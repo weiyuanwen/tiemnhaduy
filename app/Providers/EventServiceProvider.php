@@ -11,10 +11,11 @@ use App\Events\PaymentExpired;
 use App\Listeners\SendOrderCreatedNotification;
 use App\Listeners\SendProductCreatedNotification;
 use App\Listeners\SendVendorCreatedNotification;
-use App\Listeners\SendPaymentSuccessNotification;
-use App\Listeners\SendPaymentPendingNotification;
+use App\Listeners\NotifyTelegramPaymentExpired;
+use App\Listeners\NotifyTelegramPaymentSuccess;
 use App\Listeners\SendPaymentExpiredNotification;
-use App\Listeners\SendServiceOrderPaidMail;
+use App\Listeners\SendPaymentPendingNotification;
+use App\Listeners\SendPaymentSuccessNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -41,13 +42,14 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentSuccess::class => [
             SendPaymentSuccessNotification::class,
-            SendServiceOrderPaidMail::class,
+            NotifyTelegramPaymentSuccess::class,
         ],
         PaymentPending::class => [
             SendPaymentPendingNotification::class,
         ],
         PaymentExpired::class => [
             SendPaymentExpiredNotification::class,
+            NotifyTelegramPaymentExpired::class,
         ],
     ];
 

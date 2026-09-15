@@ -83,4 +83,10 @@ return [
         'template' => env('VIETQR_TEMPLATE', 'compact2'),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+        'topic_id' => env('TELEGRAM_PAYMENT_TOPIC_ID'),
+    ],
+
 ];

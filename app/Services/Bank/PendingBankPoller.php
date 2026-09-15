@@ -4,6 +4,7 @@ namespace App\Services\Bank;
 
 use App\Models\ServiceOrder;
 use App\Services\OrderService;
+use App\Services\TelegramNotifier;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,7 @@ class PendingBankPoller
         if (! $result['ok']) {
             $this->recordBackoff($result['status']);
             Log::warning('histbank poll failed', ['status' => $result['status']]);
+            $this->notifyHistbankError($result['status']);
 
             return ['fetched' => true, 'matched' => 0, 'reason' => 'histbank_error'];
         }
@@ -98,5 +100,16 @@ class PendingBankPoller
         $minutes = [2, 5, 15][min($step, 2)];
         Cache::put('histbank:backoff_step', $step + 1, 3600);
         Cache::put('histbank:backoff_until', now()->addMinutes($minutes)->toIso8601String(), 3600);
+    }
+
+    private function notifyHistbankError(int $status): void
+    {
+        if (! Cache::add('telegram:histbank_error', 1, 600)) {
+            return;
+        }
+
+        app(TelegramNotifier::class)->notify(
+            "Tiệm Nhà Duy: lỗi histbank khi đối soát CK (HTTP {$status})"
+        );
     }
 }
