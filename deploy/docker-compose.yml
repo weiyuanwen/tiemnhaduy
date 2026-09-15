@@ -5,7 +5,7 @@ x-app-build: &app-build
   dockerfile: deploy/Dockerfile
   args:
     VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-}
-    VITE_REVERB_HOST: ${VITE_REVERB_HOST:-tiemnhaduy.com}
+    VITE_REVERB_HOST: ${VITE_REVERB_HOST:-ws.tiemnhaduy.com}
     VITE_REVERB_PORT: ${VITE_REVERB_PORT:-443}
     VITE_REVERB_SCHEME: ${VITE_REVERB_SCHEME:-https}
 
@@ -41,7 +41,7 @@ services:
         required: true
     environment:
       RUN_MIGRATIONS: "0"
-      REVERB_HOST: tiemnhaduy.com
+      REVERB_HOST: ws.tiemnhaduy.com
       REVERB_PORT: "443"
       REVERB_SCHEME: https
     command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
