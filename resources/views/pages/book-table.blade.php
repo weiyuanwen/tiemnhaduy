@@ -161,6 +161,14 @@
             display: inline-block;
             animation: spin 0.8s linear infinite;
         }
+        .qr-card-badge.is-paid {
+            color: #0f5132;
+            background: #d1e7dd;
+        }
+        .qr-card-badge.is-expired {
+            color: #842029;
+            background: #f8d7da;
+        }
         .qr-result {
             margin-top: 40px;
             border-top: 1px solid #eee;
@@ -207,6 +215,7 @@
             margin-bottom: 10px;
         }
         .qr-box {
+            position: relative;
             max-width: 360px;
             margin: 0 auto;
             padding: 12px;
@@ -218,6 +227,28 @@
             width: 100%;
             height: auto;
             border-radius: 8px;
+            display: block;
+            transition: opacity 0.25s ease, filter 0.25s ease;
+        }
+        .qr-box.is-stale img {
+            opacity: 0.22;
+            filter: grayscale(1) blur(1.5px);
+            pointer-events: none;
+        }
+        .qr-refresh-overlay {
+            display: none;
+            position: absolute;
+            inset: 12px;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .qr-box.is-stale .qr-refresh-overlay {
+            display: flex;
+        }
+        .qr-refresh-btn {
+            min-width: 148px;
+            min-height: 48px;
         }
         .qr-side-meta {
             display: flex;
@@ -245,12 +276,9 @@
             color: #111;
             letter-spacing: 0.02em;
         }
-        .btn-copy {
-            width: 100%;
-            min-height: 48px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .btn-copy:disabled {
+            opacity: 0.45;
+            pointer-events: none;
         }
         .copy-action-wrap {
             position: relative;
@@ -375,8 +403,11 @@
                                 <span class="qr-card-badge" id="qrStatusBadge">Đang hoạt động</span>
                             </div>
                             <div class="qr-layout">
-                                <div class="qr-box">
+                                <div class="qr-box" id="qrBox">
                                     <img id="vietQrImage" src="" alt="VietQR Payment">
+                                    <div class="qr-refresh-overlay" id="qrRefreshOverlay">
+                                        <button type="button" class="btn-default btn-highlighted qr-refresh-btn" id="refreshQrBtn">Làm mới</button>
+                                    </div>
                                 </div>
                                 <div class="qr-side-meta">
                                     <div class="countdown-wrap">
@@ -424,6 +455,8 @@
             var expiresAtValue = document.getElementById("expiresAtValue");
             var amountValue = document.getElementById("amountValue");
             var qrStatusBadge = document.getElementById("qrStatusBadge");
+            var qrBox = document.getElementById("qrBox");
+            var refreshQrBtn = document.getElementById("refreshQrBtn");
             var generateQrBtn = document.getElementById("generateQrBtn");
             var pageLoadingOverlay = document.getElementById("pageLoadingOverlay");
             var copyTransferCodeBtn = document.getElementById("copyTransferCodeBtn");
@@ -437,6 +470,7 @@
             var currentExpiresAt = null;
             var orderSettled = false;
             var echoChannel = null;
+            var creatingOrder = false;
 
             function pad(num) {
                 return num < 10 ? "0" + num : String(num);
@@ -508,26 +542,33 @@
                 }
             }
 
-            function markPaid() {
+            function settleQr(kind) {
                 if (orderSettled) {
                     return;
                 }
                 orderSettled = true;
                 stopWatchers();
-                qrStatusBadge.textContent = "Đã thanh toán";
+                qrBox.classList.add("is-stale");
+                copyTransferCodeBtn.setAttribute("disabled", "disabled");
                 expiryCountdownValue.textContent = "00:00";
-                setMessage("Thanh toán thành công. Cảm ơn bạn.", false);
+                qrStatusBadge.classList.remove("is-paid", "is-expired");
+                if (kind === "paid") {
+                    qrStatusBadge.classList.add("is-paid");
+                    qrStatusBadge.textContent = "Đã thanh toán";
+                    setMessage("Thanh toán thành công. Bấm Làm mới để tạo QR khác.", false);
+                } else {
+                    qrStatusBadge.classList.add("is-expired");
+                    qrStatusBadge.textContent = "Hết hạn";
+                    setMessage("QR đã hết hạn. Bấm Làm mới để tạo mã mới.", true);
+                }
+            }
+
+            function markPaid() {
+                settleQr("paid");
             }
 
             function markExpired() {
-                if (orderSettled) {
-                    return;
-                }
-                orderSettled = true;
-                stopWatchers();
-                qrStatusBadge.textContent = "Hết hạn";
-                expiryCountdownValue.textContent = "00:00";
-                setMessage("Đơn đã hết hạn. Tạo mã QR mới nếu bạn vẫn muốn thanh toán.", true);
+                settleQr("expired");
             }
 
             function applyStatus(status) {
@@ -549,7 +590,7 @@
                     var remainingMs = currentExpiresAt.getTime() - Date.now();
                     expiryCountdownValue.textContent = formatCountdown(remainingMs);
                     if (remainingMs <= 0) {
-                        qrStatusBadge.textContent = "Hết hạn";
+                        markExpired();
                     }
                 }, 1000);
             }
@@ -601,6 +642,9 @@
                 orderSettled = false;
                 latestTransferCode = data.transfer_content || data.order_code;
                 currentExpiresAt = new Date(data.expires_at);
+                qrBox.classList.remove("is-stale");
+                copyTransferCodeBtn.removeAttribute("disabled");
+                qrStatusBadge.classList.remove("is-paid", "is-expired");
                 qrImage.src = data.qr_image_url;
                 transferCodeValue.textContent = latestTransferCode;
                 amountValue.textContent = formatAmount(data.amount);
@@ -615,20 +659,21 @@
                 subscribeEcho(data.order_code);
             }
 
-            paymentForm.addEventListener("submit", async function (event) {
-                event.preventDefault();
+            async function createOrder() {
                 var facebookLink = facebookInput.value.trim();
                 var email = customerEmailInput.value.trim();
                 if (!facebookLink) {
                     setMessage("Vui lòng nhập link Facebook.", true);
-                    qrResult.style.display = "none";
-                    return;
+                    return false;
                 }
                 if (!/^https?:\/\/(www\.)?facebook\.com\//i.test(facebookLink)) {
                     setMessage("Link phải là địa chỉ facebook.com.", true);
-                    qrResult.style.display = "none";
-                    return;
+                    return false;
                 }
+                if (creatingOrder) {
+                    return false;
+                }
+                creatingOrder = true;
                 try {
                     stopWatchers();
                     setSubmitLoading(true);
@@ -647,21 +692,34 @@
                     var payload = await response.json();
                     if (!response.ok || !payload.status || !payload.data) {
                         setMessage((payload && payload.message) || "Không thể tạo mã QR lúc này. Vui lòng thử lại.", true);
-                        qrResult.style.display = "none";
-                        return;
+                        return false;
                     }
                     renderOrder(payload.data);
+                    return true;
                 } catch (error) {
                     setMessage("Không thể tạo mã QR lúc này. Vui lòng thử lại.", true);
-                    qrResult.style.display = "none";
+                    return false;
                 } finally {
+                    creatingOrder = false;
                     setSubmitLoading(false);
+                }
+            }
+
+            paymentForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                var ok = await createOrder();
+                if (!ok && !latestTransferCode) {
+                    qrResult.style.display = "none";
                 }
             });
 
+            refreshQrBtn.addEventListener("click", async function () {
+                await createOrder();
+            });
+
             copyTransferCodeBtn.addEventListener("click", async function () {
-                if (!latestTransferCode) {
-                    setMessage("Chưa có nội dung chuyển khoản để sao chép.", true);
+                if (orderSettled || !latestTransferCode) {
+                    setMessage("QR này không còn dùng được. Bấm Làm mới để tạo mã mới.", true);
                     return;
                 }
                 try {

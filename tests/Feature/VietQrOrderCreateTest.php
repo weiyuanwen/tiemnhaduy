@@ -47,6 +47,8 @@ class VietQrOrderCreateTest extends TestCase
         $this->get('/thanh-toan')
             ->assertOk()
             ->assertSee('/api/v1/orders', false)
+            ->assertSee('refreshQrBtn', false)
+            ->assertSee('is-stale', false)
             ->assertDontSee('buildQrUrl', false)
             ->assertDontSee('generateTransferCode', false);
     }
