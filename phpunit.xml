@@ -25,10 +25,15 @@
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
+        <env name="BROADCAST_CONNECTION" value="log" force="true"/>
+        <env name="VAPID_PUBLIC_KEY" value="BNbxv1Q3nG8dummyVapidPublicKeyForTestsOnly1234567890" force="true"/>
+        <env name="VAPID_PRIVATE_KEY" value="dummyVapidPrivateKeyForTestsOnly" force="true"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="HISTBANK_INTERNAL_TOKEN" value="test-internal-token"/>
+        <env name="HISTBANK_URL" value="http://histbank.test"/>
     </php>
 </phpunit>

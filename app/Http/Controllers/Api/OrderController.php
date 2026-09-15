@@ -31,6 +31,7 @@ class OrderController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'facebook_profile_link' => ['required', 'url', 'regex:/facebook\.com/'],
             'service_id' => ['nullable', 'integer'],
+            'email' => ['nullable', 'email', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -109,6 +110,17 @@ class OrderController extends Controller
      */
     public function verifyPayment(Request $request): JsonResponse
     {
+        $expected = (string) config('services.histbank.internal_token');
+        $provided = (string) $request->header('X-Internal-Token', '');
+
+        if ($expected === '' || ! hash_equals($expected, $provided)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized.',
+                'data' => null,
+            ], 401);
+        }
+
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'order_code' => 'required|string',
             'bank_txn_id' => 'required|string',
@@ -205,6 +217,14 @@ class OrderController extends Controller
 
     public function markPaidTest(string $orderCode): JsonResponse
     {
+        if (app()->isProduction()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không tìm thấy đơn hàng.',
+                'data' => null,
+            ], 404);
+        }
+
         $result = $this->orderService->markPaidTest($orderCode);
 
         if (!$result['success']) {

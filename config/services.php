@@ -65,4 +65,22 @@ return [
         'use_external_api' => env('USE_EXTERNAL_SERVICE_API', false),
     ],
 
+    'histbank' => [
+        'base_url' => env('HISTBANK_URL', 'http://tpbank-serve:3999'),
+        'timeout' => (int) env('HISTBANK_TIMEOUT', 15),
+        'internal_token' => env('HISTBANK_INTERNAL_TOKEN'),
+    ],
+
+    'payment' => [
+        'window_minutes' => (int) env('PAYMENT_WINDOW_MINUTES', 12),
+        'initial_delay_seconds' => (int) env('PAYMENT_INITIAL_DELAY_SECONDS', 20),
+    ],
+
+    'vietqr' => [
+        'bank_id' => env('VIETQR_BANK_ID', 'TPB'),
+        'account_no' => env('VIETQR_ACCOUNT_NO'),
+        'account_name' => env('VIETQR_ACCOUNT_NAME'),
+        'template' => env('VIETQR_TEMPLATE', 'compact2'),
+    ],
+
 ];

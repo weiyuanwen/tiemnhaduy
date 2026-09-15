@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Services\Bank;
+
+use App\Models\ServiceOrder;
+
+class BankTransferMatcher
+{
+    public const CODE_PATTERN = '/\bORDFB[A-Z0-9]{10}\b/i';
+
+    /**
+     * @param  array<int, array<string, mixed>>  $transactions
+     * @param  iterable<ServiceOrder>  $pendingOrders
+     * @return array<int, array{order: ServiceOrder, txId: string, amount: int, description: string}>
+     */
+    public function match(array $transactions, iterable $pendingOrders): array
+    {
+        $byCode = [];
+        foreach ($pendingOrders as $order) {
+            $byCode[strtoupper($order->order_code)] = $order;
+        }
+
+        $matches = [];
+        $usedTxn = [];
+
+        foreach ($transactions as $tx) {
+            if (($tx['creditDebitIndicator'] ?? '') !== 'CRDT') {
+                continue;
+            }
+
+            $txId = isset($tx['id']) ? (string) $tx['id'] : '';
+            if ($txId === '' || isset($usedTxn[$txId])) {
+                continue;
+            }
+
+            $amount = (int) $tx['amount'];
+            $description = $this->normalize((string) ($tx['description'] ?? ''));
+
+            if (! preg_match_all(self::CODE_PATTERN, $description, $found)) {
+                continue;
+            }
+
+            foreach ($found[0] as $rawCode) {
+                $code = strtoupper($rawCode);
+                $order = $byCode[$code] ?? null;
+                if (! $order || (int) $order->amount !== $amount) {
+                    continue;
+                }
+
+                $matches[] = [
+                    'order' => $order,
+                    'txId' => $txId,
+                    'amount' => $amount,
+                    'description' => $description,
+                ];
+                $usedTxn[$txId] = true;
+                unset($byCode[$code]);
+                break;
+            }
+        }
+
+        return $matches;
+    }
+
+    public function normalize(string $description): string
+    {
+        if (class_exists(\Normalizer::class)) {
+            $normalized = \Normalizer::normalize($description, \Normalizer::FORM_C);
+            if (is_string($normalized) && $normalized !== '') {
+                $description = $normalized;
+            }
+        }
+
+        return trim(preg_replace('/\s+/u', ' ', $description) ?? $description);
+    }
+}

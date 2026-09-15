@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
+    ->withSchedule(function (Schedule $schedule): void {
+        $schedule->command('bank:poll-pending')->everyFifteenSeconds()->withoutOverlapping(2);
+        $schedule->command('bank:reconcile-overnight')->dailyAt('02:30');
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         //
         // Register custom middleware aliases
