@@ -1,15 +1,15 @@
 FROM node:22-bookworm-slim AS assets
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
 ARG VITE_REVERB_APP_KEY
-ARG VITE_REVERB_HOST=ws.tiemnhaduy.com
+ARG VITE_REVERB_HOST=tiemnhaduy.com
 ARG VITE_REVERB_PORT=443
 ARG VITE_REVERB_SCHEME=https
 ENV VITE_REVERB_APP_KEY=$VITE_REVERB_APP_KEY
 ENV VITE_REVERB_HOST=$VITE_REVERB_HOST
 ENV VITE_REVERB_PORT=$VITE_REVERB_PORT
 ENV VITE_REVERB_SCHEME=$VITE_REVERB_SCHEME
-COPY package.json package-lock.json ./
-RUN npm ci
 COPY . .
 RUN npm run build
 
