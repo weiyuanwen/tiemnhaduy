@@ -39,4 +39,15 @@ class VietQrOrderCreateTest extends TestCase
             'customer_email' => 'a@example.com',
         ]);
     }
+
+    public function test_payment_page_creates_orders_via_api(): void
+    {
+        $this->withoutVite();
+
+        $this->get('/thanh-toan')
+            ->assertOk()
+            ->assertSee('/api/v1/orders', false)
+            ->assertDontSee('buildQrUrl', false)
+            ->assertDontSee('generateTransferCode', false);
+    }
 }

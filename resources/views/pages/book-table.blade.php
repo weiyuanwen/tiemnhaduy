@@ -347,14 +347,18 @@
                 <div class="payment-content">
                     <h1>Thanh toán</h1>
                     <div class="blurb">
-                        <p>Tạo mã QR thanh toán nhanh trong một bước. Mã QR có giá trị 150.000 VND và tự động đổi sau mỗi 10 phút để đảm bảo giao dịch an toàn.</p>
+                        <p>Tạo mã QR thanh toán nhanh trong một bước. Mỗi đơn có nội dung CK riêng và hiệu lực 12 phút. Chuyển khoản đúng số tiền, đúng nội dung — hệ thống tự xác nhận.</p>
                     </div>
                     <div class="payment-form-wrap">
                         <form id="paymentForm" action="#" method="POST">
                             <div class="form-group mb-4">
                                 <label class="input-label" for="facebookLink">Link Facebook</label>
                                 <input type="url" name="facebookLink" class="form-control" id="facebookLink" placeholder="https://facebook.com/..." required>
-                                <p class="input-hint">Dùng để tạo nội dung chuyển khoản riêng theo từng thiết bị.</p>
+                                <p class="input-hint">Dùng để tạo nội dung chuyển khoản riêng cho đơn này.</p>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label class="input-label" for="customerEmail">Email (không bắt buộc)</label>
+                                <input type="email" name="customerEmail" class="form-control" id="customerEmail" placeholder="Bạn sẽ nhận mail khi thanh toán thành công">
                             </div>
                             <button type="submit" class="btn-default btn-highlighted qr-submit-btn" id="generateQrBtn">
                                 <span class="btn-text">Tạo mã QR</span>
@@ -377,7 +381,7 @@
                                 <div class="qr-side-meta">
                                     <div class="countdown-wrap">
                                         <span class="countdown-label">Còn hiệu lực</span>
-                                        <strong class="countdown-value" id="expiryCountdownValue">10:00</strong>
+                                        <strong class="countdown-value" id="expiryCountdownValue">12:00</strong>
                                     </div>
                                     <div class="copy-action-wrap">
                                         <button type="button" class="btn-default btn-copy" id="copyTransferCodeBtn">Sao chép nội dung CK</button>
@@ -388,7 +392,7 @@
                             <div class="qr-meta-list">
                                 <div class="qr-meta-item">
                                     <span class="meta-label">Số tiền</span>
-                                    <strong class="meta-value">150.000 VND</strong>
+                                    <strong class="meta-value" id="amountValue">150.000 VND</strong>
                                 </div>
                                 <div class="qr-meta-item">
                                     <span class="meta-label">Nội dung CK</span>
@@ -405,44 +409,45 @@
             </div>
         </main>
     </div>
+    @if (file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
+        @vite(['resources/js/app.js'])
+    @endif
     <script>
         (function () {
             var paymentForm = document.getElementById("paymentForm");
             var facebookInput = document.getElementById("facebookLink");
+            var customerEmailInput = document.getElementById("customerEmail");
             var paymentMessage = document.getElementById("paymentMessage");
             var qrResult = document.getElementById("qrResult");
             var qrImage = document.getElementById("vietQrImage");
             var transferCodeValue = document.getElementById("transferCodeValue");
             var expiresAtValue = document.getElementById("expiresAtValue");
+            var amountValue = document.getElementById("amountValue");
             var qrStatusBadge = document.getElementById("qrStatusBadge");
             var generateQrBtn = document.getElementById("generateQrBtn");
             var pageLoadingOverlay = document.getElementById("pageLoadingOverlay");
             var copyTransferCodeBtn = document.getElementById("copyTransferCodeBtn");
             var copySuccessTooltip = document.getElementById("copySuccessTooltip");
             var expiryCountdownValue = document.getElementById("expiryCountdownValue");
-            var amount = 150000;
-            var refreshTimer = null;
+            var pollTimer = null;
             var countdownTimer = null;
             var copyTooltipTimer = null;
-            var lastFacebookLink = "";
+            var echoWaitTimer = null;
             var latestTransferCode = "";
             var currentExpiresAt = null;
-            var deviceSignalsPromise = null;
+            var orderSettled = false;
+            var echoChannel = null;
 
             function pad(num) {
                 return num < 10 ? "0" + num : String(num);
             }
 
-            function getTimeBucket() {
-                return Math.floor(Date.now() / 600000);
-            }
-
-            function getExpiresAtFromBucket(bucket) {
-                return new Date((bucket + 1) * 600000);
-            }
-
             function formatDateTime(date) {
                 return pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds()) + " " + pad(date.getDate()) + "/" + pad(date.getMonth() + 1) + "/" + date.getFullYear();
+            }
+
+            function formatAmount(amount) {
+                return Number(amount).toLocaleString("vi-VN") + " VND";
             }
 
             function setMessage(text, isError) {
@@ -484,216 +489,168 @@
                 return pad(minutes) + ":" + pad(seconds);
             }
 
+            function stopWatchers() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+                if (echoWaitTimer) {
+                    clearInterval(echoWaitTimer);
+                    echoWaitTimer = null;
+                }
+                if (echoChannel && window.Echo) {
+                    window.Echo.leave("order." + latestTransferCode);
+                    echoChannel = null;
+                }
+            }
+
+            function markPaid() {
+                if (orderSettled) {
+                    return;
+                }
+                orderSettled = true;
+                stopWatchers();
+                qrStatusBadge.textContent = "Đã thanh toán";
+                expiryCountdownValue.textContent = "00:00";
+                setMessage("Thanh toán thành công. Cảm ơn bạn.", false);
+            }
+
+            function markExpired() {
+                if (orderSettled) {
+                    return;
+                }
+                orderSettled = true;
+                stopWatchers();
+                qrStatusBadge.textContent = "Hết hạn";
+                expiryCountdownValue.textContent = "00:00";
+                setMessage("Đơn đã hết hạn. Tạo mã QR mới nếu bạn vẫn muốn thanh toán.", true);
+            }
+
+            function applyStatus(status) {
+                if (status === "paid") {
+                    markPaid();
+                } else if (status === "expired") {
+                    markExpired();
+                }
+            }
+
             function startCountdown() {
                 if (countdownTimer) {
                     clearInterval(countdownTimer);
                 }
                 countdownTimer = setInterval(function () {
-                    if (!currentExpiresAt) {
+                    if (!currentExpiresAt || orderSettled) {
                         return;
                     }
                     var remainingMs = currentExpiresAt.getTime() - Date.now();
                     expiryCountdownValue.textContent = formatCountdown(remainingMs);
                     if (remainingMs <= 0) {
-                        qrStatusBadge.textContent = "Đang cập nhật";
+                        qrStatusBadge.textContent = "Hết hạn";
                     }
                 }, 1000);
             }
 
-            async function fetchJson(url) {
-                try {
-                    var response = await fetch(url, { cache: "no-store" });
-                    if (!response.ok) {
-                        return null;
+            function startStatusPoll(orderCode) {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                }
+                pollTimer = setInterval(async function () {
+                    if (orderSettled) {
+                        return;
                     }
-                    return await response.json();
-                } catch (error) {
-                    return null;
-                }
+                    try {
+                        var response = await fetch("/api/v1/orders/" + encodeURIComponent(orderCode), {
+                            headers: { "Accept": "application/json" }
+                        });
+                        if (!response.ok) {
+                            return;
+                        }
+                        var payload = await response.json();
+                        applyStatus(payload && payload.data ? payload.data.status : null);
+                    } catch (error) {}
+                }, 4000);
             }
 
-            function getCachedIpData() {
-                var cacheKey = "book_table_ipapi_cache_v1";
-                var ttlMs = 15 * 60 * 1000;
-                try {
-                    var raw = localStorage.getItem(cacheKey);
-                    if (!raw) {
-                        return null;
+            function subscribeEcho(orderCode) {
+                if (echoWaitTimer) {
+                    clearInterval(echoWaitTimer);
+                }
+                var tries = 0;
+                echoWaitTimer = setInterval(function () {
+                    tries += 1;
+                    if (!window.Echo) {
+                        if (tries > 40) {
+                            clearInterval(echoWaitTimer);
+                            echoWaitTimer = null;
+                        }
+                        return;
                     }
-                    var parsed = JSON.parse(raw);
-                    if (!parsed || !parsed.timestamp || !parsed.data) {
-                        return null;
-                    }
-                    if ((Date.now() - parsed.timestamp) > ttlMs) {
-                        localStorage.removeItem(cacheKey);
-                        return null;
-                    }
-                    return parsed.data;
-                } catch (error) {
-                    return null;
-                }
+                    clearInterval(echoWaitTimer);
+                    echoWaitTimer = null;
+                    echoChannel = window.Echo.private("order." + orderCode);
+                    echoChannel.listen(".payment.success", markPaid);
+                    echoChannel.listen(".payment.expired", markExpired);
+                }, 250);
             }
 
-            function setCachedIpData(data) {
-                var cacheKey = "book_table_ipapi_cache_v1";
-                try {
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                        timestamp: Date.now(),
-                        data: data
-                    }));
-                } catch (error) {}
-            }
-
-            async function loadDeviceSignals() {
-                var browserSignals = {
-                    ua: navigator.userAgent || "unknown",
-                    lang: navigator.language || "unknown",
-                    platform: navigator.platform || "unknown",
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
-                    screen: window.screen ? window.screen.width + "x" + window.screen.height : "unknown"
-                };
-                var ipData = getCachedIpData();
-                if (!ipData) {
-                    ipData = await fetchJson("https://ipapi.co/json/");
-                    if (ipData && ipData.ip) {
-                        setCachedIpData(ipData);
-                    }
-                }
-                var ip = ipData && ipData.ip ? ipData.ip : "unknown";
-                var country = ipData && ipData.country_name ? ipData.country_name : "unknown";
-                var latitude = ipData && ipData.latitude ? ipData.latitude : "";
-                var longitude = ipData && ipData.longitude ? ipData.longitude : "";
-                var weatherText = "unknown";
-                if (latitude && longitude) {
-                    var weatherData = await fetchJson("https://api.open-meteo.com/v1/forecast?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude) + "&current=temperature_2m,weather_code");
-                    if (weatherData && weatherData.current) {
-                        weatherText = String(weatherData.current.temperature_2m) + "_" + String(weatherData.current.weather_code);
-                    }
-                }
-                return {
-                    ip: ip,
-                    country: country,
-                    weather: weatherText,
-                    ua: browserSignals.ua,
-                    lang: browserSignals.lang,
-                    platform: browserSignals.platform,
-                    timezone: browserSignals.timezone,
-                    screen: browserSignals.screen
-                };
-            }
-
-            function getDeviceSignals() {
-                if (!deviceSignalsPromise) {
-                    deviceSignalsPromise = loadDeviceSignals();
-                }
-                return deviceSignalsPromise;
-            }
-
-            async function createCodeFromSeed(seed) {
-                var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var output = "";
-                if (window.crypto && window.crypto.subtle && window.TextEncoder) {
-                    var encoded = new TextEncoder().encode(seed);
-                    var digest = await window.crypto.subtle.digest("SHA-256", encoded);
-                    var bytes = Array.from(new Uint8Array(digest));
-                    for (var i = 0; i < 10; i++) {
-                        output += alphabet[bytes[i] % alphabet.length];
-                    }
-                    return output;
-                }
-                var hash = 0;
-                for (var j = 0; j < seed.length; j++) {
-                    hash = ((hash << 5) - hash) + seed.charCodeAt(j);
-                    hash |= 0;
-                }
-                var num = Math.abs(hash) + 123456789;
-                for (var k = 0; k < 10; k++) {
-                    num = (num * 1103515245 + 12345) & 0x7fffffff;
-                    output += alphabet[num % alphabet.length];
-                }
-                return output;
-            }
-
-            async function generateTransferCode(facebookLink, bucket) {
-                var signals = await getDeviceSignals();
-                var seed = [
-                    facebookLink.trim(),
-                    signals.ip,
-                    signals.country,
-                    signals.weather,
-                    signals.ua,
-                    signals.lang,
-                    signals.platform,
-                    signals.timezone,
-                    signals.screen,
-                    String(bucket)
-                ].join("|");
-                return createCodeFromSeed(seed);
-            }
-
-            function buildQrUrl(code) {
-                var url = new URL("https://img.vietqr.io/image/TPB-03738073001-compact2.png");
-                url.searchParams.set("amount", String(amount));
-                url.searchParams.set("addInfo", "ORD" + code);
-                url.searchParams.set("accountName", "NGUYEN VAN DUY");
-                return url.toString();
-            }
-
-            async function renderQr(facebookLink, autoRefresh) {
-                var bucket = getTimeBucket();
-                var code = await generateTransferCode(facebookLink, bucket);
-                var expiresAt = getExpiresAtFromBucket(bucket);
-                qrImage.src = buildQrUrl(code);
-                latestTransferCode = "ORD" + code;
-                currentExpiresAt = expiresAt;
+            function renderOrder(data) {
+                orderSettled = false;
+                latestTransferCode = data.transfer_content || data.order_code;
+                currentExpiresAt = new Date(data.expires_at);
+                qrImage.src = data.qr_image_url;
                 transferCodeValue.textContent = latestTransferCode;
-                expiresAtValue.textContent = formatDateTime(expiresAt);
-                expiryCountdownValue.textContent = formatCountdown(expiresAt.getTime() - Date.now());
+                amountValue.textContent = formatAmount(data.amount);
+                expiresAtValue.textContent = formatDateTime(currentExpiresAt);
+                expiryCountdownValue.textContent = formatCountdown(currentExpiresAt.getTime() - Date.now());
+                qrStatusBadge.textContent = "Đang chờ CK";
                 qrResult.style.display = "block";
+                paymentMessage.className = "";
+                paymentMessage.textContent = "";
                 startCountdown();
-                if (autoRefresh) {
-                    qrStatusBadge.textContent = "Đã làm mới";
-                    paymentMessage.className = "";
-                    paymentMessage.textContent = "";
-                } else {
-                    qrStatusBadge.textContent = "Đang hoạt động";
-                    paymentMessage.className = "";
-                    paymentMessage.textContent = "";
-                }
-            }
-
-            function scheduleRefresh() {
-                if (refreshTimer) {
-                    clearTimeout(refreshTimer);
-                }
-                var now = Date.now();
-                var nextTick = (Math.floor(now / 600000) + 1) * 600000 + 300;
-                refreshTimer = setTimeout(async function () {
-                    if (lastFacebookLink) {
-                        await renderQr(lastFacebookLink, true);
-                    }
-                    scheduleRefresh();
-                }, Math.max(1000, nextTick - now));
+                startStatusPoll(data.order_code);
+                subscribeEcho(data.order_code);
             }
 
             paymentForm.addEventListener("submit", async function (event) {
                 event.preventDefault();
                 var facebookLink = facebookInput.value.trim();
+                var email = customerEmailInput.value.trim();
                 if (!facebookLink) {
                     setMessage("Vui lòng nhập link Facebook.", true);
                     qrResult.style.display = "none";
                     return;
                 }
-                var isFacebook = /^https?:\/\/(www\.)?(facebook\.com|fb\.com)\//i.test(facebookLink);
-                if (!isFacebook) {
-                    setMessage("Link phải bắt đầu bằng facebook.com hoặc fb.com.", true);
+                if (!/^https?:\/\/(www\.)?facebook\.com\//i.test(facebookLink)) {
+                    setMessage("Link phải là địa chỉ facebook.com.", true);
                     qrResult.style.display = "none";
                     return;
                 }
                 try {
-                    lastFacebookLink = facebookLink;
+                    stopWatchers();
                     setSubmitLoading(true);
-                    await renderQr(facebookLink, false);
+                    var body = { facebook_profile_link: facebookLink };
+                    if (email) {
+                        body.email = email;
+                    }
+                    var response = await fetch("/api/v1/orders", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    var payload = await response.json();
+                    if (!response.ok || !payload.status || !payload.data) {
+                        setMessage((payload && payload.message) || "Không thể tạo mã QR lúc này. Vui lòng thử lại.", true);
+                        qrResult.style.display = "none";
+                        return;
+                    }
+                    renderOrder(payload.data);
                 } catch (error) {
                     setMessage("Không thể tạo mã QR lúc này. Vui lòng thử lại.", true);
                     qrResult.style.display = "none";
@@ -725,8 +682,6 @@
                     setMessage("Không thể sao chép. Vui lòng sao chép thủ công.", true);
                 }
             });
-
-            scheduleRefresh();
         })();
     </script>
 @endsection
