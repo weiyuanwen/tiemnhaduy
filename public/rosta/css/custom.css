@@ -2707,13 +2707,20 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 .pricing-image figure{
 	display: block;
 	border-radius: 400px 400px 0 0;
+	overflow: hidden;
 }
 
 .pricing-image img{
 	width: 100%;
+	height: auto;
 	aspect-ratio: 1 / 1.296;
 	object-fit: cover;
 	border-radius: 400px 400px 0 0;
+}
+
+.pricing-image .media-kenburns-img{
+	min-height: 0;
+	height: auto;
 }
 
 .pricing-image video{
@@ -2726,7 +2733,7 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 
 .menu-list-item{
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
 	border-bottom: 1px dashed var(--divider-color);
 	margin-bottom: 30px;
@@ -2740,17 +2747,25 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 }
 
 .menu-list-image{
+	flex: 0 0 100px;
+	width: 100px;
 	margin-right: 30px;
 }
 
 .menu-list-image figure{
 	display: block;
+	width: 100px;
+	height: 100px;
 	max-width: 100px;
 	border-radius: 50%;
+	overflow: hidden;
 }
 
 .menu-list-image img{
-	width: 100%;
+	display: block;
+	width: 100px;
+	height: 100px;
+	max-width: none;
 	border-radius: 50%;
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
@@ -6133,11 +6148,20 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 	}
 
 	.menu-list-image{
+		flex-basis: 80px;
+		width: 80px;
 		margin-right: 20px;
 	}
 
 	.menu-list-image figure{
+		width: 80px;
+		height: 80px;
 		max-width: 80px;
+	}
+
+	.menu-list-image img{
+		width: 80px;
+		height: 80px;
 	}
 
 	.menu-item-body{
@@ -7180,11 +7204,20 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
     }
 
 	.menu-list-image{
+        flex-basis: 70px;
+        width: 70px;
         margin-right: 10px;
     }
 
 	.menu-list-image figure{
+        width: 70px;
+        height: 70px;
         max-width: 70px;
+    }
+
+	.menu-list-image img{
+        width: 70px;
+        height: 70px;
     }
 
 	.menu-item-body{
