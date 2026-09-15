@@ -1,10 +1,7 @@
 #!/bin/bash
 #
-# Deploy script for Vietnix Shared Hosting
-# Usage: ./scripts/deploy.sh [--skip-migration] [--backup-only] [--help]
-#
-# This script is meant to be run on the remote server via SSH
-# It handles the deployment process for Laravel applications
+# Post-release / emergency deploy trên VPS (production dùng GitHub Actions rsync).
+# Usage: ./scripts/deploy.sh [--skip-migration] [--from-git] [--backup-only] [--help]
 #
 
 set -e  # Exit on error
@@ -22,6 +19,7 @@ BACKUP_DIR="${BACKUP_DIR:-backups}"
 KEEP_BACKUPS="${KEEP_BACKUPS:-5}"
 SKIP_MIGRATION="${SKIP_MIGRATION:-false}"
 BACKUP_ONLY="${BACKUP_ONLY:-false}"
+FROM_GIT="${FROM_GIT:-false}"
 TELEGRAM_NOTIFY="${TELEGRAM_NOTIFY:-true}"
 TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-}"
 TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID:-}"
@@ -45,12 +43,13 @@ log_error() {
 
 show_help() {
     cat << EOF
-Deploy Script for Laravel on Vietnix Shared Hosting
+Deploy Script for Laravel on VPS
 
 Usage: $0 [OPTIONS]
 
 Options:
     --skip-migration    Skip database migrations
+    --from-git          Emergency: git fetch/reset (production dùng GitHub rsync)
     --backup-only       Only create backup, don't deploy
     --help              Show this help message
 
@@ -78,6 +77,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --skip-migration)
             SKIP_MIGRATION=true
+            shift
+            ;;
+        --from-git)
+            FROM_GIT=true
             shift
             ;;
         --backup-only)
@@ -211,25 +214,16 @@ deploy() {
         exit 0
     fi
     
-    # Fetch latest changes from git
-    log_info "Fetching latest changes from git..."
-    git fetch origin main 2>/dev/null || git fetch origin master 2>/dev/null || {
-        log_error "Failed to fetch from git"
-        send_telegram_notification "failure" "Failed to fetch from git repository"
-        exit 1
-    }
-    
-    # Get current branch
-    local current_branch=$(git rev-parse --abbrev-ref HEAD)
-    log_info "Current branch: $current_branch"
-    
-    # Reset hard to latest
-    log_info "Resetting to latest commit..."
-    git reset --hard "origin/${current_branch}" 2>/dev/null || git reset --hard "origin/main" 2>/dev/null || {
-        log_error "Failed to reset git"
-        send_telegram_notification "failure" "Failed to reset git repository"
-        exit 1
-    }
+    if [ "${FROM_GIT}" = "true" ]; then
+        log_warning "Manual --from-git. Production nên để GitHub Actions rsync, không git pull."
+        git fetch origin main
+        git reset --hard origin/main
+    else
+        log_info "Không git pull. Gọi scripts/server-release.sh (code đã rsync từ CI)."
+        SKIP_MIGRATION="$SKIP_MIGRATION" bash "./scripts/server-release.sh"
+        cleanup_logs
+        return 0
+    fi
     
     # Restore .env from backup if it exists in gitignore
     if [ -f "${BACKUP_DIR}/latest.env.bak" ] && [ ! -f ".env" ]; then
@@ -326,7 +320,7 @@ verify_deployment() {
 # Main execution
 main() {
     log_info "=========================================="
-    log_info "  Vietnix Laravel Deployment Script"
+    log_info "  Tiệm Nhà Duy VPS release"
     log_info "=========================================="
     
     # Display configuration

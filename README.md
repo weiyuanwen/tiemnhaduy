@@ -126,19 +126,16 @@ php artisan test
 
 ## Deploy
 
-Push `main` chạy GitHub Actions (CI + deploy Vietnix). App chạy ở **git root**; document root là `public/`.
+Push `main` là đủ: GitHub Actions build Composer + Vite rồi **rsync** lên VPS (domain đã trỏ sẵn). Không SSH `git pull` trên server.
 
-Nếu server còn trỏ `.../pwa-ecommerce` hoặc `pwa-ecommerce/public`, đổi `DEPLOY_PATH` về thư mục chứa `artisan` và web root sang `public/` trước khi deploy tiếp.
+- Document root web: `public/`
+- `DEPLOY_PATH` = thư mục chứa `artisan` trên VPS, không phải `public/`
+- `.env` và file upload trong `storage/` không bị ghi đè
 
-```bash
-composer install --no-dev --optimize-autoloader
-npm ci
-npm run esbuild:build
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan optimize
-```
+Secrets bắt buộc: `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`, `SSH_PRIVATE_KEY`  
+Tùy chọn: `DEPLOY_PORT` (22), `DEPLOY_URL` (`https://tiemnhaduy.com`), `PHP_BIN`, `DEPLOY_POST_CMD` (reload php-fpm/nginx), Telegram
+
+Chi tiết: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
 
 Không commit `.env` hay `vendor/`.
 

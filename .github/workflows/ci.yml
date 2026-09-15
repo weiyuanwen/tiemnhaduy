@@ -1,132 +1,59 @@
-name: CI Build & Deploy
+name: CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    name: Build & Test
+  test:
+    name: Build & test
     runs-on: ubuntu-latest
-
+    timeout-minutes: 12
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup PHP 8.3
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           coverage: none
+          extensions: mbstring, xml, bcmath, curl, zip, pdo_sqlite
+          tools: composer:v2
 
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          cache: npm
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          key: composer-${{ runner.os }}-dev-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-
+            composer-${{ runner.os }}-dev-
 
-      - name: Create SQLite database file
+      - name: App env
         run: |
+          cp .env.example .env
           mkdir -p database
           touch database/database.sqlite
-          echo "SQLite database created at database/database.sqlite"
 
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist --no-interaction
+      - name: Composer
+        run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Key
+        run: php artisan key:generate --force
 
-      - name: Build frontend (esbuild)
-        run: npm run esbuild:build
-
-      - name: Run Laravel optimizations
+      - name: Vite
         run: |
-          php artisan view:clear  # Clears compiled views (no DB needed)
-          php artisan config:clear || true
-          php artisan route:clear || true
-          php artisan cache:clear || true
-          php artisan config:cache || true
+          npm ci
+          npm run build
 
-      - name: Run PHP unit tests (if tests exist)
-        if: runner.os == 'Linux'
-        run: |
-          if [ -f phpunit.xml ] || [ -f phpunit.xml.dist ]; then
-            composer require --dev phpunit/phpunit --no-interaction --no-progress || true
-            ./vendor/bin/phpunit --colors=always || true
-          else
-            echo "No phpunit configuration found, skipping unit tests."
-          fi
-
-      - name: Upload built frontend assets
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: public/
-          retention-days: 1  # Giữ artifact 1 ngày là đủ cho deploy
-
-  deploy:
-    name: Deploy to Production via SSH
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: Checkout code (needed for any scripts if required)
-        uses: actions/checkout@v4
-
-      - name: Download built frontend artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: public/  # Đặt đúng vào thư mục public/
-
-      - name: Setup SSH agent
-        uses: webfactory/ssh-agent@v0.9.0  # Nâng cấp lên phiên bản mới nhất ổn định
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy via rsync over SSH
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
-        run: |
-          PORT="${DEPLOY_PORT:-22}"
-          echo "Deploying to ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH} (port $PORT)"
-
-          # Kiểm tra biến có tồn tại không
-          if [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_PATH" ]; then
-            echo "Error: Missing one or more deploy secrets (HOST/USER/PATH)"
-            exit 1
-          fi
-
-          rsync -avz --delete \
-            -e "ssh -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-            public/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
-
-      - name: Run post-deploy commands on remote (optional)
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
-        run: |
-          if [ -n "${{ secrets.DEPLOY_POST_CMD }}" ]; then
-            PORT="${DEPLOY_PORT:-22}"
-            ssh -p $PORT -o StrictHostKeyChecking=no \
-              ${DEPLOY_USER}@${DEPLOY_HOST} "${{ secrets.DEPLOY_POST_CMD }}"
-          else
-            echo "No post-deploy commands configured, skipping"
-          fi
+      - name: Tests
+        run: php artisan test --no-interaction
