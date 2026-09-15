@@ -276,7 +276,7 @@ class OrderApiTest extends TestCase
         $first = app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-99');
         $second = app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-99');
 
-        $this->assertTrue($first['success'], json_encode($first));
+        $this->assertTrue($first['success']);
         $this->assertFalse($second['success']);
         $this->assertSame('already_paid', $second['error']);
         Event::assertDispatched(PaymentSuccess::class);
