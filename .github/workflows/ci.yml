@@ -26,37 +26,32 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: pwa-ecommerce/package-lock.json  # Fix lỗi lock file không tìm thấy
+          cache-dependency-path: package-lock.json
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
-          path: pwa-ecommerce/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('pwa-ecommerce/composer.lock') }}
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
       - name: Create SQLite database file
-        working-directory: pwa-ecommerce
         run: |
           mkdir -p database
           touch database/database.sqlite
           echo "SQLite database created at database/database.sqlite"
 
       - name: Install Composer dependencies
-        working-directory: pwa-ecommerce
         run: composer install --no-progress --no-suggest --prefer-dist --no-interaction
 
       - name: Install npm dependencies
-        working-directory: pwa-ecommerce
         run: npm ci
 
       - name: Build frontend (esbuild)
-        working-directory: pwa-ecommerce
         run: npm run esbuild:build
 
       - name: Run Laravel optimizations
-        working-directory: pwa-ecommerce
         run: |
           php artisan view:clear  # Clears compiled views (no DB needed)
           php artisan config:clear || true
@@ -65,7 +60,6 @@ jobs:
           php artisan config:cache || true
 
       - name: Run PHP unit tests (if tests exist)
-        working-directory: pwa-ecommerce
         if: runner.os == 'Linux'
         run: |
           if [ -f phpunit.xml ] || [ -f phpunit.xml.dist ]; then
@@ -79,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: pwa-ecommerce/public/
+          path: public/
           retention-days: 1  # Giữ artifact 1 ngày là đủ cho deploy
 
   deploy:
@@ -96,7 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: pwa-ecommerce/public/  # Đặt đúng vào thư mục public/
+          path: public/  # Đặt đúng vào thư mục public/
 
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0  # Nâng cấp lên phiên bản mới nhất ổn định
@@ -121,7 +115,7 @@ jobs:
 
           rsync -avz --delete \
             -e "ssh -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-            pwa-ecommerce/public/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
+            public/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
 
       - name: Run post-deploy commands on remote (optional)
         env:

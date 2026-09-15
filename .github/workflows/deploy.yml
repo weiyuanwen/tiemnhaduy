@@ -3,9 +3,6 @@ name: Deploy to Vietnix
 on:
   push:
     branches: [main]
-    paths:
-      - 'pwa-ecommerce/**'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
     inputs:
       environment:
@@ -26,7 +23,7 @@ on:
 
 env:
   PHP_VERSION: '8.3'
-  PWA_DIR: 'pwa-ecommerce'
+  PWA_DIR: '.'
 
 jobs:
   test:
@@ -182,7 +179,7 @@ jobs:
           message: |
             **🚀 Deploy thành công!**
             
-            **Dự án:** vietsat
+            **Dự án:** tiemnhaduy
             **Môi trường:** ${{ github.event.inputs.environment || 'production' }}
             **Branch:** main
             **Commit:** `${{ env.DEPLOY_COMMIT }}`
@@ -200,7 +197,7 @@ jobs:
           message: |
             **❌ Deploy thất bại!**
             
-            **Dự án:** vietsat
+            **Dự án:** tiemnhaduy
             **Môi trường:** ${{ github.event.inputs.environment || 'production' }}
             
             Vui lòng kiểm tra GitHub Actions logs.
