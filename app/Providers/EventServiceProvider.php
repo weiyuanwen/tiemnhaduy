@@ -14,6 +14,7 @@ use App\Listeners\SendVendorCreatedNotification;
 use App\Listeners\SendPaymentSuccessNotification;
 use App\Listeners\SendPaymentPendingNotification;
 use App\Listeners\SendPaymentExpiredNotification;
+use App\Listeners\SendServiceOrderPaidMail;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -40,6 +41,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentSuccess::class => [
             SendPaymentSuccessNotification::class,
+            SendServiceOrderPaidMail::class,
         ],
         PaymentPending::class => [
             SendPaymentPendingNotification::class,

@@ -23,16 +23,20 @@ class OrderService
 
     private WebPushTestService $webPushTestService;
 
+    private VietQrService $vietQrService;
+
     public function __construct(
         ExternalServiceApi $externalServiceApi,
         DeviceTrackingService $deviceTrackingService,
         ServiceOrderRepositoryInterface $repository,
-        WebPushTestService $webPushTestService
+        WebPushTestService $webPushTestService,
+        VietQrService $vietQrService
     ) {
         $this->externalServiceApi = $externalServiceApi;
         $this->deviceTrackingService = $deviceTrackingService;
         $this->repository = $repository;
         $this->webPushTestService = $webPushTestService;
+        $this->vietQrService = $vietQrService;
     }
 
     public function createOrder(
@@ -97,8 +101,9 @@ class OrderService
                 'order_code' => 'ORDFB' . Str::upper(Str::random(10)),
                 'amount' => $amount,
                 'status' => ServiceOrder::STATUS_PENDING,
-                'expires_at' => now()->addMinutes(5),
+                'expires_at' => now()->addMinutes((int) config('services.payment.window_minutes', 12)),
                 'facebook_profile_link' => $facebookProfileLink,
+                'customer_email' => $request->input('email'),
                 'device_fingerprint' => $deviceFingerprint,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
@@ -125,7 +130,9 @@ class OrderService
                     'order_code' => $order->order_code,
                     'amount' => $order->amount,
                     'expires_at' => $order->expires_at->toIso8601String(),
-                    'qr_content' => 'bank:' . $order->order_code . ':' . $order->amount,
+                    'qr_content' => $order->order_code,
+                    'transfer_content' => $order->order_code,
+                    'qr_image_url' => $this->vietQrService->imageUrl($order->order_code, (int) $order->amount),
                     'status' => $order->status,
                     'service' => [
                         'id' => $serviceData['id'],
@@ -137,13 +144,13 @@ class OrderService
         });
     }
 
-    public function verifyPayment(string $orderCode, string $bankTxnId): array
+    public function confirmBankMatch(string $orderCode, string $bankTxnId, bool $allowExpired = false): array
     {
         try {
-            return DB::transaction(function () use ($orderCode, $bankTxnId) {
+            return DB::transaction(function () use ($orderCode, $bankTxnId, $allowExpired) {
                 $order = $this->findOrderByCodeWithLock($orderCode);
 
-                if (!$order) {
+                if (! $order) {
                     return [
                         'success' => false,
                         'error' => 'order_not_found',
@@ -159,8 +166,9 @@ class OrderService
                     ];
                 }
 
-                if ($order->isTimeExpired()) {
+                if (! $allowExpired && $order->isTimeExpired()) {
                     $this->expireOrderIfNeeded($order);
+
                     return [
                         'success' => false,
                         'error' => 'order_expired',
@@ -185,7 +193,7 @@ class OrderService
 
                 event(new PaymentSuccess($order));
 
-                $this->webPushTestService->notifyPaid($order);
+                $this->notifyPaidSafely($order);
 
                 return [
                     'success' => true,
@@ -197,7 +205,7 @@ class OrderService
                 ];
             });
         } catch (\Exception $e) {
-            Log::error('Order verifyPayment transaction failed', [
+            Log::error('Order confirmBankMatch failed', [
                 'order_code' => $orderCode,
                 'bank_txn_id' => $bankTxnId,
                 'error' => $e->getMessage(),
@@ -209,6 +217,11 @@ class OrderService
                 'message' => 'Có lỗi xảy ra khi xác nhận thanh toán.',
             ];
         }
+    }
+
+    public function verifyPayment(string $orderCode, string $bankTxnId): array
+    {
+        return $this->confirmBankMatch($orderCode, $bankTxnId, false);
     }
 
     public function markPaidTest(string $orderCode): array
@@ -251,7 +264,7 @@ class OrderService
 
                 event(new PaymentSuccess($order));
 
-                $this->webPushTestService->notifyPaid($order);
+                $this->notifyPaidSafely($order);
 
                 return [
                     'success' => true,
@@ -324,6 +337,18 @@ class OrderService
         event(new PaymentExpired($order));
 
         return true;
+    }
+
+    private function notifyPaidSafely(ServiceOrder $order): void
+    {
+        try {
+            $this->webPushTestService->notifyPaid($order);
+        } catch (\Throwable $e) {
+            Log::warning('Web push after paid failed', [
+                'order_code' => $order->order_code,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function findOrderByCode(string $orderCode): ?ServiceOrder

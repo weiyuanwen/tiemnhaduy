@@ -1,10 +1,17 @@
 name: tiemnhaduy
 
+x-app-build: &app-build
+  context: ..
+  dockerfile: deploy/Dockerfile
+  args:
+    VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-}
+    VITE_REVERB_HOST: ${VITE_REVERB_HOST:-ws.tiemnhaduy.com}
+    VITE_REVERB_PORT: ${VITE_REVERB_PORT:-443}
+    VITE_REVERB_SCHEME: ${VITE_REVERB_SCHEME:-https}
+
 services:
   app:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -12,6 +19,8 @@ services:
       RUN_MIGRATIONS: "1"
     ports:
       - "127.0.0.1:9090:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ../.env:/var/www/html/.env:ro
       - laravel-storage:/var/www/html/storage
@@ -20,11 +29,30 @@ services:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    networks: [default, vps-internal]
+
+  reverb:
+    build: *app-build
+    env_file:
+      - path: ../.env
+        required: true
+    environment:
+      RUN_MIGRATIONS: "0"
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    ports:
+      - "127.0.0.1:9091:8080"
+    volumes:
+      - ../.env:/var/www/html/.env:ro
+      - laravel-storage:/var/www/html/storage
+      - laravel-cache:/var/www/html/bootstrap/cache
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [default, vps-internal]
 
   queue:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -39,17 +67,18 @@ services:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    networks: [default, vps-internal]
 
   scheduler:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
     environment:
       RUN_MIGRATIONS: "0"
     command: ["php", "artisan", "schedule:work"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ../.env:/var/www/html/.env:ro
       - laravel-storage:/var/www/html/storage
@@ -58,6 +87,7 @@ services:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    networks: [default, vps-internal]
 
   mysql:
     image: mysql:8.4
@@ -74,8 +104,14 @@ services:
       timeout: 5s
       retries: 20
     restart: unless-stopped
+    networks: [default]
 
 volumes:
   mysql-data:
   laravel-storage:
   laravel-cache:
+
+networks:
+  vps-internal:
+    name: vps-internal
+    external: true

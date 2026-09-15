@@ -212,6 +212,8 @@ class OrderApiTest extends TestCase
         $response = $this->postJson('/api/v1/orders/verify-payment', [
             'order_code' => $order->order_code,
             'bank_txn_id' => 'TPB123456',
+        ], [
+            'X-Internal-Token' => 'test-internal-token',
         ]);
 
         $response->assertStatus(200)
@@ -236,6 +238,8 @@ class OrderApiTest extends TestCase
         $response = $this->postJson('/api/v1/orders/verify-payment', [
             'order_code' => $order->order_code,
             'bank_txn_id' => 'TPB123456',
+        ], [
+            'X-Internal-Token' => 'test-internal-token',
         ]);
 
         $response->assertStatus(400)
@@ -243,6 +247,75 @@ class OrderApiTest extends TestCase
                 'status' => false,
                 'message' => 'Đơn hàng đã được thanh toán.',
             ]);
+    }
+
+    public function test_verify_payment_rejected_without_token(): void
+    {
+        $order = ServiceOrder::factory()->create([
+            'status' => ServiceOrder::STATUS_PENDING,
+        ]);
+
+        $this->postJson('/api/v1/orders/verify-payment', [
+            'order_code' => $order->order_code,
+            'bank_txn_id' => 'x',
+        ])->assertStatus(401);
+    }
+
+    public function test_confirm_bank_match_marks_paid_once(): void
+    {
+        Event::fake([PaymentSuccess::class]);
+        $service = Service::factory()->create(['is_active' => true, 'price' => 100000]);
+        $order = ServiceOrder::factory()->create([
+            'service_id' => $service->id,
+            'amount' => 100000,
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'expires_at' => now()->addMinutes(12),
+        ]);
+
+        $first = app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-99');
+        $second = app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-99');
+
+        $this->assertTrue($first['success']);
+        $this->assertFalse($second['success']);
+        $this->assertSame('already_paid', $second['error']);
+        Event::assertDispatched(PaymentSuccess::class);
+    }
+
+    public function test_paid_order_sends_mail_when_email_present(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+        \Illuminate\Support\Facades\Http::fake();
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'customer_email' => 'a@example.com',
+            'expires_at' => now()->addMinutes(12),
+        ]);
+
+        app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-mail');
+
+        \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\ServiceOrderPaidMail::class, function ($mail) {
+            return $mail->hasTo('a@example.com');
+        });
+    }
+
+    public function test_paid_order_skips_mail_without_email(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+        \Illuminate\Support\Facades\Http::fake();
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBZZZZZZZZZZ',
+            'expires_at' => now()->addMinutes(12),
+            'customer_email' => null,
+        ]);
+
+        app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-nomail');
+        \Illuminate\Support\Facades\Mail::assertNothingSent();
     }
 
     public function test_show_marks_expired_pending_order_and_broadcasts_event(): void

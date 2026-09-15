@@ -15,7 +15,7 @@ class ServiceOrderFactory extends Factory
     public function definition(): array
     {
         $createdAt = now();
-        $expiresAt = $createdAt->copy()->addMinutes(5);
+        $expiresAt = $createdAt->copy()->addMinutes(12);
         $status = ServiceOrder::STATUS_PENDING;
 
         return [
@@ -29,6 +29,7 @@ class ServiceOrderFactory extends Factory
             'paid_at' => null,
             'bank_txn_id' => null,
             'facebook_profile_link' => 'https://facebook.com/' . $this->faker->userName(),
+            'customer_email' => null,
             'device_fingerprint' => hash('sha256', $this->faker->uuid()),
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',

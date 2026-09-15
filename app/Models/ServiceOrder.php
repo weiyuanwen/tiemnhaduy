@@ -26,6 +26,7 @@ class ServiceOrder extends Model
         'paid_at',
         'bank_txn_id',
         'facebook_profile_link',
+        'customer_email',
         'device_fingerprint',
         'ip_address',
         'user_agent',

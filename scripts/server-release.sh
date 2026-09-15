@@ -18,6 +18,7 @@ fi
 
 if [ -f deploy/docker-compose.yml ]; then
   echo "Docker release..."
+  docker network create vps-internal >/dev/null 2>&1 || true
   docker compose -f deploy/docker-compose.yml --env-file .env up -d --build
   echo "Release OK (docker compose)"
   exit 0
