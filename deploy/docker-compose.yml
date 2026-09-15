@@ -1,10 +1,17 @@
 name: tiemnhaduy
 
+x-app-build: &app-build
+  context: ..
+  dockerfile: deploy/Dockerfile
+  args:
+    VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-}
+    VITE_REVERB_HOST: ${VITE_REVERB_HOST:-ws.tiemnhaduy.com}
+    VITE_REVERB_PORT: ${VITE_REVERB_PORT:-443}
+    VITE_REVERB_SCHEME: ${VITE_REVERB_SCHEME:-https}
+
 services:
   app:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -25,9 +32,7 @@ services:
     networks: [default, vps-internal]
 
   reverb:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -47,9 +52,7 @@ services:
     networks: [default, vps-internal]
 
   queue:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -67,9 +70,7 @@ services:
     networks: [default, vps-internal]
 
   scheduler:
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
+    build: *app-build
     env_file:
       - path: ../.env
         required: true
@@ -113,3 +114,4 @@ volumes:
 networks:
   vps-internal:
     name: vps-internal
+    external: true
