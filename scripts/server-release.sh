@@ -6,9 +6,6 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-PHP_BIN="${PHP_BIN:-php}"
-SKIP_MIGRATION="${SKIP_MIGRATION:-false}"
-
 if [ ! -f artisan ]; then
   echo "DEPLOY_PATH phải là root Laravel trên VPS (có file artisan), không phải thư mục public/."
   exit 1
@@ -16,6 +13,21 @@ fi
 
 if [ ! -f .env ]; then
   echo "Thiếu .env trên server. Tạo một lần rồi giữ nguyên — CI không ghi đè file này."
+  exit 1
+fi
+
+if [ -f deploy/docker-compose.yml ]; then
+  echo "Docker release..."
+  docker compose -f deploy/docker-compose.yml --env-file .env up -d --build
+  echo "Release OK (docker compose)"
+  exit 0
+fi
+
+PHP_BIN="${PHP_BIN:-php}"
+SKIP_MIGRATION="${SKIP_MIGRATION:-false}"
+
+if ! command -v "$PHP_BIN" >/dev/null 2>&1; then
+  echo "Không có $PHP_BIN trên host và không thấy deploy/docker-compose.yml."
   exit 1
 fi
 

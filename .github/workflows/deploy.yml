@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       skip_migration:
-        description: 'Skip database migration'
+        description: 'Skip database migration (ignored on Docker; app still migrates on start)'
         required: false
         default: false
         type: boolean
@@ -18,109 +18,38 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  PHP_VERSION: '8.3'
-  NODE_VERSION: '22'
-
 jobs:
   deploy:
-    name: Build and rsync to VPS
-    runs-on: ubuntu-latest
-    timeout-minutes: 18
+    name: Rsync and Docker release on VPS
+    runs-on: [self-hosted, tiemnhaduy]
+    timeout-minutes: 25
     if: github.ref == 'refs/heads/main'
     env:
       DEPLOY_URL: ${{ secrets.DEPLOY_URL || 'https://tiemnhaduy.com' }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          coverage: none
-          extensions: mbstring, xml, bcmath, curl, zip, pdo_mysql
-          tools: composer:v2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - uses: actions/cache@v4
-        with:
-          path: vendor
-          key: composer-${{ runner.os }}-prod-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            composer-${{ runner.os }}-prod-
-
-      - name: Production env for build only
-        run: |
-          cp .env.example .env
-          printf '\nAPP_ENV=production\nAPP_DEBUG=false\n' >> .env
-
-      - name: Composer
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
-
-      - name: Vite
-        run: |
-          npm ci
-          npm run build
-
-      - name: Drop runner .env so it cannot be copied
-        run: rm -f .env
-
-      - uses: webfactory/ssh-agent@v0.9.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Rsync to server
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+      - name: Sync into app directory
         run: |
           set -euo pipefail
-          PORT="${DEPLOY_PORT:-22}"
-          if [ -z "${DEPLOY_HOST:-}" ] || [ -z "${DEPLOY_USER:-}" ] || [ -z "${DEPLOY_PATH:-}" ]; then
-            echo "Thiếu secrets VPS: DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH, SSH_PRIVATE_KEY"
+          if [ -z "${DEPLOY_PATH:-}" ]; then
+            echo "Thiếu secret DEPLOY_PATH"
             exit 1
           fi
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          SSH_OPTS="-p $PORT -o StrictHostKeyChecking=accept-new -o BatchMode=yes -o PreferredAuthentications=publickey -o ServerAliveInterval=15"
-          ssh-add -l
-          ssh $SSH_OPTS "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH' && (command -v rsync || echo 'NO_RSYNC') && uname -n && if [ -f '$DEPLOY_PATH/artisan' ]; then echo has_artisan; else echo no_artisan_yet; fi"
+          mkdir -p "$DEPLOY_PATH"
           chmod +x scripts/server-release.sh
-          rsync -az --delete \
+          rsync -a --delete \
             --exclude-from=.github/deploy-exclude.txt \
-            -e "ssh $SSH_OPTS" \
-            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+            ./ "$DEPLOY_PATH/"
 
-      - name: Migrate and optimize
-        uses: appleboy/ssh-action@v1.2.2
-        env:
-          SKIP_MIGRATION: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_migration || false }}
-          PHP_BIN: ${{ secrets.PHP_BIN }}
-          DEPLOY_POST_CMD: ${{ secrets.DEPLOY_POST_CMD }}
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          port: ${{ secrets.DEPLOY_PORT || 22 }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: SKIP_MIGRATION,PHP_BIN,DEPLOY_POST_CMD
-          script_stop: true
-          command_timeout: 8m
-          script: |
-            set -euo pipefail
-            cd "${{ secrets.DEPLOY_PATH }}"
-            export SKIP_MIGRATION="${SKIP_MIGRATION:-false}"
-            export PHP_BIN="${PHP_BIN:-php}"
-            bash scripts/server-release.sh
-            if [ -n "${DEPLOY_POST_CMD:-}" ]; then
-              eval "$DEPLOY_POST_CMD"
-            fi
+      - name: Docker compose release
+        run: |
+          set -euo pipefail
+          cd "$DEPLOY_PATH"
+          bash scripts/server-release.sh
 
       - name: Health check
         if: env.DEPLOY_URL != ''
