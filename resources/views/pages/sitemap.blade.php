@@ -48,7 +48,7 @@
 
                 <div class="sitemap-group">
                     <h2>Hỗ trợ</h2>
-                    <a href="{{ route('book-table') }}">Đặt lịch tư vấn</a>
+                    <a href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a>
                     <a href="{{ route('faqs') }}">Câu hỏi thường gặp</a>
                 </div>
 

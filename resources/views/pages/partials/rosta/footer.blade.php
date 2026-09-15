@@ -47,10 +47,10 @@
             </div>
             <div class="span-1">
                 <h3>Quà tặng</h3>
-                <a href="{{ route('book-table') }}">Hộp quà đặc sản</a>
-                <a href="{{ route('book-table') }}">Gói định kỳ</a>
+                <a href="{{ route('thanh-toan') }}">Hộp quà đặc sản</a>
+                <a href="{{ route('thanh-toan') }}">Gói định kỳ</a>
                 <a href="{{ route('services') }}">Sản phẩm đề xuất</a>
-                <a href="{{ route('book-table') }}">Phiếu quà tặng</a>
+                <a href="{{ route('thanh-toan') }}">Phiếu quà tặng</a>
             </div>
             <div class="span-1">
                 <h3>Kiến thức</h3>

@@ -26,9 +26,11 @@ Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
 
-Route::get('/book-table', function () {
+Route::get('/thanh-toan', function () {
     return view('pages.book-table');
-})->name('book-table');
+})->name('thanh-toan');
+
+Route::permanentRedirect('/book-table', '/thanh-toan');
 
 Route::get('/faqs', function () {
     return view('pages.faqs');

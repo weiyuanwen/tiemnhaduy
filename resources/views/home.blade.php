@@ -57,7 +57,7 @@
                         <!-- Hero Button Start -->
                         <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
                             <a href="{{ route('about') }}" class="btn-default">Khám phá sản phẩm</a>
-                            <a href="{{ route('book-table') }}" class="btn-default btn-highlighted">Thanh toán ngay</a>
+                            <a href="{{ route('thanh-toan') }}" class="btn-default btn-highlighted">Thanh toán ngay</a>
                         </div>
                         <!-- Hero Button End -->
                     </div>
@@ -814,7 +814,7 @@
                         </div>
 
                         <div class="section-footer-text wow fadeInUp" data-wow-delay="0.2s">
-                            <p>Bạn đang tìm nông sản sạch? <a href="{{ route('book-table') }}">Liên hệ đặt hàng ngay!</a></p>
+                            <p>Bạn đang tìm nông sản sạch? <a href="{{ route('thanh-toan') }}">Liên hệ đặt hàng ngay!</a></p>
                         </div>
                     </div>
                 </div>
@@ -968,7 +968,7 @@
 
                         <!-- Offer Button Start -->
                         <div class="offer-button wow fadeInUp" data-wow-delay="1s">
-                            <a href="{{ route('book-table') }}" class="btn-default">Đặt lịch tư vấn ngay</a>
+                            <a href="{{ route('thanh-toan') }}" class="btn-default">Đặt lịch tư vấn ngay</a>
                         </div>
                         <!-- Offer Button End -->
                     </div>

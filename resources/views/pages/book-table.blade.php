@@ -4,7 +4,7 @@
 @section('meta_description', 'Thanh toán nhanh tại Tiệm Nhà Duy với mã QR tự động, an toàn và tiện lợi cho đơn hàng nông sản sạch.')
 @section('meta_keywords', 'thanh toán tiệm nhà duy, QR chuyển khoản, cà phê robusta chư sê gia lai, nông sản sạch')
 @section('og_image', asset('rosta/images/favicon_io/android-chrome-512x512.png'))
-@section('canonical_url', route('book-table'))
+@section('canonical_url', route('thanh-toan'))
 
 @push('structured_data')
 <script type="application/ld+json">
@@ -13,7 +13,7 @@
     "@@type": "WebPage",
     "name": "Thanh toán QR nhanh",
     "description": "Thanh toán nhanh tại Tiệm Nhà Duy với mã QR tự động, an toàn và tiện lợi cho đơn hàng nông sản sạch.",
-    "url": "{{ route('book-table') }}",
+    "url": "{{ route('thanh-toan') }}",
     "inLanguage": "vi-VN"
 }
 </script>
@@ -32,7 +32,7 @@
             "@@type": "ListItem",
             "position": 2,
             "name": "Thanh toán QR nhanh",
-            "item": "{{ route('book-table') }}"
+            "item": "{{ route('thanh-toan') }}"
         }
     ]
 }

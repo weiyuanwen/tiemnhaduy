@@ -54,6 +54,6 @@
         </div>
     </div>
     <div class="announcement">
-        <p><a href="{{ route('book-table') }}">Miễn phí vận chuyển đơn từ 500.000đ</a></p>
+        <p><a href="{{ route('thanh-toan') }}">Miễn phí vận chuyển đơn từ 500.000đ</a></p>
     </div>
 </div>

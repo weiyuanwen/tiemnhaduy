@@ -49,7 +49,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Dịch vụ</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Sản phẩm</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Liên hệ</a></li>                             
-                                <li class="nav-item highlighted-menu"><a class="nav-link" href="{{ route('book-table') }}">Đặt lịch tư vấn</a></li>                             
+                                <li class="nav-item highlighted-menu"><a class="nav-link" href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a></li>                             
                             </ul>
                         </div>
 
@@ -57,7 +57,7 @@
                         <div class="header-button-box">
                             <!-- Header Btn Start -->
                             <div class="header-btn">
-                               <a href="{{ route('book-table') }}" class="btn-default btn-highlighted">Đặt lịch ngay</a>
+                               <a href="{{ route('thanh-toan') }}" class="btn-default btn-highlighted">Đặt lịch ngay</a>
                             </div>
                             <!-- Header Btn End -->
 
@@ -106,7 +106,7 @@
                                             <a class="primary" href="{{ route('services') }}">Dịch vụ</a>
                                             <a class="primary" href="{{ route('services') }}">Sản phẩm</a>
                                             <a class="primary" href="{{ route('contact') }}">Liên hệ</a>
-                                            <a class="primary" href="{{ route('book-table') }}">Đặt lịch tư vấn</a>
+                                            <a class="primary" href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a>
                                         </div>
                                         <!-- Header Sidebar Social List Start -->
                                         <div class="header-sidebar-social-list">
