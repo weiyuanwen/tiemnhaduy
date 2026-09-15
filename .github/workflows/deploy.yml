@@ -88,12 +88,13 @@ jobs:
             exit 1
           fi
           mkdir -p ~/.ssh
-          ssh-keyscan -p "$PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH'"
+          chmod 700 ~/.ssh
+          SSH_OPTS="-p $PORT -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
+          ssh $SSH_OPTS "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH' && if ! command -v rsync >/dev/null 2>&1; then echo 'rsync missing, installing'; if [ \"\$(id -u)\" -eq 0 ]; then (apt-get update -qq && apt-get install -y rsync) || yum install -y rsync || apk add --no-cache rsync; else sudo -n apt-get update -qq && sudo -n apt-get install -y rsync; fi; fi && command -v rsync && uname -n && if [ -f '$DEPLOY_PATH/artisan' ]; then echo has_artisan; else echo no_artisan_yet; fi"
           chmod +x scripts/server-release.sh
           rsync -az --delete \
             --exclude-from=.github/deploy-exclude.txt \
-            -e "ssh -p $PORT -o StrictHostKeyChecking=yes" \
+            -e "ssh $SSH_OPTS" \
             ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
 
       - name: Migrate and optimize
