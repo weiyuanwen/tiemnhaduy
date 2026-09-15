@@ -89,8 +89,9 @@ jobs:
           fi
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          SSH_OPTS="-p $PORT -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
-          ssh $SSH_OPTS "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH' && if ! command -v rsync >/dev/null 2>&1; then echo 'rsync missing, installing'; if [ \"\$(id -u)\" -eq 0 ]; then (apt-get update -qq && apt-get install -y rsync) || yum install -y rsync || apk add --no-cache rsync; else sudo -n apt-get update -qq && sudo -n apt-get install -y rsync; fi; fi && command -v rsync && uname -n && if [ -f '$DEPLOY_PATH/artisan' ]; then echo has_artisan; else echo no_artisan_yet; fi"
+          SSH_OPTS="-p $PORT -o StrictHostKeyChecking=accept-new -o BatchMode=yes -o PreferredAuthentications=publickey -o ServerAliveInterval=15"
+          ssh-add -l
+          ssh $SSH_OPTS "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH' && (command -v rsync || echo 'NO_RSYNC') && uname -n && if [ -f '$DEPLOY_PATH/artisan' ]; then echo has_artisan; else echo no_artisan_yet; fi"
           chmod +x scripts/server-release.sh
           rsync -az --delete \
             --exclude-from=.github/deploy-exclude.txt \
