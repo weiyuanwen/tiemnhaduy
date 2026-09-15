@@ -1,36 +1,21 @@
 <!-- Jquery Library File -->
-<script src="{{ asset('rosta/js/jquery-3.7.1.min.js') }}"></script>
-<!-- Bootstrap js file -->
-<script src="{{ asset('rosta/js/bootstrap.min.js') }}"></script>
-<!-- Validator js file -->
-<script src="{{ asset('rosta/js/validator.min.js') }}"></script>
-<!-- SlickNav js file -->
-<script src="{{ asset('rosta/js/jquery.slicknav.js') }}"></script>
-<!-- Swiper js file -->
-<script src="{{ asset('rosta/js/swiper-bundle.min.js') }}"></script>
-<!-- Counter js file -->
-<script src="{{ asset('rosta/js/jquery.waypoints.min.js') }}"></script>
-<script src="{{ asset('rosta/js/jquery.counterup.min.js') }}"></script>
-<!-- Isotop js file -->
-<script src="{{ asset('rosta/js/isotope.min.js') }}"></script>
-<!-- Magnific js file -->
-<script src="{{ asset('rosta/js/jquery.magnific-popup.min.js') }}"></script>
-<!-- SmoothScroll -->
-<script src="{{ asset('rosta/js/SmoothScroll.js') }}"></script>
-<!-- Parallax js -->
-<script src="{{ asset('rosta/js/parallaxie.js') }}"></script>
-<!-- MagicCursor js file -->
-<script src="{{ asset('rosta/js/gsap.min.js') }}"></script>
-<script src="{{ asset('rosta/js/magiccursor.js') }}"></script>
-<!-- Text Effect js file -->
-<script src="{{ asset('rosta/js/SplitText.js') }}"></script>
-<script src="{{ asset('rosta/js/ScrollTrigger.min.js') }}"></script>
-<!-- YTPlayer js File -->
-<script src="{{ asset('rosta/js/jquery.mb.YTPlayer.min.js') }}"></script>
-<!-- Wow js file -->
-<script src="{{ asset('rosta/js/wow.min.js') }}"></script>
-<!-- Main Custom js file -->
-<script src="{{ asset('rosta/js/function.js') }}"></script>
+<script src="{{ asset('rosta/js/jquery-3.7.1.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/bootstrap.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/validator.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/jquery.slicknav.js') }}" defer></script>
+<script src="{{ asset('rosta/js/swiper-bundle.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/jquery.waypoints.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/jquery.counterup.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/isotope.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/jquery.magnific-popup.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/SmoothScroll.js') }}" defer></script>
+<script src="{{ asset('rosta/js/parallaxie.js') }}" defer></script>
+<script src="{{ asset('rosta/js/gsap.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/magiccursor.js') }}" defer></script>
+<script src="{{ asset('rosta/js/SplitText.js') }}" defer></script>
+<script src="{{ asset('rosta/js/ScrollTrigger.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/wow.min.js') }}" defer></script>
+<script src="{{ asset('rosta/js/function.js') }}" defer></script>
 <script>
     (function () {
         var hidePreloader = function () {
@@ -54,86 +39,26 @@
 </script>
 <script>
     (function () {
-        var trigger = document.querySelector('.listening-trigger');
-        if (!trigger) {
-            return;
-        }
-        var artists = Array.from(document.querySelectorAll('.the-ticker .tick-left .ticker-text-wrapper:not(.dup) strong')).map(function (item) {
-            return item.textContent.trim();
-        }).filter(Boolean);
-        var allArtistNodes = Array.from(document.querySelectorAll('.the-ticker .tick-left .ticker-text-wrapper strong'));
-        var tracks = [
-            { artist: 'Nick Mulvey', videoId: 'Ds0nA5LMf4M' },
-            { artist: 'Tom Petty and the Heartbreakers', videoId: 'h0JvF9vpqx8' },
-            { artist: 'Jean Dawson', videoId: 'Gf95M9JQJUk' },
-            { artist: 'Thundercat', videoId: 'ormQQG2UhtQ' },
-            { artist: 'Joy Division', videoId: 'zuuObGsB0No' },
-            { artist: 'Neil Diamond', videoId: '4F_RCWVoL4s' },
-            { artist: 'Harry Styles', videoId: 'qN4ooNx77u0' },
-            { artist: 'Noah Gundersen', videoId: '89cT6Nf4NfI' },
-            { artist: 'Bruno Mars', videoId: 'OPf0YbXqDm0' },
-            { artist: 'thebandfriday', videoId: 'D6nxCqQrb4M' },
-            { artist: 'Jeremy Passion', videoId: '8xN4ULfZHf4' },
-            { artist: 'J. Cole', videoId: 'WILNIXZr2oc' },
-            { artist: 'Solon Holt', videoId: 'fV6gP6_Wj4s' },
-            { artist: 'Lily Meola', videoId: 'UPs3ALfyM4g' },
-            { artist: 'Timmy Skelly', videoId: 'w6RH2f2fT3I' }
-        ];
-        var orderedTracks = artists.map(function (artistName) {
-            return tracks.find(function (track) {
-                return track.artist === artistName;
-            });
-        }).filter(Boolean);
-        if (!orderedTracks.length) {
-            orderedTracks = tracks;
-        }
-        var trackIndexByArtist = orderedTracks.reduce(function (acc, track, index) {
-            acc[track.artist] = index;
-            return acc;
-        }, {});
-        var currentTrackIndex = 0;
-        var openTrack = function (index) {
-            if (!orderedTracks.length) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+        var loadGtag = function () {
+            if (document.querySelector('script[data-gtag]')) {
                 return;
             }
-            currentTrackIndex = index % orderedTracks.length;
-            window.open('https://www.youtube.com/watch?v=' + orderedTracks[currentTrackIndex].videoId, '_blank', 'noopener');
+            var script = document.createElement('script');
+            script.async = true;
+            script.dataset.gtag = '1';
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4GNZ75JE64';
+            script.onload = function () {
+                window.gtag('js', new Date());
+                window.gtag('config', 'G-4GNZ75JE64');
+            };
+            document.head.appendChild(script);
         };
-        var startPlayback = function () {
-            openTrack(currentTrackIndex);
-        };
-        var playArtistByIndex = function (index) {
-            openTrack(index);
-        };
-        allArtistNodes.forEach(function (artistNode) {
-            var artistName = artistNode.textContent.trim();
-            var artistTrackIndex = trackIndexByArtist[artistName];
-            if (artistTrackIndex === undefined) {
-                return;
-            }
-            artistNode.classList.add('listening-artist');
-            artistNode.setAttribute('role', 'button');
-            artistNode.setAttribute('tabindex', '0');
-            artistNode.setAttribute('aria-label', 'Play ' + artistName);
-            artistNode.addEventListener('click', function () {
-                playArtistByIndex(artistTrackIndex);
-            });
-            artistNode.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    playArtistByIndex(artistTrackIndex);
-                }
-            });
-        });
-        trigger.addEventListener('click', function (event) {
-            event.preventDefault();
-            startPlayback();
-        });
-        trigger.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                startPlayback();
-            }
-        });
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadGtag, { timeout: 4000 });
+        } else {
+            window.addEventListener('load', loadGtag, { once: true });
+        }
     })();
 </script>

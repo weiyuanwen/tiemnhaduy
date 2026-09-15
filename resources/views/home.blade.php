@@ -6,7 +6,7 @@
 @section('canonical_url', route('home'))
 
 @push('head_preloads')
-<link rel="preload" as="image" href="https://cdn.shopify.com/s/files/1/1707/3261/files/hp-poster.webp?v=1736778184" fetchpriority="high" type="image/webp">
+<link rel="preload" as="image" href="{{ asset('rosta/images/produce/highland-coffee-sm.webp') }}" fetchpriority="high" type="image/webp" imagesrcset="{{ asset('rosta/images/produce/highland-coffee-sm.webp') }} 800w, {{ asset('rosta/images/produce/highland-coffee.webp') }} 1400w" imagesizes="100vw">
 @endpush
 
 @push('structured_data')
@@ -27,20 +27,19 @@
     <!-- Hero Section Start -->
     <div class="hero hero-video" id="main-content">
         <div class="background">
-            <img
-                src="https://cdn.shopify.com/s/files/1/1707/3261/files/hp-poster.webp?v=1736778184"
-                alt="Nông sản sạch Tiệm Nhà Duy"
-                fetchpriority="high"
-                loading="eager"
-                decoding="async"
-                width="1920"
-                height="1080"
-                aria-hidden="true"
-                style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;"
-            >
-            <video preload="metadata" autoplay loop muted playsinline poster="https://cdn.shopify.com/s/files/1/1707/3261/files/hp-poster.webp?v=1736778184">
-                <source type="video/mp4" src="https://cdn.shopify.com/videos/c/o/v/f3a0b38123db492c8ddea379bb7e7474.mp4">
-            </video>
+            <picture>
+                <source media="(max-width: 767px)" srcset="{{ asset('rosta/images/produce/highland-coffee-sm.webp') }}" type="image/webp">
+                <img
+                    class="media-kenburns-img"
+                    src="{{ asset('rosta/images/produce/highland-coffee.webp') }}"
+                    alt="Vườn cà phê Gia Lai, đất đỏ bazan Tây Nguyên"
+                    fetchpriority="high"
+                    loading="eager"
+                    decoding="async"
+                    width="1400"
+                    height="662"
+                >
+            </picture>
         </div>
         <div class="container">
             <div class="row align-items-center">
@@ -74,37 +73,37 @@
         <!-- Scrolling Ticker Start -->
         <div class="scrolling-ticker-box">
             <div class="scrolling-content">
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Espresso</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Americano</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Latte</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cappuccino</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Mocha</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Macchiato</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cold Brew</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Espresso</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Americano</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Latte</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cappuccino</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Mocha</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Macchiato</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cold Brew</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Robusta Gia Lai</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca Tây Nguyên</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Chư Sê</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản sạch</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Robusta Gia Lai</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca Tây Nguyên</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Chư Sê</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản sạch</span>
             </div>
 
             <div class="scrolling-content">
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Espresso</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Americano</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Latte</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cappuccino</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Mocha</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Macchiato</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cold Brew</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Espresso</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Americano</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Latte</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cappuccino</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Mocha</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Macchiato</span>
-                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Decorative divider icon">Cold Brew</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Robusta Gia Lai</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca Tây Nguyên</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Chư Sê</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản sạch</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Robusta Gia Lai</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca Tây Nguyên</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Chư Sê</span>
+                <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản sạch</span>
             </div>
         </div>
         <!-- Scrolling Ticker End -->
@@ -163,10 +162,10 @@
                             
                             <!-- Video Play Button Start -->
                             <div class="video-play-button">
-                                <a href="https://www.youtube.com/watch?v=Y-x0efG1seA" class="popup-video" data-cursor-text="Play">
-                                    <i class="fa-solid fa-play"></i>
+                                <a href="{{ route('about') }}" data-cursor-text="Xem">
+                                    <i class="fa-solid fa-leaf"></i>
                                 </a>
-                                <p>xem video</p>
+                                <p>về nông sản</p>
                             </div>
                             <!-- Video Play Button End -->
                         </div>
@@ -181,9 +180,7 @@
                         <!-- About Us Image Start -->
                         <div class="about-us-img">
                             <figure class="image-anime">
-                                <video preload="none" id="video_block_096b8d46-578c-4cff-924a-066c60ffabbb" play-on-visible="" autoplay loop muted playsinline poster="https://product.onyxcontent.com/media/pages/ecom/home/12c54db84b-1776176788/screenshot.webp" class="visible">
-                                    <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/cfa1f1e98e-1776176712/colombiabrewinghomepagevideo.mp4">
-                                </video>
+                                <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/coffee-cherries.webp') }}" alt="Chùm cà phê chín đỏ trên cây Tây Nguyên" width="1021" height="642" loading="lazy" decoding="async">
                             </figure>
                         </div>
                         <!-- About Us Image End -->
@@ -343,14 +340,12 @@
                 <div class="col-lg-6 col-md-4">
                     <!-- Intro Video Box Start -->
                     <div class="intro-video-box about-intro-video wow fadeInUp" data-wow-delay="0.2s">
-                        <!-- Video Play Button Start -->
                         <div class="video-play-button">
-                            <a href="https://www.youtube.com/watch?v=Y-x0efG1seA" class="popup-video" data-cursor-text="Play">
-                                <i class="fa-solid fa-play"></i>
+                            <a href="{{ route('about') }}" data-cursor-text="Xem">
+                                <i class="fa-solid fa-leaf"></i>
                             </a>
-                            <p>xem video</p>
+                            <p>từ vườn Gia Lai</p>
                         </div>
-                        <!-- Video Play Button End -->
                     </div>
                     <!-- Intro Video Box End -->
                 </div>
@@ -439,7 +434,7 @@
                                     <button class="btn-default btn-highlighted active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-selected="true">Cà phê</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="btn-default btn-highlighted" id="see-food-tab" data-bs-toggle="tab" data-bs-target="#see-food" type="button" role="tab" aria-selected="false">Maccamadia</button>
+                                    <button class="btn-default btn-highlighted" id="see-food-tab" data-bs-toggle="tab" data-bs-target="#see-food" type="button" role="tab" aria-selected="false">Mắc ca</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="btn-default btn-highlighted" id="desserts-tab" data-bs-toggle="tab" data-bs-target="#desserts" type="button" role="tab" aria-selected="false">Tiêu</button>
@@ -448,7 +443,7 @@
                                     <button class="btn-default btn-highlighted" id="drink-tab" data-bs-toggle="tab" data-bs-target="#drink" type="button" role="tab" aria-selected="false">Bơ</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="btn-default btn-highlighted" id="durian-tab" data-bs-toggle="tab" data-bs-target="#drink" type="button" role="tab" aria-selected="false">Sầu riêng</button>
+                                    <button class="btn-default btn-highlighted" id="durian-tab" data-bs-toggle="tab" data-bs-target="#durian" type="button" role="tab" aria-selected="false">Sầu riêng</button>
                                 </li>
                             </ul>
                         </div>
@@ -461,9 +456,7 @@
                                     <!-- Pricing Image Start -->
                                     <div class="pricing-image">
                                         <figure class="image-anime">
-                                            <video playsinline autoplay muted loop preload="none" poster="https://cdn.shopify.com/s/files/1/1707/3261/files/hp-poster.webp?v=1736778184">
-                                                <source src="https://cdn.shopify.com/videos/c/o/v/f3a0b38123db492c8ddea379bb7e7474.mp4" type="video/mp4">
-                                            </video>
+                                            <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/coffee-roaster.webp') }}" alt="Hạt cà phê robusta đang rang" width="1200" height="800" loading="lazy" decoding="async">
                                         </figure>
                                     </div>
                                     <!-- Pricing Image End -->
@@ -477,7 +470,7 @@
                                             <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-1.png') }}" alt="Signature menu item 1">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-coffee.webp') }}" alt="Cà phê robusta Gia Lai" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
                                             <!-- Our Menu Image End -->
@@ -506,7 +499,7 @@
                                             <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-2.png') }}" alt="Signature menu item 2">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-macadamia.webp') }}" alt="Hạt mắc ca Tây Nguyên" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
                                             <!-- Our Menu Image End -->
@@ -515,7 +508,7 @@
                                             <div class="menu-item-body">
                                                 <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
-                                                    <h3>Hạt maccamadia</h3>
+                                                    <h3>Hạt mắc ca</h3>
                                                     <hr>
                                                     <span>160.000đ</span>
                                                 </div>
@@ -537,7 +530,7 @@
                                             <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-3.png') }}" alt="Signature menu item 3">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-pepper.webp') }}" alt="Tiêu đen hạt chắc" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
                                             <!-- Our Menu Image End -->
@@ -567,7 +560,7 @@
                                             <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-4.png') }}" alt="Signature menu item 4">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-avocado.webp') }}" alt="Bơ sáp bổ đôi" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
                                             <!-- Our Menu Image End -->
@@ -597,7 +590,7 @@
                                             <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-2.png') }}" alt="Signature menu item 2">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-durian.webp') }}" alt="Sầu riêng múi vàng" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
                                             <!-- Our Menu Image End -->
@@ -635,7 +628,7 @@
                                     <!-- Pricing Image Start -->
                                     <div class="pricing-image">
                                         <figure class="image-anime">
-                                            <img src="{{ asset('rosta/images/pricing-tab-image-2.jpg') }}" alt="Menu category image 2">
+                                            <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/macadamia.webp') }}" alt="Hạt mắc ca Tây Nguyên" width="800" height="800" loading="lazy" decoding="async">
                                         </figure>
                                     </div>
                                     <!-- Pricing Image End -->
@@ -644,125 +637,40 @@
                                 <div class="col-lg-6">
                                     <!-- Our Menu List Start -->
                                     <div class="our-menu-list">
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-1.png') }}" alt="Signature menu item 1">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-macadamia.webp') }}" alt="Hạt mắc ca sấy Tây Nguyên" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Cà phê robusta hạt</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Cà phê robusta gia lai vị đậm, hậu ngọt nhẹ, phù hợp pha phin và pha máy tại nhà.</p>
-                                                </div>
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-2.png') }}" alt="Signature menu item 2">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Cà phê robusta xay</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Bột xay mịn vừa, giữ mùi thơm tự nhiên, tiện lợi cho người bận rộn nhưng vẫn muốn uống cà phê ngon.</p>
-                                                </div>
-                                                <!-- Our Menu Item End -->
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        <!-- Our Menu Item End -->
-                                        
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-3.png') }}" alt="Signature menu item 3">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
                                                     <h3>Hạt mắc ca sấy</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
                                                     <p>Hạt mắc ca béo bùi, giàu dinh dưỡng, thích hợp ăn vặt lành mạnh cho cả nhà.</p>
                                                 </div>
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        <!-- Our Menu Item End -->
-
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-4.png') }}" alt="Signature menu item 4">
+                                                    <img src="{{ asset('rosta/images/produce/macadamia-hand.webp') }}" alt="Hạt mắc ca nhân còn vỏ" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
-                                                    <h3>Tiêu đen hữu cơ</h3>
+                                                    <h3>Hạt mắc ca còn vỏ</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
-                                                    <p>Tiêu đen hạt chắc, mùi thơm nồng tự nhiên, giúp món ăn đậm đà và tròn vị hơn.</p>
+                                                    <p>Hạt chắc, vỏ mỏng, vị béo tự nhiên đặc trưng của mắc ca Tây Nguyên.</p>
                                                 </div>
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        <!-- Our Menu Item End -->
                                     </div>
                                     <!-- Our Menu List End -->
                                 </div>
@@ -774,285 +682,136 @@
                         <div class="pricing-boxes tab-pane fade" id="desserts" role="tabpanel">
                             <div class="row align-items-center">
                                 <div class="col-lg-6">
-                                    <!-- Pricing Image Start -->
                                     <div class="pricing-image">
                                         <figure class="image-anime">
-                                            <img src="{{ asset('rosta/images/pricing-tab-image-3.jpg') }}" alt="Menu category image 3">
+                                            <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/peppercorns.webp') }}" alt="Tiêu đen hạt chắc Tây Nguyên" width="900" height="900" loading="lazy" decoding="async">
                                         </figure>
                                     </div>
-                                    <!-- Pricing Image End -->
                                 </div>
-
                                 <div class="col-lg-6">
-                                    <!-- Our Menu List Start -->
                                     <div class="our-menu-list">
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-1.png') }}" alt="Signature menu item 1">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-pepper.webp') }}" alt="Tiêu đen hạt chắc" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
-                                                    <h3>Cà phê robusta hạt</h3>
+                                                    <h3>Tiêu đen hạt</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
-                                                    <p>Cà phê robusta gia lai vị đậm, hậu ngọt nhẹ, phù hợp pha phin và pha máy tại nhà.</p>
+                                                    <p>Tiêu đen hạt chắc, thơm nồng tự nhiên, giúp món ăn dậy mùi và đậm đà hơn.</p>
                                                 </div>
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-2.png') }}" alt="Signature menu item 2">
+                                                    <img src="{{ asset('rosta/images/produce/peppercorns.webp') }}" alt="Tiêu đen phơi khô Gia Lai" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Cà phê robusta xay</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Bột xay mịn vừa, giữ mùi thơm tự nhiên, tiện lợi cho người bận rộn nhưng vẫn muốn uống cà phê ngon.</p>
-                                                </div>
-                                                <!-- Our Menu Item End -->
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        <!-- Our Menu Item End -->
-                                        
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-3.png') }}" alt="Signature menu item 3">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Hạt mắc ca sấy</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Hat mac ca beo bui, giau dinh duong, thich hop an vat lanh manh cho ca nha.</p>
-                                                </div>
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        <!-- Our Menu Item End -->
-
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-4.png') }}" alt="Signature menu item 4">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
                                                     <h3>Tiêu đen hữu cơ</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
-                                                    <p>Tieu den hat chac, mui thom nong tu nhien, giup mon an dam da va tron vi hon.</p>
+                                                    <p>Tiêu phơi khô theo cách nhà vườn Tây Nguyên, cay rõ, hương bền.</p>
                                                 </div>
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        <!-- Our Menu Item End -->
                                     </div>
-                                    <!-- Our Menu List End -->
                                 </div>
                             </div>
                         </div>
-                        <!-- Pricing Boxes End -->
-                        
-                        <!-- Pricing Boxes Start -->
+
                         <div class="pricing-boxes tab-pane fade" id="drink" role="tabpanel">
                             <div class="row align-items-center">
                                 <div class="col-lg-6">
-                                    <!-- Pricing Image Start -->
                                     <div class="pricing-image">
                                         <figure class="image-anime">
-                                            <img src="{{ asset('rosta/images/pricing-tab-image-4.jpg') }}" alt="Menu category image 4">
+                                            <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/avocado.webp') }}" alt="Bơ sáp bổ đôi" width="1200" height="799" loading="lazy" decoding="async">
                                         </figure>
                                     </div>
-                                    <!-- Pricing Image End -->
                                 </div>
-
                                 <div class="col-lg-6">
-                                    <!-- Our Menu List Start -->
                                     <div class="our-menu-list">
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-1.png') }}" alt="Signature menu item 1">
+                                                    <img src="{{ asset('rosta/images/produce/thumb-avocado.webp') }}" alt="Bơ sáp Tây Nguyên" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
-                                                    <h3>Cà phê robusta hạt</h3>
+                                                    <h3>Bơ sáp</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
-                                                    <p>Cà phê robusta gia lai vị đậm, hậu ngọt nhẹ, phù hợp pha phin và pha máy tại nhà.</p>
+                                                    <p>Bơ sáp dẻo mịn, vị béo ngậy tự nhiên, phù hợp làm sinh tố, ăn cùng bánh mì hoặc salad.</p>
                                                 </div>
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        
-                                        <!-- Our Menu Item Start -->
                                         <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
                                             <div class="menu-list-image">
                                                 <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-2.png') }}" alt="Signature menu item 2">
+                                                    <img src="{{ asset('rosta/images/produce/avocado.webp') }}" alt="Bơ sáp cơm vàng" width="480" height="480" loading="lazy" decoding="async">
                                                 </figure>
                                             </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
                                             <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
                                                 <div class="menu-item-title">
-                                                    <h3>Cà phê robusta xay</h3>
+                                                    <h3>Bơ sáp theo mùa</h3>
                                                     <hr>
-                                                    <span>$16.00</span>
+                                                    <span>160.000đ</span>
                                                 </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
                                                 <div class="menu-item-content">
-                                                    <p>Bột xay mịn vừa, giữ mùi thơm tự nhiên, tiện lợi cho người bận rộn nhưng vẫn muốn uống cà phê ngon.</p>
+                                                    <p>Thu hoạch tại Gia Lai và Tây Nguyên, cơm vàng, béo thanh, không xơ.</p>
                                                 </div>
-                                                <!-- Our Menu Item End -->
-                                                <!-- Menu Item Content End -->
                                             </div>
-                                            <!-- Menu Item Body End -->
                                         </div>
-                                        <!-- Our Menu Item End -->
-                                        
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-3.png') }}" alt="Signature menu item 3">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Hạt mắc ca sấy</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Hat mac ca beo bui, giau dinh duong, thich hop an vat lanh manh cho ca nha.</p>
-                                                </div>
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        <!-- Our Menu Item End -->
-
-                                        <!-- Our Menu Item Start -->
-                                        <div class="menu-list-item">
-                                            <!-- Our Menu Image Start -->
-                                            <div class="menu-list-image">
-                                                <figure>
-                                                    <img src="{{ asset('rosta/images/pricing-menu-4.png') }}" alt="Signature menu item 4">
-                                                </figure>
-                                            </div>
-                                            <!-- Our Menu Image End -->
-        
-                                            <!-- Menu Item Body Start -->
-                                            <div class="menu-item-body">
-                                                <!-- Menu Item Title Start -->
-                                                <div class="menu-item-title">
-                                                    <h3>Tiêu đen hữu cơ</h3>
-                                                    <hr>
-                                                    <span>$16.00</span>
-                                                </div>
-                                                <!-- Menu Item Title End -->
-        
-                                                <!-- Menu Item Content Start -->
-                                                <div class="menu-item-content">
-                                                    <p>Tieu den hat chac, mui thom nong tu nhien, giup mon an dam da va tron vi hon.</p>
-                                                </div>
-                                                <!-- Menu Item Content End -->
-                                            </div>
-                                            <!-- Menu Item Body End -->
-                                        </div>
-                                        <!-- Our Menu Item End -->
                                     </div>
-                                    <!-- Our Menu List End -->
                                 </div>
                             </div>
                         </div>
                         <!-- Pricing Boxes End -->
+
+                        <div class="pricing-boxes tab-pane fade" id="durian" role="tabpanel">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <div class="pricing-image">
+                                        <figure class="image-anime">
+                                            <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/durian.webp') }}" alt="Sầu riêng múi vàng Tây Nguyên" width="1100" height="1554" loading="lazy" decoding="async">
+                                        </figure>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="our-menu-list">
+                                        <div class="menu-list-item">
+                                            <div class="menu-list-image">
+                                                <figure>
+                                                    <img src="{{ asset('rosta/images/produce/thumb-durian.webp') }}" alt="Sầu riêng múi vàng" width="480" height="480" loading="lazy" decoding="async">
+                                                </figure>
+                                            </div>
+                                            <div class="menu-item-body">
+                                                <div class="menu-item-title">
+                                                    <h3>Sầu riêng</h3>
+                                                    <hr>
+                                                    <span>160.000đ</span>
+                                                </div>
+                                                <div class="menu-item-content">
+                                                    <p>Sầu riêng thơm đậm, múi vàng dẻo và ngọt béo, phù hợp cho khách yêu thích trái cây đặc sản.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="section-footer-text wow fadeInUp" data-wow-delay="0.2s">
                             <p>Bạn đang tìm nông sản sạch? <a href="{{ route('book-table') }}">Liên hệ đặt hàng ngay!</a></p>
@@ -1104,9 +863,7 @@
                 <!-- Interactive Process Image Start -->
                 <div class="interactive-process-list-image video-split">
                     <div class="interactive-process-image img-0 show">
-                        <video autoplay loop muted playsinline preload="none" poster="https://product.onyxcontent.com/media/pages/ecom/home/487e8943b1-1749499406/cover-new.webp">
-                            <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/224fcadae6-1749498876/new.mp4">
-                        </video>
+                        <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/highland-coffee.webp') }}" alt="Vườn cà phê Chư Sê - Gia Lai" width="1400" height="662" loading="lazy" decoding="async">
                         <div class="interactive-process-caption">
                             <h3>Chư Sê - Gia Lai</h3>
                             <p>Vùng đất nổi tiếng với cà phê robusta hạt chắc, hương đậm và hậu vị rõ nét, rất được yêu thích tại Việt Nam.</p>
@@ -1114,9 +871,7 @@
                         </div>
                     </div>
                     <div class="interactive-process-image img-1">
-                        <video autoplay loop muted playsinline preload="none" poster="https://product.onyxcontent.com/media/pages/ecom/home/f3c96161a3-1774303240/honduras-cover.webp">
-                            <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/4108535e73-1774303284/honduras-fill.mp4">
-                        </video>
+                        <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/macadamia.webp') }}" alt="Hạt mắc ca Tây Nguyên" width="800" height="800" loading="lazy" decoding="async">
                         <div class="interactive-process-caption">
                             <h3>Mắc ca Tây Nguyên</h3>
                             <p>Hạt mắc ca được chọn lọc, béo bùi tự nhiên, thích hợp ăn trực tiếp hoặc kết hợp trong các khẩu phần dinh dưỡng.</p>
@@ -1124,19 +879,20 @@
                         </div>
                     </div>
                     <div class="interactive-process-image img-2">
-                        <video autoplay loop muted playsinline preload="none" poster="https://product.onyxcontent.com/media/pages/ecom/home/851e06e9d6-1763745870/colombia-cover-2.webp">
-                            <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/cb45055b2c-1763745691/colombia-10.mp4">
-                        </video>
+                        <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/avocado.webp') }}" alt="Bơ sáp Tây Nguyên" width="1200" height="799" loading="lazy" decoding="async">
                         <div class="interactive-process-caption">
-                            <h3>Tiêu và Bơ</h3>
-                            <p>Tiêu đen hữu cơ cay thơm tự nhiên và bơ sáp dẻo ngon là bộ đôi nông sản được khách hàng đặt mua nhiều.</p>
-                            <a href="{{ route('services') }}">Xem tiêu và bơ →</a>
+                            <h3>Bơ sáp Tây Nguyên</h3>
+                            <p>Bơ sáp dẻo, cơm vàng, vị béo thanh. Thu hoạch theo mùa tại Gia Lai và các tỉnh Tây Nguyên.</p>
+                            <a href="{{ route('services') }}">Xem bơ sáp →</a>
                         </div>
                     </div>
                     <div class="interactive-process-image img-3">
-                        <video autoplay loop muted playsinline preload="none" poster="https://product.onyxcontent.com/media/pages/ecom/home/487e8943b1-1749499406/cover-new.webp">
-                            <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/224fcadae6-1749498876/new.mp4">
-                        </video>
+                        <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/peppercorns.webp') }}" alt="Tiêu đen hạt chắc Tây Nguyên" width="900" height="900" loading="lazy" decoding="async">
+                        <div class="interactive-process-caption">
+                            <h3>Tiêu đen Gia Lai</h3>
+                            <p>Tiêu hạt chắc, cay nồng tự nhiên, phơi khô theo cách truyền thống của nhà vườn Tây Nguyên.</p>
+                            <a href="{{ route('services') }}">Xem tiêu đen →</a>
+                        </div>
                     </div>
                 </div>
                 <!-- Interactive Process Image End -->
@@ -1225,7 +981,7 @@
                         <!-- Offer Image Start -->
                         <div class="offer-image">
                             <figure class="image-anime">
-                                <img src="{{ asset('rosta/images/offer-image.jpg') }}" alt="Special offer at Rosta">
+                                <img src="{{ asset('rosta/images/produce/phin-coffee.webp') }}" alt="Pha cà phê phin Tây Nguyên" width="1200" height="796" loading="lazy" decoding="async">
                             </figure>
                         </div>
                         <!-- Offer Image End -->
@@ -1233,7 +989,7 @@
                         <!-- Offer Circle Image 1 Start -->
                         <div class="offer-circle-image-1">
                             <figure class="image-anime">
-                                <img src="{{ asset('rosta/images/offer-circle-image-1.jpg') }}" alt="Special offer detail image">
+                                <img src="{{ asset('rosta/images/produce/macadamia-hand.webp') }}" alt="Hạt mắc ca trên tay" width="1000" height="1333" loading="lazy" decoding="async">
                             </figure>
                         </div>  
                         <!-- Offer Circle Image 1 End -->
@@ -1241,7 +997,7 @@
                         <!-- Offer Circle Image 2 Start -->
                         <div class="offer-circle-image-2">
                             <figure class="image-anime">
-                                <img src="{{ asset('rosta/images/offer-circle-image-2.jpg') }}" alt="Special offer detail image">
+                                <img src="{{ asset('rosta/images/produce/avocado.webp') }}" alt="Bơ sáp Tây Nguyên" width="1200" height="799" loading="lazy" decoding="async">
                             </figure>
                         </div>
                         <!-- Offer Circle Image 2 End -->
@@ -1258,9 +1014,7 @@
             <div class="a-split">
                 <div class="background">
                     <div class="blur"></div>
-                    <video autoplay preload="none" id="video_block_9c49ebdd-6f92-4425-88c1-54a3cf5cf4d9" play-on-visible="" loop="" muted="" playsinline="" poster="https://product.onyxcontent.com/media/pages/ecom/home/e70fe566a3-1737134861/subscription-cover.webp" class="visible">
-                        <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/a247c39541-1736883966/subscribe.mp4">
-                    </video>
+                    <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/coffee-cherries.webp') }}" alt="Cà phê chín trên cây Chư Sê Gia Lai" width="1021" height="642" loading="lazy" decoding="async">
                 </div>
                 <div class="text">
                     <h2>Khám phá</h2>
@@ -1272,9 +1026,7 @@
             <div class="a-split">
                 <div class="background">
                     <div class="blur"></div>
-                    <video autoplay preload="none" id="video_block_9c49ebdd-6f92-4425-88c1-54a3cf5cf4d9" play-on-visible="" loop="" muted="" playsinline="" poster="https://product.onyxcontent.com/media/pages/ecom/home/d800b359f8-1736877618/wholesale-cover-image.webp" class="visible">
-                        <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/b823d0ebf9-1736877524/wholesale-video.mp4">
-                    </video>
+                    <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/phin-coffee.webp') }}" alt="Pha cà phê phin tại Tây Nguyên" width="1200" height="796" loading="lazy" decoding="async">
                 </div>
                 <div class="text">
                     <h2>phát huy</h2>
@@ -1349,18 +1101,16 @@
         <div class="container">
             <div class="text">
                 <div class="inner">
-                    <h2 class="blinds-text">cafe<br>expressions</h2>
+                    <h2 class="blinds-text">nông sản<br>Tây Nguyên</h2>
                     <div>
-                        <p>Trong suốt năm năm qua, chúng tôi đã phát triển dòng thức uống hoàn thiện được tuyển chọn kỹ lưỡng, tạo nên với cùng sự chỉn chu, chính xác và tiêu chuẩn đã làm nên tên tuổi quán cà phê đạt nhiều giải thưởng của Onyx.</p>
-                        <p>Tìm hiểu thêm về chương trình mới bằng cách nhấp vào liên kết bên dưới.</p>
+                        <p>Tiệm Nhà Duy chọn lọc cà phê robusta Gia Lai, mắc ca, tiêu đen, bơ sáp và sầu riêng theo mùa vụ. Mỗi sản phẩm giữ hương vị thật của vùng cao nguyên.</p>
+                        <p>Xem danh mục và đặt hàng trực tiếp, không qua trung gian.</p>
                     </div>
-                    <a class="button" href="https://onyxcoffeelab.com/products/cafe-expressions">Tìm hiểu thêm về Cafe Expressions</a>
+                    <a class="button" href="{{ route('services') }}">Xem nông sản Tây Nguyên</a>
                 </div>
             </div>
             <div class="media">
-                <video preload="none" id="video_block_2ad2bed3-6bd5-4aee-a1e3-589e3fd4b7ff" autoplay loop muted playsinline poster="https://product.onyxcontent.com/media/pages/ecom/home/6dffbb1657-1776363338/expressions-cover.webp" class="visible">
-                    <source type="video/mp4" src="https://product.onyxcontent.com/media/pages/ecom/home/42525f65da-1776363220/insta_square.mp4">
-                </video>
+                <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/durian.webp') }}" alt="Sầu riêng múi vàng đặc sản" width="1100" height="1554" loading="lazy" decoding="async">
             </div>
         </div>
     </div>

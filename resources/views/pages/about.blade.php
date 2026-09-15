@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-lg-6">
                     <figure class="image-anime">
-                        <img src="{{ asset('rosta/images/our-story-image.jpg') }}" alt="Our story">
+                        <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/phin-coffee.webp') }}" alt="Pha cà phê phin Tây Nguyên" width="1200" height="796" loading="lazy" decoding="async">
                     </figure>
                 </div>
             </div>

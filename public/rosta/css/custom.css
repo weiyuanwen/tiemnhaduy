@@ -576,6 +576,24 @@ body:not(.onyx-theme) .navbar-brand svg #anim path{
 }
 
 @font-face{
+	font-family: 'Forum';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../webfonts/forum-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face{
+	font-family: 'Forum';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../webfonts/forum-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face{
 	font-family: 'Bajern';
 	font-style: normal;
 	font-weight: 400;
@@ -1174,9 +1192,9 @@ body{
 
 .loading-container,
 .loading{
-	height: 120px;
+	height: 240px;
 	position: relative;
-	width: 120px;
+	width: 240px;
 	border-radius: 100%;
 }
 
@@ -1200,7 +1218,8 @@ body{
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	max-width: 90px;
+	width: 240px;
+	max-width: 240px;
 	transform: translate(-50%, -50%);
 }
 
@@ -1962,6 +1981,11 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 	z-index: 1;
 }
 
+.hero.hero-video{
+	background-image: none;
+	background-color: var(--secondary-color);
+}
+
 .hero.hero-video .hero-bg-video{
 	position: absolute;
 	top: 0;
@@ -1988,7 +2012,9 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 	object-fit: cover;
 }
 
-.hero.hero-video .background video{
+.hero.hero-video .background video,
+.hero.hero-video .background img,
+.hero.hero-video .background picture{
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -2505,7 +2531,7 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 .intro-video{
 	position: relative;
 	padding: 200px 0 100px;
-	background-image: url('../images/intro-video-bg.jpg');
+	background-image: url('../images/produce/highland-coffee.webp');
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: cover;
@@ -2930,7 +2956,8 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
     transition: all .7s ease
 }
 
-.interactive-process-layout .interactive-process-list-image .interactive-process-image video{
+.interactive-process-layout .interactive-process-list-image .interactive-process-image video,
+.interactive-process-layout .interactive-process-list-image .interactive-process-image img{
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -3344,7 +3371,7 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 .our-testimonials{
 	position: relative;
 	padding: 100px 0;
-	background: url('../images/testimonial-bg.jpg') no-repeat;
+	background: url('../images/produce/highland-coffee.webp') no-repeat;
 	background-position: center center;
 	background-size: cover;
 }
@@ -3814,7 +3841,7 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 
 .page-header{
 	position: relative;
-	background-image: url('../images/page-header-bg.jpg');
+	background-image: url('../images/produce/highland-coffee.webp');
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: cover;
@@ -7194,7 +7221,8 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 		min-height: 280px;
 	}
 
-	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image video{
+	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image video,
+	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image img{
 		height: 100%;
 	}
 
@@ -7644,7 +7672,8 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 		max-height: none;
 	}
 
-	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image video{
+	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image video,
+	.interactive-process-layout .interactive-process-list-image.video-split .interactive-process-image img{
 		height: 100%;
 		object-fit: cover;
 	}
@@ -7709,5 +7738,47 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 	.onyx-theme .hero.hero-video{
 		margin-top: 0 !important;
 		padding-top: 170px;
+	}
+}
+
+.hero.hero-video .background picture{
+	position: absolute;
+	inset: 0;
+	display: block;
+}
+
+.hero.hero-video .background img{
+	position: absolute;
+	inset: 0;
+}
+
+.media-kenburns-img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	animation: media-kenburns 22s ease-in-out infinite alternate;
+	will-change: transform;
+}
+
+.image-anime .media-kenburns-img{
+	display: block;
+	min-height: 280px;
+}
+
+.textSplit .media .media-kenburns-img{
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@keyframes media-kenburns{
+	from{ transform: scale(1) translate3d(0,0,0); }
+	to{ transform: scale(1.1) translate3d(-1.2%, -0.8%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+	.media-kenburns-img{
+		animation: none;
 	}
 }
