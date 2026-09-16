@@ -368,6 +368,216 @@
                 transform: rotate(360deg);
             }
         }
+        .pay-success-dialog {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            max-width: none;
+            max-height: none;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .pay-success-dialog[open] {
+            display: grid;
+            place-items: center;
+        }
+        .pay-success-dialog::backdrop {
+            background: rgba(16, 18, 22, 0.48);
+            backdrop-filter: blur(6px);
+        }
+        .pay-success-confetti {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .pay-success-card {
+            position: relative;
+            z-index: 2;
+            width: min(92vw, 420px);
+            padding: 22px 22px 24px;
+            background: #fff;
+            border-radius: 28px;
+            box-shadow: 0 28px 64px rgba(16, 18, 22, 0.22);
+            text-align: center;
+        }
+        .pay-success-kicker {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f6b4a;
+        }
+        .pay-success-rule {
+            height: 1px;
+            background: #ececec;
+            margin: 0 0 28px;
+        }
+        .pay-success-mark {
+            position: relative;
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 22px;
+        }
+        .pay-success-burst {
+            position: absolute;
+            inset: -18px;
+            pointer-events: none;
+        }
+        .pay-success-burst span {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 8px;
+            height: 8px;
+            margin: -4px 0 0 -4px;
+            border-radius: 2px;
+            background: var(--dot, #f59e0b);
+            transform: rotate(var(--rot, 0deg)) translateY(-52px);
+            animation: payBurst 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .pay-success-check {
+            position: relative;
+            z-index: 1;
+            width: 88px;
+            height: 88px;
+            margin: 12px auto 0;
+            border-radius: 50%;
+            background: #22c55e;
+            color: #fff;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 14px 28px rgba(34, 197, 94, 0.32);
+            animation: payPop 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .pay-success-check svg {
+            width: 42px;
+            height: 42px;
+        }
+        .pay-success-title {
+            margin: 0 0 16px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.35;
+            text-wrap: balance;
+        }
+        .pay-success-code {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 48px;
+            padding: 10px 12px 10px 14px;
+            margin: 0 0 10px;
+            background: #f3f4f6;
+            border-radius: 14px;
+            text-align: left;
+        }
+        .pay-success-code span {
+            flex: 1;
+            min-width: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            letter-spacing: 0.04em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .pay-success-copy {
+            flex: none;
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 10px;
+            background: #e8eaed;
+            color: #16a34a;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+        .pay-success-copy:hover,
+        .pay-success-copy:focus-visible {
+            background: #dcefe3;
+            outline: none;
+        }
+        .pay-success-copy svg {
+            width: 18px;
+            height: 18px;
+        }
+        .pay-success-hint {
+            margin: 0 0 18px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .pay-success-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .pay-success-primary {
+            appearance: none;
+            border: 0;
+            border-radius: 999px;
+            min-height: 48px;
+            padding: 12px 18px;
+            background: #16a34a;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .pay-success-primary:hover,
+        .pay-success-primary:focus-visible {
+            background: #15803d;
+            outline: none;
+        }
+        .pay-success-ghost {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            min-height: 40px;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .pay-success-ghost:hover,
+        .pay-success-ghost:focus-visible {
+            color: #111;
+            outline: none;
+        }
+        @keyframes payPop {
+            from {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes payBurst {
+            from {
+                opacity: 0;
+                transform: rotate(var(--rot, 0deg)) translateY(-18px) scale(0.4);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(var(--rot, 0deg)) translateY(-52px) scale(1);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pay-success-check,
+            .pay-success-burst span {
+                animation: none;
+            }
+        }
     </style>
     <div id="MainContent" tabindex="-1">
         <main data-header-color="dark">
@@ -440,6 +650,47 @@
             </div>
         </main>
     </div>
+    <dialog id="paymentSuccessDialog" class="pay-success-dialog" aria-labelledby="paySuccessTitle">
+        <canvas id="paySuccessConfetti" class="pay-success-confetti" aria-hidden="true"></canvas>
+        <div class="pay-success-card">
+            <p class="pay-success-kicker">Thành công</p>
+            <div class="pay-success-rule"></div>
+            <div class="pay-success-mark" aria-hidden="true">
+                <span class="pay-success-burst">
+                    <span style="--rot: 12deg; --dot: #f59e0b;"></span>
+                    <span style="--rot: 48deg; --dot: #38bdf8;"></span>
+                    <span style="--rot: 84deg; --dot: #f472b6;"></span>
+                    <span style="--rot: 122deg; --dot: #22c55e;"></span>
+                    <span style="--rot: 158deg; --dot: #a78bfa;"></span>
+                    <span style="--rot: 198deg; --dot: #fb7185;"></span>
+                    <span style="--rot: 236deg; --dot: #facc15;"></span>
+                    <span style="--rot: 274deg; --dot: #2dd4bf;"></span>
+                    <span style="--rot: 312deg; --dot: #60a5fa;"></span>
+                    <span style="--rot: 348deg; --dot: #f97316;"></span>
+                </span>
+                <span class="pay-success-check">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M5 12.5l4.2 4.2L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+            </div>
+            <h2 class="pay-success-title" id="paySuccessTitle">Thanh toán thành công</h2>
+            <div class="pay-success-code">
+                <span id="paySuccessCode"></span>
+                <button type="button" class="pay-success-copy" id="paySuccessCopyBtn" aria-label="Sao chép mã đơn">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="8" y="8" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="pay-success-hint">Đơn đã được xác nhận. Bạn có thể tạo QR khác khi cần.</p>
+            <div class="pay-success-actions">
+                <button type="button" class="pay-success-primary" id="paySuccessRefreshBtn">Làm mới QR</button>
+                <button type="button" class="pay-success-ghost" id="paySuccessCloseBtn">Đóng</button>
+            </div>
+        </div>
+    </dialog>
     @if (file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
         @vite(['resources/js/app.js'])
     @endif
@@ -462,6 +713,12 @@
             var copyTransferCodeBtn = document.getElementById("copyTransferCodeBtn");
             var copySuccessTooltip = document.getElementById("copySuccessTooltip");
             var expiryCountdownValue = document.getElementById("expiryCountdownValue");
+            var paymentSuccessDialog = document.getElementById("paymentSuccessDialog");
+            var paySuccessCode = document.getElementById("paySuccessCode");
+            var paySuccessCopyBtn = document.getElementById("paySuccessCopyBtn");
+            var paySuccessRefreshBtn = document.getElementById("paySuccessRefreshBtn");
+            var paySuccessCloseBtn = document.getElementById("paySuccessCloseBtn");
+            var paySuccessConfetti = document.getElementById("paySuccessConfetti");
             var pollTimer = null;
             var countdownTimer = null;
             var copyTooltipTimer = null;
@@ -471,6 +728,127 @@
             var orderSettled = false;
             var echoChannel = null;
             var creatingOrder = false;
+            var confettiRaf = 0;
+
+            function stopCelebration() {
+                if (confettiRaf) {
+                    cancelAnimationFrame(confettiRaf);
+                    confettiRaf = 0;
+                }
+                if (paySuccessConfetti) {
+                    var ctx = paySuccessConfetti.getContext("2d");
+                    if (ctx) {
+                        ctx.clearRect(0, 0, paySuccessConfetti.width, paySuccessConfetti.height);
+                    }
+                }
+            }
+
+            function launchCelebration() {
+                stopCelebration();
+                if (!paySuccessConfetti || !paySuccessConfetti.getContext) {
+                    return;
+                }
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    return;
+                }
+                var canvas = paySuccessConfetti;
+                var ctx = canvas.getContext("2d");
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                var width = window.innerWidth;
+                var height = window.innerHeight;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                canvas.style.width = width + "px";
+                canvas.style.height = height + "px";
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                var colors = ["#22c55e", "#f59e0b", "#f472b6", "#38bdf8", "#a78bfa", "#fb7185", "#facc15", "#2dd4bf"];
+                var originX = width / 2;
+                var originY = Math.max(140, height / 2 - 90);
+                var pieces = [];
+                var i;
+                for (i = 0; i < 150; i += 1) {
+                    var angle = ((Math.PI * 2) * i) / 150 + Math.random() * 0.25;
+                    var speed = 3.4 + Math.random() * 8.5;
+                    pieces.push({
+                        x: originX,
+                        y: originY,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed - 3.2,
+                        g: 0.12 + Math.random() * 0.08,
+                        w: 5 + Math.random() * 7,
+                        h: 7 + Math.random() * 8,
+                        rot: Math.random() * Math.PI,
+                        vr: (Math.random() - 0.5) * 0.28,
+                        color: colors[i % colors.length],
+                        shape: i % 3
+                    });
+                }
+                var start = performance.now();
+                function frame(now) {
+                    var elapsed = (now - start) / 1000;
+                    ctx.clearRect(0, 0, width, height);
+                    var alive = false;
+                    for (i = 0; i < pieces.length; i += 1) {
+                        var p = pieces[i];
+                        p.vy += p.g;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vx *= 0.991;
+                        p.rot += p.vr;
+                        var life = Math.max(0, 1 - elapsed / 2.15);
+                        if (life <= 0 || p.y > height + 40) {
+                            continue;
+                        }
+                        alive = true;
+                        ctx.save();
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(p.rot);
+                        ctx.globalAlpha = life;
+                        ctx.fillStyle = p.color;
+                        if (p.shape === 0) {
+                            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                        } else if (p.shape === 1) {
+                            ctx.beginPath();
+                            ctx.arc(0, 0, p.w / 2.2, 0, Math.PI * 2);
+                            ctx.fill();
+                        } else {
+                            ctx.beginPath();
+                            ctx.moveTo(0, -p.h / 2);
+                            ctx.lineTo(p.w / 2, p.h / 2);
+                            ctx.lineTo(-p.w / 2, p.h / 2);
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                        ctx.restore();
+                    }
+                    if (alive && elapsed < 2.3) {
+                        confettiRaf = requestAnimationFrame(frame);
+                    } else {
+                        ctx.clearRect(0, 0, width, height);
+                        confettiRaf = 0;
+                    }
+                }
+                confettiRaf = requestAnimationFrame(frame);
+            }
+
+            function closeSuccessModal() {
+                stopCelebration();
+                if (paymentSuccessDialog && paymentSuccessDialog.open) {
+                    paymentSuccessDialog.close();
+                }
+            }
+
+            function showSuccessModal(code) {
+                if (!paymentSuccessDialog) {
+                    return;
+                }
+                paySuccessCode.textContent = code || latestTransferCode;
+                if (!paymentSuccessDialog.open) {
+                    paymentSuccessDialog.showModal();
+                }
+                launchCelebration();
+                paySuccessRefreshBtn.focus();
+            }
 
             function pad(num) {
                 return num < 10 ? "0" + num : String(num);
@@ -555,7 +933,9 @@
                 if (kind === "paid") {
                     qrStatusBadge.classList.add("is-paid");
                     qrStatusBadge.textContent = "Đã thanh toán";
-                    setMessage("Thanh toán thành công. Bấm Làm mới để tạo QR khác.", false);
+                    paymentMessage.className = "";
+                    paymentMessage.textContent = "";
+                    showSuccessModal(latestTransferCode);
                 } else {
                     qrStatusBadge.classList.add("is-expired");
                     qrStatusBadge.textContent = "Hết hạn";
@@ -640,6 +1020,7 @@
 
             function renderOrder(data) {
                 orderSettled = false;
+                closeSuccessModal();
                 latestTransferCode = data.transfer_content || data.order_code;
                 currentExpiresAt = new Date(data.expires_at);
                 qrBox.classList.remove("is-stale");
@@ -714,7 +1095,47 @@
             });
 
             refreshQrBtn.addEventListener("click", async function () {
+                closeSuccessModal();
                 await createOrder();
+            });
+
+            paySuccessRefreshBtn.addEventListener("click", async function () {
+                closeSuccessModal();
+                await createOrder();
+            });
+
+            paySuccessCloseBtn.addEventListener("click", function () {
+                closeSuccessModal();
+            });
+
+            paySuccessCopyBtn.addEventListener("click", async function () {
+                var code = paySuccessCode.textContent;
+                if (!code) {
+                    return;
+                }
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(code);
+                    } else {
+                        var hiddenInput = document.createElement("input");
+                        hiddenInput.value = code;
+                        document.body.appendChild(hiddenInput);
+                        hiddenInput.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(hiddenInput);
+                    }
+                    showCopyTooltip();
+                } catch (error) {}
+            });
+
+            paymentSuccessDialog.addEventListener("click", function (event) {
+                if (event.target === paymentSuccessDialog) {
+                    closeSuccessModal();
+                }
+            });
+
+            paymentSuccessDialog.addEventListener("close", function () {
+                stopCelebration();
             });
 
             copyTransferCodeBtn.addEventListener("click", async function () {
