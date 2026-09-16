@@ -89,4 +89,13 @@ return [
         'topic_id' => env('TELEGRAM_PAYMENT_TOPIC_ID'),
     ],
 
+    'facebook' => [
+        'lookup_http' => filter_var(env('FACEBOOK_LOOKUP_HTTP', true), FILTER_VALIDATE_BOOL),
+        'lookup_timeout' => (int) env('FACEBOOK_LOOKUP_TIMEOUT', 8),
+        'approver_url' => env('FB_APPROVER_URL'),
+        'approver_token' => env('FB_APPROVER_TOKEN'),
+        'approver_timeout' => (int) env('FB_APPROVER_TIMEOUT', 90),
+        'group_id' => env('FB_GROUP_ID', '782860725537921'),
+    ],
+
 ];

@@ -47,6 +47,7 @@ class OrderApiTest extends TestCase
         $this->assertDatabaseHas('service_orders', [
             'service_id' => $service->id,
             'facebook_profile_link' => 'https://facebook.com/testuser',
+            'facebook_name' => 'testuser',
             'status' => ServiceOrder::STATUS_PENDING,
         ]);
 

@@ -35,5 +35,6 @@
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="HISTBANK_INTERNAL_TOKEN" value="test-internal-token"/>
         <env name="HISTBANK_URL" value="http://histbank.test"/>
+        <env name="FACEBOOK_LOOKUP_HTTP" value="false" force="true"/>
     </php>
 </phpunit>

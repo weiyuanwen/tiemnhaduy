@@ -25,18 +25,22 @@ class OrderService
 
     private VietQrService $vietQrService;
 
+    private FacebookProfileLookup $facebookLookup;
+
     public function __construct(
         ExternalServiceApi $externalServiceApi,
         DeviceTrackingService $deviceTrackingService,
         ServiceOrderRepositoryInterface $repository,
         WebPushTestService $webPushTestService,
-        VietQrService $vietQrService
+        VietQrService $vietQrService,
+        FacebookProfileLookup $facebookLookup
     ) {
         $this->externalServiceApi = $externalServiceApi;
         $this->deviceTrackingService = $deviceTrackingService;
         $this->repository = $repository;
         $this->webPushTestService = $webPushTestService;
         $this->vietQrService = $vietQrService;
+        $this->facebookLookup = $facebookLookup;
     }
 
     public function createOrder(
@@ -91,8 +95,9 @@ class OrderService
         }
 
         $amount = $serviceData['price'];
+        $facebook = $this->facebookLookup->resolve($facebookProfileLink);
 
-        return DB::transaction(function () use ($request, $serviceData, $localServiceId, $amount, $facebookProfileLink, $userId) {
+        return DB::transaction(function () use ($request, $serviceData, $localServiceId, $amount, $facebookProfileLink, $facebook, $userId) {
             $this->cleanupExpiredPendingOrders();
 
             $deviceFingerprint = $this->deviceTrackingService->generateFingerprint($request);
@@ -103,6 +108,8 @@ class OrderService
                 'status' => ServiceOrder::STATUS_PENDING,
                 'expires_at' => now()->addMinutes((int) config('services.payment.window_minutes', 12)),
                 'facebook_profile_link' => $facebookProfileLink,
+                'facebook_name' => $facebook['name'],
+                'facebook_id' => $facebook['id'],
                 'customer_email' => $request->input('email'),
                 'device_fingerprint' => $deviceFingerprint,
                 'ip_address' => $request->ip(),
@@ -134,6 +141,9 @@ class OrderService
                     'transfer_content' => $order->order_code,
                     'qr_image_url' => $this->vietQrService->imageUrl($order->order_code, (int) $order->amount),
                     'status' => $order->status,
+                    'facebook_profile_link' => $order->facebook_profile_link,
+                    'facebook_name' => $order->facebook_name,
+                    'facebook_id' => $order->facebook_id,
                     'service' => [
                         'id' => $serviceData['id'],
                         'name' => $serviceData['name'],

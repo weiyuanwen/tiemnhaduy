@@ -49,8 +49,8 @@ class VietQrOrderCreateTest extends TestCase
             ->assertSee('/api/v1/orders', false)
             ->assertSee('refreshQrBtn', false)
             ->assertSee('is-stale', false)
-            ->assertSee('paymentSuccessDialog', false)
-            ->assertSee('Thanh toán thành công', false)
+            ->assertSee('facebookPayerName', false)
+            ->assertSee('Thông tin thanh toán', false)
             ->assertDontSee('buildQrUrl', false)
             ->assertDontSee('generateTransferCode', false);
     }

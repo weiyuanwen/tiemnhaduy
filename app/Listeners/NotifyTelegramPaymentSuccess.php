@@ -35,6 +35,10 @@ class NotifyTelegramPaymentSuccess
             'Tiệm Nhà Duy: thanh toán thành công',
             'Mã: '.$order->order_code,
             'Số tiền: '.number_format((int) $order->amount).' VND',
+            'Facebook: '.($order->facebook_name ?: '—'),
+            'ID: '.($order->facebook_id ?: '—'),
+            'URL: '.($order->facebook_profile_link ?: '—'),
+            'Đã tắt phê duyệt bài viết thành công cho Facebook của bạn.',
             $mailLine,
         ]));
     }

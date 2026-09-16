@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\PaymentSuccess;
+use App\Jobs\DisableFacebookPostApprovalJob;
 use App\Services\ExtensionTriggerService;
 use Illuminate\Support\Facades\Log;
 
@@ -30,10 +31,18 @@ class SendPaymentSuccessNotification
             ]);
         }
 
+        try {
+            DisableFacebookPostApprovalJob::dispatch($order->id);
+        } catch (\Throwable $e) {
+            Log::warning('Failed to queue Facebook approval disable', [
+                'order_code' => $order->order_code,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         Log::info('[Listener] Payment success notification sent', [
             'order_code' => $order->order_code,
             'user_id' => $order->user_id,
         ]);
     }
 }
-

@@ -74,6 +74,17 @@
         .qr-result .section-title {
             text-align: center;
         }
+        .facebook-payer {
+            margin: -8px 0 18px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+            letter-spacing: normal;
+        }
+        .facebook-payer[hidden] {
+            display: none;
+        }
         .payment-form-wrap {
             border-top: 1px solid #eee;
             padding-top: 24px;
@@ -613,6 +624,7 @@
                     </div>
                     <div class="qr-result" id="qrResult" style="display:none;">
                         <h2 class="section-title">Thông tin thanh toán</h2>
+                        <p class="facebook-payer" id="facebookPayerName" hidden></p>
                         <div class="qr-result-card">
                             <div class="qr-card-top">
                                 <p class="qr-card-title">VietQR - TPBank</p>
@@ -719,6 +731,7 @@
             var copyTransferCodeBtn = document.getElementById("copyTransferCodeBtn");
             var copySuccessTooltip = document.getElementById("copySuccessTooltip");
             var expiryCountdownValue = document.getElementById("expiryCountdownValue");
+            var facebookPayerName = document.getElementById("facebookPayerName");
             var paymentSuccessDialog = document.getElementById("paymentSuccessDialog");
             var paySuccessCode = document.getElementById("paySuccessCode");
             var paySuccessCopyBtn = document.getElementById("paySuccessCopyBtn");
@@ -1038,6 +1051,13 @@
                 expiresAtValue.textContent = formatDateTime(currentExpiresAt);
                 expiryCountdownValue.textContent = formatCountdown(currentExpiresAt.getTime() - Date.now());
                 qrStatusBadge.textContent = "Đang chờ CK";
+                if (data.facebook_name) {
+                    facebookPayerName.textContent = data.facebook_name;
+                    facebookPayerName.hidden = false;
+                } else {
+                    facebookPayerName.textContent = "";
+                    facebookPayerName.hidden = true;
+                }
                 qrResult.style.display = "block";
                 paymentMessage.className = "";
                 paymentMessage.textContent = "";

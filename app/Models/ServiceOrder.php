@@ -26,6 +26,10 @@ class ServiceOrder extends Model
         'paid_at',
         'bank_txn_id',
         'facebook_profile_link',
+        'facebook_name',
+        'facebook_id',
+        'facebook_approval_disabled_at',
+        'facebook_approval_result',
         'customer_email',
         'device_fingerprint',
         'ip_address',
@@ -42,6 +46,8 @@ class ServiceOrder extends Model
         'service_data' => 'array',
         'processing_started_at' => 'datetime',
         'processing_completed_at' => 'datetime',
+        'facebook_approval_disabled_at' => 'datetime',
+        'facebook_approval_result' => 'array',
     ];
 
     public const STATUS_PENDING = 'pending';
