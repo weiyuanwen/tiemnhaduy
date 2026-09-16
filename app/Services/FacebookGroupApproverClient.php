@@ -14,6 +14,21 @@ class FacebookGroupApproverClient
      */
     public function lookupProfile(string $profileUrl): array
     {
+        $result = $this->attemptLookup($profileUrl);
+        if (($result['ok'] ?? false) || ($result['skipped'] ?? false)) {
+            return $result;
+        }
+
+        usleep(1_200_000);
+
+        return $this->attemptLookup($profileUrl);
+    }
+
+    /**
+     * @return array{ok: bool, skipped?: bool, name?: string|null, id?: string|null, reason?: string, status?: int}
+     */
+    private function attemptLookup(string $profileUrl): array
+    {
         $base = rtrim((string) config('services.facebook.approver_url'), '/');
         if ($base === '') {
             return ['ok' => false, 'skipped' => true, 'reason' => 'approver_unconfigured'];

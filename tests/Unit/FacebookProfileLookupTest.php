@@ -63,4 +63,25 @@ class FacebookProfileLookupTest extends TestCase
         $this->assertSame('Thảo Phương Sarah Wedding', $profile['name']);
         $this->assertSame('100012345678901', $profile['id']);
     }
+
+    public function test_retries_group_inspect_after_a_failed_attempt(): void
+    {
+        config()->set('services.facebook.approver_url', 'http://approver.test');
+        config()->set('services.facebook.lookup_http', false);
+        Http::fake([
+            'http://approver.test/lookup-profile' => Http::sequence()
+                ->push(['ok' => false, 'reason' => 'unreachable'], 500)
+                ->push([
+                    'ok' => true,
+                    'uid' => '61571144631788',
+                    'name' => 'Trần Phượng (Gấu)',
+                ], 200),
+        ]);
+
+        $profile = app(FacebookProfileLookup::class)
+            ->resolve('https://web.facebook.com/nghi.inh.53471/');
+
+        $this->assertSame('Trần Phượng (Gấu)', $profile['name']);
+        $this->assertSame('61571144631788', $profile['id']);
+    }
 }
