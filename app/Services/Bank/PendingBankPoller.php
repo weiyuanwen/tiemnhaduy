@@ -24,7 +24,7 @@ class PendingBankPoller
     {
         $pending = ServiceOrder::query()
             ->where('status', ServiceOrder::STATUS_PENDING)
-            ->where('expires_at', '>', now())
+            ->where('created_at', '>=', now()->subHours(6))
             ->orderBy('created_at')
             ->get();
 
@@ -32,11 +32,10 @@ class PendingBankPoller
             return ['fetched' => false, 'matched' => 0, 'reason' => 'idle'];
         }
 
-        $newestAge = (int) Carbon::parse($pending->max('created_at'))->diffInSeconds(now());
-        $oldestAge = (int) Carbon::parse($pending->min('created_at'))->diffInSeconds(now());
+        $oldestAge = (int) Carbon::parse($pending->min('created_at'))->diffInSeconds(now(), true);
         $initial = (int) config('services.payment.initial_delay_seconds', 20);
 
-        if (! $force && $newestAge < $initial) {
+        if (! $force && $oldestAge < $initial) {
             return ['fetched' => false, 'matched' => 0, 'reason' => 'initial_delay'];
         }
 
@@ -48,7 +47,7 @@ class PendingBankPoller
             return ['fetched' => false, 'matched' => 0, 'reason' => 'backoff'];
         }
 
-        if (! $force && $last && now()->diffInSeconds(Carbon::parse($last)) < $delay) {
+        if (! $force && $last && Carbon::parse($last)->diffInSeconds(now(), true) < $delay) {
             return ['fetched' => false, 'matched' => 0, 'reason' => 'throttled'];
         }
 
@@ -69,7 +68,7 @@ class PendingBankPoller
         $matches = $this->matcher->match($result['transactions'], $pending);
         $paid = 0;
         foreach ($matches as $match) {
-            $confirm = $this->orders->confirmBankMatch($match['order']->order_code, $match['txId']);
+            $confirm = $this->orders->confirmBankMatch($match['order']->order_code, $match['txId'], true);
             if ($confirm['success']) {
                 $paid++;
             }

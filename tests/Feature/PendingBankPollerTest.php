@@ -77,4 +77,87 @@ class PendingBankPollerTest extends TestCase
         $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
         Event::assertDispatched(PaymentSuccess::class);
     }
+
+    public function test_fetches_again_after_throttle_window(): void
+    {
+        Cache::flush();
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+        Cache::put('histbank:last_poll_at', now()->subSeconds(30)->toIso8601String());
+
+        ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'expires_at' => now()->addMinutes(12),
+            'created_at' => now()->subMinutes(1),
+        ]);
+
+        Http::fake([
+            'http://histbank.test/transactions*' => Http::response([
+                'count' => 0,
+                'transactions' => [],
+            ], 200),
+        ]);
+
+        $result = app(PendingBankPoller::class)->run();
+        $this->assertTrue($result['fetched']);
+        $this->assertSame('ok', $result['reason']);
+        Http::assertSent(fn ($request) => str_contains($request->url(), '/transactions'));
+    }
+
+    public function test_throttles_when_last_poll_is_recent(): void
+    {
+        Cache::flush();
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+        Cache::put('histbank:last_poll_at', now()->subSeconds(5)->toIso8601String());
+
+        ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'expires_at' => now()->addMinutes(12),
+            'created_at' => now()->subMinutes(1),
+        ]);
+
+        Http::fake();
+        $result = app(PendingBankPoller::class)->run();
+        $this->assertFalse($result['fetched']);
+        $this->assertSame('throttled', $result['reason']);
+        Http::assertNothingSent();
+    }
+
+    public function test_matches_pending_order_after_expiry_window(): void
+    {
+        Event::fake([PaymentSuccess::class]);
+        Cache::flush();
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'expires_at' => now()->subMinutes(5),
+            'created_at' => now()->subMinutes(20),
+        ]);
+
+        Http::fake([
+            'http://histbank.test/transactions*' => Http::response([
+                'count' => 1,
+                'transactions' => [[
+                    'id' => 'tx-late-2',
+                    'description' => 'MBVCB.1.ABC.ORDFBABCDEFGH12.CT',
+                    'amount' => '100000',
+                    'creditDebitIndicator' => 'CRDT',
+                ]],
+            ], 200),
+        ]);
+
+        $result = app(PendingBankPoller::class)->run();
+        $this->assertTrue($result['fetched']);
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
+    }
 }
