@@ -15,8 +15,43 @@ class FacebookApprovalOnPaymentTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_create_order_looks_up_facebook_via_group_member_inspect(): void
+    {
+        config()->set('services.facebook.approver_url', 'http://approver.test');
+        config()->set('services.facebook.lookup_http', false);
+        Http::fake([
+            'http://approver.test/lookup-profile' => Http::response([
+                'ok' => true,
+                'uid' => '100012345678901',
+                'name' => 'Thảo Phương Sarah Wedding',
+                'reason' => 'ok',
+                'membership' => 'member',
+            ], 200),
+        ]);
+
+        $service = Service::factory()->create(['is_active' => true, 'price' => 100000]);
+        $response = $this->postJson('/api/v1/orders', [
+            'facebook_profile_link' => 'https://www.facebook.com/thaophuongsarahwedding',
+            'service_id' => $service->id,
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.facebook_name', 'Thảo Phương Sarah Wedding')
+            ->assertJsonPath('data.facebook_id', '100012345678901');
+        Http::assertSent(function ($request) {
+            return $request->url() === 'http://approver.test/lookup-profile'
+                && $request['url'] === 'https://www.facebook.com/thaophuongsarahwedding';
+        });
+        $this->assertDatabaseHas('service_orders', [
+            'facebook_profile_link' => 'https://www.facebook.com/thaophuongsarahwedding',
+            'facebook_name' => 'Thảo Phương Sarah Wedding',
+            'facebook_id' => '100012345678901',
+        ]);
+    }
+
     public function test_create_order_looks_up_facebook_name_from_html(): void
     {
+        config()->set('services.facebook.approver_url', '');
         config()->set('services.facebook.lookup_http', true);
         Http::fake([
             'facebook.com/*' => Http::response(

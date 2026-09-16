@@ -9,6 +9,10 @@ class FacebookProfileLookup
 {
     private const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
+    public function __construct(private FacebookGroupApproverClient $approver)
+    {
+    }
+
     /**
      * @return array{name: string|null, id: string|null, url: string}
      */
@@ -17,6 +21,15 @@ class FacebookProfileLookup
         $url = trim($profileUrl);
         $id = $this->idFromUrl($url);
         $name = $this->nameFromUrl($url);
+
+        $inspected = $this->approver->lookupProfile($url);
+        if (($inspected['ok'] ?? false) && ! ($inspected['skipped'] ?? false)) {
+            return [
+                'name' => $inspected['name'] ?: $name,
+                'id' => $inspected['id'] ?: $id,
+                'url' => $url,
+            ];
+        }
 
         if (! (bool) config('services.facebook.lookup_http', true)) {
             return ['name' => $name, 'id' => $id, 'url' => $url];

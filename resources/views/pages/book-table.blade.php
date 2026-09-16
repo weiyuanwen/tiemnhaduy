@@ -1051,8 +1051,15 @@
                 expiresAtValue.textContent = formatDateTime(currentExpiresAt);
                 expiryCountdownValue.textContent = formatCountdown(currentExpiresAt.getTime() - Date.now());
                 qrStatusBadge.textContent = "Đang chờ CK";
+                var payerBits = [];
                 if (data.facebook_name) {
-                    facebookPayerName.textContent = data.facebook_name;
+                    payerBits.push(data.facebook_name);
+                }
+                if (data.facebook_id) {
+                    payerBits.push("ID " + data.facebook_id);
+                }
+                if (payerBits.length) {
+                    facebookPayerName.textContent = payerBits.join(" · ");
                     facebookPayerName.hidden = false;
                 } else {
                     facebookPayerName.textContent = "";

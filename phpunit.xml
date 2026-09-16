@@ -36,5 +36,6 @@
         <env name="HISTBANK_INTERNAL_TOKEN" value="test-internal-token"/>
         <env name="HISTBANK_URL" value="http://histbank.test"/>
         <env name="FACEBOOK_LOOKUP_HTTP" value="false" force="true"/>
+        <env name="FB_APPROVER_URL" value="" force="true"/>
     </php>
 </phpunit>

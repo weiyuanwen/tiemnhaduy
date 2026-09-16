@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Services\FacebookProfileLookup;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class FacebookProfileLookupTest extends TestCase
@@ -24,8 +25,28 @@ class FacebookProfileLookupTest extends TestCase
     public function test_resolves_username_without_http_when_lookup_disabled(): void
     {
         config()->set('services.facebook.lookup_http', false);
+        config()->set('services.facebook.approver_url', '');
         $profile = app(FacebookProfileLookup::class)->resolve('https://facebook.com/testuser');
         $this->assertSame('testuser', $profile['name']);
         $this->assertNull($profile['id']);
+    }
+
+    public function test_resolves_name_and_id_from_group_member_inspect(): void
+    {
+        config()->set('services.facebook.approver_url', 'http://approver.test');
+        config()->set('services.facebook.lookup_http', false);
+        Http::fake([
+            'http://approver.test/lookup-profile' => Http::response([
+                'ok' => true,
+                'uid' => '100012345678901',
+                'name' => 'Thảo Phương Sarah Wedding',
+            ], 200),
+        ]);
+
+        $profile = app(FacebookProfileLookup::class)
+            ->resolve('https://www.facebook.com/thaophuongsarahwedding');
+
+        $this->assertSame('Thảo Phương Sarah Wedding', $profile['name']);
+        $this->assertSame('100012345678901', $profile['id']);
     }
 }

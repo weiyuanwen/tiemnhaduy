@@ -94,7 +94,7 @@ return [
         'lookup_timeout' => (int) env('FACEBOOK_LOOKUP_TIMEOUT', 8),
         'approver_url' => env('FB_APPROVER_URL'),
         'approver_token' => env('FB_APPROVER_TOKEN'),
-        'approver_timeout' => (int) env('FB_APPROVER_TIMEOUT', 90),
+        'approver_timeout' => (int) env('FB_APPROVER_TIMEOUT', 110),
         'group_id' => env('FB_GROUP_ID', '782860725537921'),
     ],
 
