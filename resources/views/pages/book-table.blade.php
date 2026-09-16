@@ -364,7 +364,7 @@
         }
         @media screen and (max-width: 800px) {
             #MainContent {
-                padding-top: 84px;
+                padding-top: 136px;
             }
             .text-only h1 {
                 font-size: clamp(22px, 6.2vw, 30px);
