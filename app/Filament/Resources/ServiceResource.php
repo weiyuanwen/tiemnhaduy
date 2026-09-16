@@ -37,7 +37,12 @@ class ServiceResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Service Management';
+        return 'Phí nhóm Facebook';
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Gói phí';
     }
 
     public static function form(Schema $schema): Schema
@@ -60,13 +65,12 @@ class ServiceResource extends Resource
                             ->helperText('Duration of the service in days'),
 
                         Forms\TextInput::make('price')
+                            ->label('Phí nhóm')
                             ->required()
                             ->numeric()
-                            ->minValue(0)
+                            ->minValue(1000)
                             ->prefix('VND')
-                            ->formatStateUsing(fn ($state) => $state / 100)
-                            ->dehydrateStateUsing(fn ($state) => $state * 100)
-                            ->helperText('Price in VND (enter in thousands, e.g., 100 for 100,000 VND)'),
+                            ->helperText('Nhập số tiền đầy đủ. Mặc định 150000 (150.000đ). Có thể đổi bất cứ lúc nào.'),
                     ])->columns(3),
 
                 Layout\Section::make('Status')

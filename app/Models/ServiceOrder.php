@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use NotificationChannels\WebPush\HasPushSubscriptions;
@@ -60,7 +61,7 @@ class ServiceOrder extends Model
      */
     public static function generateOrderCode(): string
     {
-        return 'ORD-' . strtoupper(Str::random(10));
+        return 'ORDFB' . strtoupper(Str::random(10));
     }
 
     /**
@@ -77,6 +78,11 @@ class ServiceOrder extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bankTransactions(): HasMany
+    {
+        return $this->hasMany(BankTransaction::class);
     }
 
     /**

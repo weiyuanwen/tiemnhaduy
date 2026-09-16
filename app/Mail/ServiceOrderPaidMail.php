@@ -30,7 +30,7 @@ class ServiceOrderPaidMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.service-order-paid',
+            html: 'mail.service-order-paid',
         );
     }
 }

@@ -18,6 +18,9 @@
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('meta_description', 'Tiệm Nhà Duy cung cấp nông sản sạch và đặc sản Tây Nguyên chất lượng cao.')))">
     <meta property="og:url" content="@yield('og_url', url()->current())">
     <meta property="og:image" content="@yield('og_image', asset('rosta/images/tiemnhaduy.svg'))">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'Tiệm Nhà Duy')">
+    <meta property="og:image:width" content="@yield('og_image_width', '1200')">
+    <meta property="og:image:height" content="@yield('og_image_height', '630')">
 
     <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')">
     <meta name="twitter:title" content="@yield('twitter_title', trim($__env->yieldContent('title', 'Tiệm Nhà Duy')))">

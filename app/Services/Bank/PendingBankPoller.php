@@ -68,7 +68,15 @@ class PendingBankPoller
         $matches = $this->matcher->match($result['transactions'], $pending);
         $paid = 0;
         foreach ($matches as $match) {
-            $confirm = $this->orders->confirmBankMatch($match['order']->order_code, $match['txId'], true);
+            $confirm = $this->orders->confirmBankMatch(
+                $match['order']->order_code,
+                $match['txId'],
+                true,
+                [
+                    'amount' => $match['amount'],
+                    'description' => $match['description'],
+                ]
+            );
             if ($confirm['success']) {
                 $paid++;
             }

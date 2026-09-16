@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\PaymentExpired;
 use App\Events\PaymentPending;
 use App\Events\PaymentSuccess;
+use App\Models\BankTransaction;
 use App\Models\Service;
 use App\Models\ServiceOrder;
 use App\Repositories\Interfaces\ServiceOrderRepositoryInterface;
@@ -154,10 +155,10 @@ class OrderService
         });
     }
 
-    public function confirmBankMatch(string $orderCode, string $bankTxnId, bool $allowExpired = false): array
+    public function confirmBankMatch(string $orderCode, string $bankTxnId, bool $allowExpired = false, ?array $bankMeta = null): array
     {
         try {
-            return DB::transaction(function () use ($orderCode, $bankTxnId, $allowExpired) {
+            return DB::transaction(function () use ($orderCode, $bankTxnId, $allowExpired, $bankMeta) {
                 $order = $this->findOrderByCodeWithLock($orderCode);
 
                 if (! $order) {
@@ -200,6 +201,8 @@ class OrderService
                     'paid_at' => now(),
                     'bank_txn_id' => $bankTxnId,
                 ]);
+
+                $this->recordBankTransaction($order, $bankTxnId, $bankMeta);
 
                 event(new PaymentSuccess($order));
 
@@ -266,10 +269,16 @@ class OrderService
                     ];
                 }
 
+                $txnId = 'TEST_' . Str::upper(Str::random(12));
                 $order->update([
                     'status' => ServiceOrder::STATUS_PAID,
                     'paid_at' => now(),
-                    'bank_txn_id' => 'TEST_' . Str::upper(Str::random(12)),
+                    'bank_txn_id' => $txnId,
+                ]);
+
+                $this->recordBankTransaction($order, $txnId, [
+                    'amount' => (int) $order->amount,
+                    'description' => 'Test mark paid',
                 ]);
 
                 event(new PaymentSuccess($order));
@@ -347,6 +356,19 @@ class OrderService
         event(new PaymentExpired($order));
 
         return true;
+    }
+
+    private function recordBankTransaction(ServiceOrder $order, string $bankTxnId, ?array $bankMeta = null): void
+    {
+        BankTransaction::query()->firstOrCreate(
+            ['bank_txn_id' => $bankTxnId],
+            [
+                'service_order_id' => $order->id,
+                'amount' => (int) ($bankMeta['amount'] ?? $order->amount),
+                'description' => isset($bankMeta['description']) ? (string) $bankMeta['description'] : null,
+                'matched_at' => now(),
+            ]
+        );
     }
 
     private function notifyPaidSafely(ServiceOrder $order): void

@@ -3,7 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceOrderResource\Pages;
+use App\Filament\Resources\ServiceOrderResource\RelationManagers;
 use App\Models\ServiceOrder;
+use App\Services\OrderService;
+use Filament\Notifications\Notification;
 use Filament\Forms\Components as Forms;
 use Filament\Schemas\Components as Layout;
 use Filament\Schemas\Schema;
@@ -37,12 +40,12 @@ class ServiceOrderResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Service Management';
+        return 'Phí nhóm Facebook';
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Service Orders';
+        return 'Người đã thanh toán';
     }
 
     public static function form(Schema $schema): Schema
@@ -69,6 +72,23 @@ class ServiceOrderResource extends Resource
                             ->url()
                             ->maxLength(500)
                             ->helperText('The Facebook profile URL for this order'),
+
+                        Forms\TextInput::make('facebook_name')
+                            ->label('Tên Facebook')
+                            ->maxLength(191),
+
+                        Forms\TextInput::make('facebook_id')
+                            ->label('ID Facebook')
+                            ->maxLength(64),
+
+                        Forms\TextInput::make('customer_email')
+                            ->label('Email')
+                            ->email()
+                            ->maxLength(255),
+
+                        Forms\TextInput::make('ip_address')
+                            ->label('IP')
+                            ->disabled(),
                     ])->columns(3),
 
                 Layout\Section::make('Payment Information')
@@ -78,9 +98,7 @@ class ServiceOrderResource extends Resource
                             ->numeric()
                             ->minValue(0)
                             ->prefix('VND')
-                            ->formatStateUsing(fn ($state) => $state / 100)
-                            ->dehydrateStateUsing(fn ($state) => $state * 100)
-                            ->helperText('Price in VND (enter in thousands, e.g., 100 for 100,000 VND)'),
+                            ->helperText('Số tiền đầy đủ, ví dụ 150000.'),
 
                         Forms\Select::make('status')
                             ->options([
@@ -126,13 +144,19 @@ class ServiceOrderResource extends Resource
                     ->sortable()
                     ->weight('semibold'),
 
-                Tables\Columns\TextColumn::make('facebook_profile_link')
-                    ->label('Facebook Profile')
+                Tables\Columns\TextColumn::make('facebook_name')
+                    ->label('Facebook')
                     ->searchable()
-                    ->sortable()
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->facebook_profile_link)
-                    ->url(fn ($record) => $record->facebook_profile_link, true),
+                    ->placeholder('—'),
+
+                Tables\Columns\TextColumn::make('customer_email')
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('ip_address')
+                    ->label('IP')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Amount')
@@ -156,11 +180,11 @@ class ServiceOrderResource extends Resource
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('paid_at')
-                    ->label('Paid')
+                Tables\Columns\TextColumn::make('facebook_approval_disabled_at')
+                    ->label('Tắt duyệt bài')
                     ->dateTime('d/m/Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->placeholder('Chưa')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('bank_txn_id')
                     ->label('Bank TXN')
@@ -208,11 +232,29 @@ class ServiceOrderResource extends Resource
                     ])
                     ->visible(fn (ServiceOrder $record): bool => $record->status === 'pending')
                     ->action(function (ServiceOrder $record, array $data) {
-                        $record->update([
-                            'status' => 'paid',
-                            'paid_at' => now(),
-                            'bank_txn_id' => $data['bank_txn_id'],
-                        ]);
+                        $result = app(OrderService::class)->confirmBankMatch(
+                            $record->order_code,
+                            $data['bank_txn_id'],
+                            true,
+                            [
+                                'amount' => (int) $record->amount,
+                                'description' => 'Admin xác nhận thanh toán',
+                            ]
+                        );
+
+                        if (! ($result['success'] ?? false)) {
+                            Notification::make()
+                                ->danger()
+                                ->title($result['message'] ?? 'Không xác nhận được thanh toán')
+                                ->send();
+
+                            return;
+                        }
+
+                        Notification::make()
+                            ->success()
+                            ->title('Đã lưu người thanh toán và giao dịch')
+                            ->send();
                     }),
 
                 Action::make('mark_expired')
@@ -235,10 +277,25 @@ class ServiceOrderResource extends Resource
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update([
-                            'status' => 'paid',
-                            'paid_at' => now(),
-                        ])),
+                        ->action(function ($records) {
+                            $orders = app(OrderService::class);
+
+                            foreach ($records as $record) {
+                                if ($record->status !== ServiceOrder::STATUS_PENDING) {
+                                    continue;
+                                }
+
+                                $orders->confirmBankMatch(
+                                    $record->order_code,
+                                    'ADMIN_'.strtoupper(\Illuminate\Support\Str::random(12)),
+                                    true,
+                                    [
+                                        'amount' => (int) $record->amount,
+                                        'description' => 'Admin xác nhận hàng loạt',
+                                    ]
+                                );
+                            }
+                        }),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -247,7 +304,7 @@ class ServiceOrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\BankTransactionsRelationManager::class,
         ];
     }
 

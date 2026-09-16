@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'bot.detect' => \App\Http\Middleware\DetectBot::class,
             'cors' => \App\Http\Middleware\CorsMiddleware::class,
+            'deny.production' => \App\Http\Middleware\DenyProductionDebug::class,
         ]);
         
         // Add CORS middleware to all API routes

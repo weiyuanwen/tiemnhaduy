@@ -15,7 +15,7 @@ class ServiceSeeder extends Seeder
             [
                 'name' => 'Default Plan',
                 'duration_days' => 90, // 3 months
-                'price' => 100000, // 100,000 VND
+                'price' => 150000,
                 'is_active' => true,
             ]
         );

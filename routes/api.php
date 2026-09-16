@@ -377,6 +377,7 @@ Route::prefix('v1')->group(function () {
          * }
          */
         Route::post('/', [OrderController::class, 'store'])
+            ->middleware('throttle:payment-create')
             ->name('store');
 
         /**
@@ -393,6 +394,7 @@ Route::prefix('v1')->group(function () {
          * }
          */
         Route::post('verify-payment', [OrderController::class, 'verifyPayment'])
+            ->middleware('throttle:30,1')
             ->name('verify-payment');
 
         Route::post('{orderCode}/push-subscriptions', [OrderController::class, 'storePushSubscription'])
@@ -444,6 +446,7 @@ Route::prefix('v1')->group(function () {
          * }
          */
         Route::get('{orderCode}', [OrderController::class, 'show'])
+            ->middleware('throttle:payment-status')
             ->name('show');
     });
 
@@ -458,7 +461,7 @@ Route::prefix('v1')->group(function () {
     });
 
     // Facebook Profile Routes
-    Route::prefix('facebook-profiles')->name('facebook-profiles.')->group(function () {
+    Route::prefix('facebook-profiles')->name('facebook-profiles.')->middleware('throttle:20,1')->group(function () {
         /**
          * POST /api/v1/facebook-profiles/validate
          * Validate and parse Facebook profile URL
@@ -601,6 +604,7 @@ Route::prefix('v1')->group(function () {
 
     // Debug route - Xem dữ liệu và mối quan hệ (Remove in production)
     Route::get('debug/data', function () {
+        abort_if(app()->environment('production'), 404);
         $useExternalApi = config('services.service.use_external_api', true);
         
         $services = \App\Models\Service::with('orders')->get();
@@ -696,6 +700,7 @@ Route::prefix('v1')->group(function () {
      * Test Pusher connection and verify credentials
      */
     Route::get('debug/pusher-test', function () {
+        abort_if(app()->environment('production'), 404);
         // Check if Pusher is configured
         $pusherConfigured = !empty(env('PUSHER_APP_KEY')) && !empty(env('PUSHER_APP_SECRET'));
 
@@ -777,6 +782,7 @@ Route::prefix('v1')->group(function () {
      * }
      */
     Route::post('debug/trigger-payment', function (\Illuminate\Http\Request $request) {
+        abort_if(app()->environment('production'), 404);
         $orderCode = $request->input('order_code');
         $status = $request->input('status', 'paid');
         $message = $request->input('message', 'Test payment status');
@@ -935,6 +941,7 @@ Route::prefix('v1')->group(function () {
      * }
      */
     Route::post('debug/generate-signature', function (\Illuminate\Http\Request $request) {
+        abort_if(app()->environment('production'), 404);
         $triggerSecret = env('PUSHER_TRIGGER_SECRET');
 
         if (!$triggerSecret) {

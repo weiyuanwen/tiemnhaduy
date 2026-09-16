@@ -1,9 +1,13 @@
 @extends('layouts.rosta')
 
-@section('title', 'Tiệm Nhà Duy | Thanh Toán QR Nhanh')
-@section('meta_description', 'Thanh toán nhanh tại Tiệm Nhà Duy với mã QR tự động, an toàn và tiện lợi cho đơn hàng nông sản sạch.')
-@section('meta_keywords', 'thanh toán tiệm nhà duy, QR chuyển khoản, cà phê robusta chư sê gia lai, nông sản sạch')
-@section('og_image', asset('rosta/images/favicon_io/android-chrome-512x512.png'))
+@section('title', 'Đóng phí nhóm Ăn vặt Chư Sê | Thanh toán QR')
+@section('meta_description', 'Đóng phí nhóm Facebook Ăn vặt Chư Sê bằng mã QR. Sau khi chuyển khoản, hệ thống tắt phê duyệt bài viết đang chờ duyệt.')
+@section('meta_keywords', 'ăn vặt chư sê, đóng phí nhóm facebook, phê duyệt bài viết, bài viết đang chờ duyệt, nhóm facebook chư sê gia lai, thanh toán qr phí nhóm, tiệm nhà duy')
+@section('og_title', 'Đóng phí nhóm Ăn vặt Chư Sê')
+@section('og_description', 'Quét QR để đóng phí nhóm. Bài viết chờ duyệt sẽ được mở sau khi thanh toán thành công.')
+@section('og_image', asset('rosta/images/og/og-thanh-toan.png'))
+@section('og_image_alt', 'Đóng phí nhóm Facebook Ăn vặt Chư Sê — quét QR thanh toán')
+@section('twitter_image', asset('rosta/images/og/fb-phi-nhom.png'))
 @section('canonical_url', route('thanh-toan'))
 
 @push('structured_data')
@@ -11,8 +15,8 @@
 {
     "@@context": "https://schema.org",
     "@@type": "WebPage",
-    "name": "Thanh toán QR nhanh",
-    "description": "Thanh toán nhanh tại Tiệm Nhà Duy với mã QR tự động, an toàn và tiện lợi cho đơn hàng nông sản sạch.",
+    "name": "Đóng phí nhóm Ăn vặt Chư Sê",
+    "description": "Đóng phí nhóm Facebook Ăn vặt Chư Sê bằng mã QR. Sau khi chuyển khoản, hệ thống tắt phê duyệt bài viết đang chờ duyệt.",
     "url": "{{ route('thanh-toan') }}",
     "inLanguage": "vi-VN"
 }
