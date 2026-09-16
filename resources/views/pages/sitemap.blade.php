@@ -1,8 +1,11 @@
 @extends('layouts.rosta')
 
-@section('title', 'Tiệm Nhà Duy | Sitemap')
-@section('meta_description', 'Sơ đồ website Tiệm Nhà Duy giúp bạn truy cập nhanh các trang chính.')
-@section('og_image', asset('rosta/images/icon-sub-heading.svg'))
+@section('title', 'Sơ đồ trang | Tiệm Nhà Duy')
+@section('meta_description', 'Danh sách đường dẫn chính của Tiệm Nhà Duy: trang chủ, sản phẩm, dịch vụ, liên hệ và chính sách.')
+@section('og_title', 'Sơ đồ trang Tiệm Nhà Duy')
+@section('og_description', 'Đường dẫn tiếng Việt tới các trang nông sản, dịch vụ và hỗ trợ của Tiệm Nhà Duy.')
+@section('og_image', asset('rosta/images/page-header-bg.jpg'))
+@section('og_image_alt', 'Sơ đồ trang website Tiệm Nhà Duy')
 @section('canonical_url', route('sitemap'))
 
 @push('structured_data')
@@ -10,8 +13,8 @@
 {
     "@@context": "https://schema.org",
     "@@type": "WebPage",
-    "name": "Sitemap",
-    "description": "Sơ đồ website Tiệm Nhà Duy giúp bạn truy cập nhanh các trang chính.",
+    "name": "Sơ đồ trang",
+    "description": "Danh sách đường dẫn chính của Tiệm Nhà Duy: trang chủ, sản phẩm, dịch vụ, liên hệ và chính sách.",
     "url": "{{ route('sitemap') }}",
     "inLanguage": "vi-VN"
 }
@@ -35,20 +38,21 @@
     <div id="MainContent" tabindex="-1">
         <main data-header-color="dark">
             <div class="container text-only">
-                <h1>Sitemap</h1>
+                <h1>Sơ đồ trang</h1>
 
                 <div class="sitemap-group">
                     <h2>Trang chính</h2>
                     <a href="{{ route('home') }}">Trang chủ</a>
                     <a href="{{ route('about') }}">Về chúng tôi</a>
                     <a href="{{ route('services') }}">Dịch vụ</a>
+                    <a href="{{ route('san-pham') }}">Sản phẩm</a>
                     <a href="{{ route('projects') }}">Dự án</a>
                     <a href="{{ route('contact') }}">Liên hệ</a>
                 </div>
 
                 <div class="sitemap-group">
-                    <h2>Hỗ trợ</h2>
-                    <a href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a>
+                    <h2>Đường dẫn hỗ trợ</h2>
+                    <a href="{{ route('thanh-toan') }}">Thanh toán QR</a>
                     <a href="{{ route('faqs') }}">Câu hỏi thường gặp</a>
                 </div>
 
@@ -56,8 +60,8 @@
                     <h2>Pháp lý</h2>
                     <a href="{{ route('privacy-policy') }}">Chính sách bảo mật</a>
                     <a href="{{ route('terms-of-service') }}">Điều khoản sử dụng</a>
-                    <a href="{{ route('sitemap') }}">HTML Sitemap</a>
-                    <a href="{{ url('/rosta/sitemap.xml') }}">XML Sitemap</a>
+                    <a href="{{ route('sitemap') }}">Sơ đồ trang</a>
+                    <a href="{{ url('/sitemap.xml') }}">Sitemap XML</a>
                 </div>
             </div>
         </main>

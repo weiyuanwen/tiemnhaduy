@@ -1,8 +1,11 @@
 @extends('layouts.rosta')
 
-@section('title', 'Cà phê Tây Nguyên nguyên bản | Tiệm Nhà Duy')
-@section('meta_description', 'Khám phá cà phê Tây Nguyên nguyên bản với hương vị đậm đà, từ hạt rang chất lượng đến ly pha chuẩn gu dành cho người yêu cà phê Việt.')
-@section('og_image', asset('rosta/images/tiemnhaduy.svg'))
+@section('title', 'Cà phê Robusta Gia Lai, nông sản Tây Nguyên | Tiệm Nhà Duy')
+@section('meta_description', 'Mua cà phê Robusta Gia Lai, mắc ca, tiêu đen, bơ sáp và sầu riêng từ Tiệm Nhà Duy. Nguồn gốc Chư Sê – Tây Nguyên, hương vị thật, giao hàng toàn quốc.')
+@section('og_title', 'Cà phê Robusta Gia Lai | Tiệm Nhà Duy')
+@section('og_description', 'Nông sản sạch từ Chư Sê, Gia Lai: cà phê Robusta, mắc ca, tiêu đen và bơ sáp. Đặt hàng trực tiếp tại Tiệm Nhà Duy.')
+@section('og_image', asset('rosta/images/about-us-image.jpg'))
+@section('og_image_alt', 'Vườn cà phê và nông sản Tây Nguyên của Tiệm Nhà Duy')
 @section('canonical_url', route('home'))
 
 @push('head_preloads')
@@ -14,8 +17,8 @@
 {
     "@@context": "https://schema.org",
     "@@type": "WebPage",
-    "name": "Tiệm Nhà Duy",
-    "description": "Khám phá cà phê Tây Nguyên nguyên bản với hương vị đậm đà, từ hạt rang chất lượng đến ly pha chuẩn gu dành cho người yêu cà phê Việt.",
+    "name": "Cà phê Robusta Gia Lai, nông sản Tây Nguyên",
+    "description": "Mua cà phê Robusta Gia Lai, mắc ca, tiêu đen, bơ sáp và sầu riêng từ Tiệm Nhà Duy. Nguồn gốc Chư Sê – Tây Nguyên, hương vị thật, giao hàng toàn quốc.",
     "url": "{{ route('home') }}",
     "inLanguage": "vi-VN"
 }
@@ -51,15 +54,15 @@
                     <div class="hero-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">nông sản sạch từ tâm, chất lượng đến tay bạn</h3>
-                            <h1 class="text-anime-style-3" data-cursor="-opaque">Robusta Gia Lai</h1>
+                            <p class="section-eyebrow wow fadeInUp">Nông sản sạch từ Chư Sê – Tây Nguyên</p>
+                            <h1 class="wow fadeInUp">Cà phê Robusta Gia Lai</h1>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Tiệm Nhà Duy giới thiệu đặc sản Tây Nguyên gồm cà phê robusta, hạt mắc ca béo bùi, tiêu đen nồng thơm và bơ sáp tươi ngon. Chúng tôi tập trung nguồn gốc rõ ràng, hương vị thật và giá trị bền vững cho mỗi gia đình Việt.</p>
                         </div>
                         <!-- Section Title End -->
                         
                         <!-- Hero Button Start -->
                         <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ route('about') }}" class="btn-default">Khám phá sản phẩm</a>
+                            <a href="{{ route('san-pham') }}" class="btn-default">Khám phá sản phẩm</a>
                             <a href="{{ route('thanh-toan') }}" class="btn-default btn-highlighted">Thanh toán ngay</a>
                         </div>
                         <!-- Hero Button End -->
@@ -122,8 +125,8 @@
                     <div class="about-us-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">về chúng tôi</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Kết nối gia đình Việt qua từng sản phẩm sạch mỗi ngày</h2>
+                            <p class="section-eyebrow wow fadeInUp">Về chúng tôi</p>
+                            <h2 class="wow fadeInUp">Nông sản sạch mỗi ngày cho gia đình Việt</h2>
                         </div>
                         <!-- Section Title End -->
                          
@@ -225,8 +228,8 @@
                     <div class="why-choose-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">Lý do chọn chúng tôi</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Nơi hương vị nông sản Tây Nguyên gặp sự tận tâm</h2>
+                            <p class="section-eyebrow wow fadeInUp">Lý do chọn Tiệm Nhà Duy</p>
+                            <h2 class="wow fadeInUp">Nông sản Tây Nguyên, nguồn gốc rõ ràng</h2>
                         </div>
                         <!-- Section Title End -->
 
@@ -332,8 +335,8 @@
                     <div class="intro-video-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">Hành Trình Phát Triển</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Từ vườn đến bàn ăn với Cà phê robusta gia lai</h2>
+                            <p class="section-eyebrow wow fadeInUp">Hành trình từ vườn</p>
+                            <h2 class="wow fadeInUp">Từ vườn Gia Lai đến bàn ăn</h2>
                         </div>
                         <!-- Section Title End -->
                     </div>
@@ -364,7 +367,7 @@
                                 <img src="{{ asset('rosta/images/icon-intro-video-counter-1.svg') }}" alt="Restaurant statistic icon">
                             </div>
                             <div class="video-counter-content">
-                                <h2><span class="counter">300</span>+</h2>
+                                <p class="counter-value"><span class="counter">300</span>+</p>
                             <p>khách thăm mỗi ngày</p>
                             </div>
                         </div>
@@ -376,7 +379,7 @@
                                 <img src="{{ asset('rosta/images/icon-intro-video-counter-2.svg') }}" alt="Restaurant statistic icon">
                             </div>
                             <div class="video-counter-content">
-                                <h2><span class="counter">50</span></h2>
+                                <p class="counter-value"><span class="counter">50</span></p>
                             <p>công thức gợi ý</p>
                             </div>
                         </div>
@@ -388,7 +391,7 @@
                                 <img src="{{ asset('rosta/images/icon-intro-video-counter-3.svg') }}" alt="Restaurant statistic icon">
                             </div>
                             <div class="video-counter-content">
-                                <h2><span class="counter">120</span>+</h2>
+                                <p class="counter-value"><span class="counter">120</span>+</p>
                                 <p>đợt sự kiện đồng hành</p>
                             </div>
                         </div>
@@ -400,7 +403,7 @@
                                 <img src="{{ asset('rosta/images/icon-intro-video-counter-4.svg') }}" alt="Restaurant statistic icon">
                             </div>
                             <div class="video-counter-content">
-                                <h2><span class="counter">500</span>+</h2>
+                                <p class="counter-value"><span class="counter">500</span>+</p>
                                 <p>khách hàng hài lòng</p>
                             </div>
                         </div>
@@ -420,8 +423,8 @@
                 <div class="col-lg-12">
                     <!-- Section Title Start -->
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">bảng giá nổi bật</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Quality farm produce, fair value for every family</h2>
+                        <p class="section-eyebrow wow fadeInUp">Bảng giá nổi bật</p>
+                        <h2 class="wow fadeInUp">Giá nông sản Tây Nguyên cho mọi gia đình</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -836,7 +839,7 @@
                     <div class="container">
                         <div class="text">
                             <div class="inner">
-                                <h2 class="blinds-text" aria-label="Sản phẩm">
+                                <h2 class="blinds-text" aria-label="Danh mục nông sản Tây Nguyên">
                                     <div class="blinds-text-wrapper">
                                         <div class="blinds-word" aria-hidden="true">
                                             <span class="char-clip"><span style="--i:0ms">S</span></span>
@@ -855,7 +858,7 @@
                                 <div data-reset="true" data-delay="200" reveal="" data-sr-id="7" style="visibility: visible; opacity: 1; transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transition: all, opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;">
                                     <p>Khám phá bộ sưu tập nông sản mới từ vùng đất Gia Lai và Tây Nguyên. Cập nhật sản phẩm mới mỗi tuần qua bản tin của Tiệm Nhà Duy.</p>
                                 </div>
-                                <a data-reset="true" data-delay="400" reveal="" class="button" href="{{ route('services') }}" data-sr-id="8" style="visibility: visible; opacity: 1; transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transition: all, opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;">Xem danh mục sản phẩm</a>
+                                <a data-reset="true" data-delay="400" reveal="" class="button" href="{{ route('san-pham') }}" data-sr-id="8" style="visibility: visible; opacity: 1; transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transition: all, opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;">Xem danh mục sản phẩm</a>
                             </div>
                         </div>
                     </div>
@@ -870,7 +873,7 @@
                         <div class="interactive-process-caption">
                             <h3>Chư Sê - Gia Lai</h3>
                             <p>Vùng đất nổi tiếng với cà phê robusta hạt chắc, hương đậm và hậu vị rõ nét, rất được yêu thích tại Việt Nam.</p>
-                            <a href="{{ route('services') }}">Xem cà phê robusta →</a>
+                            <a href="{{ route('san-pham') }}">Xem cà phê robusta →</a>
                         </div>
                     </div>
                     <div class="interactive-process-image img-1">
@@ -878,7 +881,7 @@
                         <div class="interactive-process-caption">
                             <h3>Mắc ca Tây Nguyên</h3>
                             <p>Hạt mắc ca được chọn lọc, béo bùi tự nhiên, thích hợp ăn trực tiếp hoặc kết hợp trong các khẩu phần dinh dưỡng.</p>
-                            <a href="{{ route('services') }}">Xem sản phẩm mắc ca →</a>
+                            <a href="{{ route('san-pham') }}">Xem sản phẩm mắc ca →</a>
                         </div>
                     </div>
                     <div class="interactive-process-image img-2">
@@ -886,7 +889,7 @@
                         <div class="interactive-process-caption">
                             <h3>Bơ sáp Tây Nguyên</h3>
                             <p>Bơ sáp dẻo, cơm vàng, vị béo thanh. Thu hoạch theo mùa tại Gia Lai và các tỉnh Tây Nguyên.</p>
-                            <a href="{{ route('services') }}">Xem bơ sáp →</a>
+                            <a href="{{ route('san-pham') }}">Xem bơ sáp →</a>
                         </div>
                     </div>
                     <div class="interactive-process-image img-3">
@@ -894,7 +897,7 @@
                         <div class="interactive-process-caption">
                             <h3>Tiêu đen Gia Lai</h3>
                             <p>Tiêu hạt chắc, cay nồng tự nhiên, phơi khô theo cách truyền thống của nhà vườn Tây Nguyên.</p>
-                            <a href="{{ route('services') }}">Xem tiêu đen →</a>
+                            <a href="{{ route('san-pham') }}">Xem tiêu đen →</a>
                         </div>
                     </div>
                 </div>
@@ -914,8 +917,8 @@
                     <div class="our-offers-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">Facebook · Ăn vặt Chư Sê</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Cộng đồng ẩm thực Chư Sê – Gia Lai</h2>
+                            <p class="section-eyebrow wow fadeInUp">Facebook · Ăn vặt Chư Sê</p>
+                            <h2 class="wow fadeInUp">Cộng đồng ẩm thực Chư Sê – Gia Lai</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Nhóm do người con sinh ra và lớn lên ở Chư Sê tạo ra — nơi tụ họp những người yêu món ăn vặt, đồ uống và ẩm thực quê nhà. Hơn 39.800 người theo dõi, gom đơn và chia sẻ món ngon mỗi ngày.</p>
                         </div>
                         <!-- Section Title End -->
@@ -924,11 +927,11 @@
                         <div class="offers-accordion" id="offer-accordion">
                             <!-- Offer Accordian Item Start -->
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                                <h2 class="accordion-header" id="offersheading1">
+                                <h3 class="accordion-header" id="offersheading1">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse1" aria-expanded="true" aria-controls="offerscollapse1">
                                         Người Chư Sê tụ họp
                                     </button>
-                                </h2>
+                                </h3>
                                 <div id="offerscollapse1" class="accordion-collapse collapse show" aria-labelledby="offersheading1" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
                                         <p>Không gian của người sống, làm việc hoặc nhớ Chư Sê – Gia Lai: kể chuyện quê, hỏi quán quen, tìm món đúng vị nhà.</p>
@@ -939,11 +942,11 @@
                             
                             <!-- Offer Accordian Item Start -->
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                                <h2 class="accordion-header" id="offersheading2">
+                                <h3 class="accordion-header" id="offersheading2">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse2" aria-expanded="false" aria-controls="offerscollapse2">
                                         Ăn vặt &amp; đồ uống
                                     </button>
-                                </h2>
+                                </h3>
                                 <div id="offerscollapse2" class="accordion-collapse collapse" aria-labelledby="offersheading2" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
                                         <p>Từ món ăn vặt, đồ uống đến đặc sản Tây Nguyên: gợi ý quán, công thức nhà làm và những món đang được khen trong ngày.</p>
@@ -954,11 +957,11 @@
                             
                             <!-- Offer Accordian Item Start -->
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.8s">
-                                <h2 class="accordion-header" id="offersheading3">
+                                <h3 class="accordion-header" id="offersheading3">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse3" aria-expanded="false" aria-controls="offerscollapse3">
                                         Gom đơn mỗi ngày
                                     </button>
-                                </h2>
+                                </h3>
                                 <div id="offerscollapse3" class="accordion-collapse collapse" aria-labelledby="offersheading3" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
                                         <p>Thành viên thường gom đơn món quen như bún trộn, ship theo nhóm — tiện, rẻ, đúng khẩu vị Chư Sê.</p>
@@ -1020,9 +1023,9 @@
                     <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/coffee-cherries.webp') }}" alt="Cà phê chín trên cây Chư Sê Gia Lai" width="1021" height="642" loading="lazy" decoding="async">
                 </div>
                 <div class="text">
-                    <h2>Khám phá</h2>
+                    <h2>Khám phá cà phê Robusta Chư Sê</h2>
                     <p>Mỗi tuần chúng tôi cập nhật cà phê robusta chất lượng cao từ Chư Sê Gia Lai, giúp bạn bắt đầu ngày mới đầy năng lượng.</p>
-                    <a href="{{ route('services') }}">Xem bộ sưu tập nông sản</a>
+                    <a href="{{ route('san-pham') }}">Xem bộ sưu tập nông sản</a>
                 </div>
             </div>
 
@@ -1032,7 +1035,7 @@
                     <img class="media-kenburns-img" src="{{ asset('rosta/images/produce/phin-coffee.webp') }}" alt="Pha cà phê phin tại Tây Nguyên" width="1200" height="796" loading="lazy" decoding="async">
                 </div>
                 <div class="text">
-                    <h2>phát huy</h2>
+                    <h2>Bán sỉ nông sản cho quán và đại lý</h2>
                     <p>Nếu bạn cần nguồn hàng ổn định cho quán cà phê, cửa hàng nông sản hoặc kênh phân phối, chúng tôi sẵn sàng đồng hành với chính sách linh hoạt.</p>
                     <a href="{{ route('about') }}">Tìm hiểu thêm về Tiệm Nhà Duy</a>
                 </div>
@@ -1047,8 +1050,8 @@
                 <div class="col-lg-12">
                     <!-- Section Title Start -->
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">cảm nhận khách hàng</h3>
-                        <h2 class="text-anime-style-3" data-cursor="-opaque">Người đã dùng sẽ kể cho bạn nghe</h2>
+                        <p class="section-eyebrow wow fadeInUp">Cảm nhận khách hàng</p>
+                        <h2 class="wow fadeInUp">Người đã dùng sẽ kể cho bạn nghe</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -1104,12 +1107,12 @@
         <div class="container">
             <div class="text">
                 <div class="inner">
-                    <h2 class="blinds-text">nông sản<br>Tây Nguyên</h2>
+                    <h2 class="blinds-text">Nông sản<br>Tây Nguyên</h2>
                     <div>
                         <p>Tiệm Nhà Duy chọn lọc cà phê robusta Gia Lai, mắc ca, tiêu đen, bơ sáp và sầu riêng theo mùa vụ. Mỗi sản phẩm giữ hương vị thật của vùng cao nguyên.</p>
                         <p>Xem danh mục và đặt hàng trực tiếp, không qua trung gian.</p>
                     </div>
-                    <a class="button" href="{{ route('services') }}">Xem nông sản Tây Nguyên</a>
+                    <a class="button" href="{{ route('san-pham') }}">Xem nông sản Tây Nguyên</a>
                 </div>
             </div>
             <div class="media">

@@ -1,8 +1,11 @@
 @extends('layouts.rosta')
 
-@section('title', 'Về Tiệm Nhà Duy')
-@section('meta_description', 'Giới thiệu về Tiệm Nhà Duy và hành trình phát triển.')
-@section('og_image', asset('rosta/images/about-restaurant-bg-image.svg'))
+@section('title', 'Về Tiệm Nhà Duy – nông sản Chư Sê, Gia Lai')
+@section('meta_description', 'Tiệm Nhà Duy mang cà phê Robusta Gia Lai và nông sản sạch từ Chư Sê đến gia đình Việt. Nguồn gốc rõ, hương vị thật của Tây Nguyên.')
+@section('og_title', 'Về Tiệm Nhà Duy')
+@section('og_description', 'Câu chuyện nông sản Chư Sê – Gia Lai: cà phê Robusta, mắc ca, tiêu đen và bơ sáp từ vườn đến bàn ăn.')
+@section('og_image', asset('rosta/images/our-story-image.jpg'))
+@section('og_image_alt', 'Câu chuyện Tiệm Nhà Duy và nông sản Tây Nguyên')
 @section('canonical_url', route('about'))
 
 @push('structured_data')
@@ -10,8 +13,8 @@
 {
     "@@context": "https://schema.org",
     "@@type": "WebPage",
-    "name": "Về Tiệm Nhà Duy",
-    "description": "Giới thiệu về Tiệm Nhà Duy và hành trình phát triển.",
+    "name": "Về Tiệm Nhà Duy – nông sản Chư Sê, Gia Lai",
+    "description": "Tiệm Nhà Duy mang cà phê Robusta Gia Lai và nông sản sạch từ Chư Sê đến gia đình Việt. Nguồn gốc rõ, hương vị thật của Tây Nguyên.",
     "url": "{{ route('about') }}",
     "inLanguage": "vi-VN"
 }
@@ -39,15 +42,15 @@
 @endpush
 
 @section('content')
-    @include('pages.partials.rosta.page-header', ['title' => 'về chúng tôi'])
+    @include('pages.partials.rosta.page-header', ['title' => 'Về Tiệm Nhà Duy'])
     <div class="about-us">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="about-us-content">
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">về chúng tôi</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Mang nông sản sạch và cà phê chất lượng đến mọi gia đình</h2>
+                            <p class="section-eyebrow wow fadeInUp">Câu chuyện thương hiệu</p>
+                            <h2 class="wow fadeInUp">Mang nông sản sạch đến mọi gia đình Việt</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Tiệm Nhà Duy tập trung vào nguồn gốc rõ ràng, sản phẩm an toàn và trải nghiệm mua sắm minh bạch.</p>
                         </div>
                     </div>

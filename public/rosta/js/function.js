@@ -180,42 +180,18 @@
 		});		
 	}
 	
-	if ($('.text-anime-style-3').length) {		
-		let	animatedTextElements = document.querySelectorAll('.text-anime-style-3');
-		
-		 animatedTextElements.forEach((element) => {
-			//Reset if needed
-			if (element.animation) {
-				element.animation.progress(1).kill();
-				element.split.revert();
-			}
+	if ($('.text-anime-style-3').length) {
+		let animatedTextElements = document.querySelectorAll('.text-anime-style-3');
 
-			element.split = new SplitText(element, {
-				type: "lines,words,chars",
-				linesClass: "split-line",
-				wordsClass: "split-word",
-				charsClass: "split-char",
-				tag: "span",
-			});
-			gsap.set(element, { perspective: 400 });
-
-			gsap.set(element.split.chars, {
+		animatedTextElements.forEach((element) => {
+			gsap.from(element, {
+				scrollTrigger: { trigger: element, start: "top 90%" },
 				opacity: 0,
-				x: 20,
-				display: "inline-block",
+				y: 18,
+				duration: 0.7,
+				ease: "power2.out",
 			});
-
-			element.animation = gsap.to(element.split.chars, {
-				scrollTrigger: { trigger: element,	start: "top 90%" },
-				x: 0,
-				y: 0,
-				rotateX: 0,
-				opacity: 1,
-				duration: 0.6,
-				ease: Back.easeOut,
-				stagger: 0.035,
-			});
-		});		
+		});
 	}
 
 	/* Parallaxie js */

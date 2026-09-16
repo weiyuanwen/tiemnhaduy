@@ -1,9 +1,12 @@
 @extends('layouts.rosta')
 
-@section('title', 'Tiệm Nhà Duy | 404')
-@section('meta_description', 'Trang bạn tìm không tồn tại tại Tiệm Nhà Duy. Hãy quay lại trang chủ để tiếp tục khám phá nội dung.')
+@section('title', 'Không tìm thấy trang | Tiệm Nhà Duy')
+@section('meta_description', 'Trang bạn tìm không tồn tại. Quay lại trang chủ Tiệm Nhà Duy để xem cà phê Robusta và nông sản Tây Nguyên.')
 @section('meta_robots', 'noindex,follow')
-@section('og_image', asset('rosta/images/icon-blockquote.svg'))
+@section('og_title', 'Không tìm thấy trang')
+@section('og_description', 'Đường dẫn này không còn. Hãy về trang chủ Tiệm Nhà Duy để tiếp tục mua nông sản Tây Nguyên.')
+@section('og_image', asset('rosta/images/page-header-bg.jpg'))
+@section('og_image_alt', 'Trang không tồn tại tại Tiệm Nhà Duy')
 
 @push('structured_data')
 <script type="application/ld+json">
@@ -25,7 +28,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-12">
                         <div class="page-header-box">
-                            <h1 class="text-anime-style-3" data-cursor="-opaque">Page Not Found</h1>
+                            <h1>Không tìm thấy trang</h1>
                             <nav class="wow fadeInUp">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></li>
@@ -41,22 +44,22 @@
         <div class="our-scrolling-ticker subpages-scrolling-ticker">
             <div class="scrolling-ticker-box">
                 <div class="scrolling-content">
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Espresso</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Americano</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Latte</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Cappuccino</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Mocha</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Macchiato</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Cold Brew</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Robusta</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Chư Sê Gia Lai</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản Tây Nguyên</span>
                 </div>
                 <div class="scrolling-content">
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Espresso</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Americano</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Latte</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Cappuccino</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Mocha</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Macchiato</span>
-                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="Asterisk icon">Cold Brew</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Cà phê Robusta</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Mắc ca</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Tiêu đen</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Bơ sáp</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Sầu riêng</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Chư Sê Gia Lai</span>
+                    <span><img src="{{ asset('rosta/images/asterisk-icon.svg') }}" alt="">Nông sản Tây Nguyên</span>
                 </div>
             </div>
         </div>
@@ -67,7 +70,7 @@
                     <div class="col-lg-12">
                         <div class="error-page-content">
                             <div class="section-title">
-                                <h2 class="text-anime-style-3" data-cursor="-opaque">Oops! Không tìm thấy trang</h2>
+                                <h2 class="wow fadeInUp">Trang này không còn tồn tại</h2>
                             </div>
                             <div class="error-page-content-body">
                                 <p class="wow fadeInUp" data-wow-delay="0.25s">

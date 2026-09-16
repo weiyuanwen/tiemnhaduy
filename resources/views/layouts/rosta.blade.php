@@ -4,28 +4,42 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Tiệm Nhà Duy')</title>
-    <meta name="description" content="@yield('meta_description', 'Tiệm Nhà Duy cung cấp nông sản sạch và đặc sản Tây Nguyên chất lượng cao.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'Tiệm Nhà Duy, nông sản sạch, cà phê robusta, mắc ca, tiêu đen, bơ sáp')">
+    @php
+        $seoTitle = trim($__env->yieldContent('title', 'Nông sản Tây Nguyên | Tiệm Nhà Duy'));
+        $seoDescription = trim($__env->yieldContent('meta_description', 'Tiệm Nhà Duy cung cấp cà phê Robusta Gia Lai, mắc ca, tiêu đen và bơ sáp — nông sản sạch từ Chư Sê, Tây Nguyên.'));
+        $seoCanonical = trim($__env->yieldContent('canonical_url', url()->current()));
+        $seoOgTitle = trim($__env->yieldContent('og_title', $seoTitle));
+        $seoOgDescription = trim($__env->yieldContent('og_description', $seoDescription));
+        $seoOgImage = trim($__env->yieldContent('og_image', asset('rosta/images/about-us-image.jpg')));
+        $seoOgImageAlt = trim($__env->yieldContent('og_image_alt', 'Tiệm Nhà Duy — nông sản Tây Nguyên tại Chư Sê, Gia Lai'));
+        $seoOgImageType = trim($__env->yieldContent('og_image_type', 'image/jpeg'));
+        $seoTwitterImage = trim($__env->yieldContent('twitter_image', $seoOgImage));
+    @endphp
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="keywords" content="@yield('meta_keywords', 'Tiệm Nhà Duy, cà phê Robusta Gia Lai, nông sản Tây Nguyên, mắc ca, tiêu đen, bơ sáp, Chư Sê')">
     <meta name="robots" content="@yield('meta_robots', 'index,follow')">
     <meta name="author" content="Tiệm Nhà Duy">
-    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+    <link rel="canonical" href="{{ $seoCanonical }}">
 
     <meta property="og:locale" content="vi_VN">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="Tiệm Nhà Duy">
-    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title', 'Tiệm Nhà Duy')))">
-    <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('meta_description', 'Tiệm Nhà Duy cung cấp nông sản sạch và đặc sản Tây Nguyên chất lượng cao.')))">
-    <meta property="og:url" content="@yield('og_url', url()->current())">
-    <meta property="og:image" content="@yield('og_image', asset('rosta/images/tiemnhaduy.svg'))">
-    <meta property="og:image:alt" content="@yield('og_image_alt', 'Tiệm Nhà Duy')">
+    <meta property="og:title" content="{{ $seoOgTitle }}">
+    <meta property="og:description" content="{{ $seoOgDescription }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoOgImage }}">
+    <meta property="og:image:secure_url" content="{{ $seoOgImage }}">
+    <meta property="og:image:alt" content="{{ $seoOgImageAlt }}">
+    <meta property="og:image:type" content="{{ $seoOgImageType }}">
     <meta property="og:image:width" content="@yield('og_image_width', '1200')">
     <meta property="og:image:height" content="@yield('og_image_height', '630')">
 
     <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')">
-    <meta name="twitter:title" content="@yield('twitter_title', trim($__env->yieldContent('title', 'Tiệm Nhà Duy')))">
-    <meta name="twitter:description" content="@yield('twitter_description', trim($__env->yieldContent('meta_description', 'Tiệm Nhà Duy cung cấp nông sản sạch và đặc sản Tây Nguyên chất lượng cao.')))">
-    <meta name="twitter:image" content="@yield('twitter_image', trim($__env->yieldContent('og_image', asset('rosta/images/tiemnhaduy.svg'))))">
+    <meta name="twitter:title" content="{{ $seoOgTitle }}">
+    <meta name="twitter:description" content="{{ $seoOgDescription }}">
+    <meta name="twitter:image" content="{{ $seoTwitterImage }}">
+    <meta name="twitter:image:alt" content="{{ $seoOgImageAlt }}">
     @stack('head_preloads')
     <script type="application/ld+json">
         {
@@ -34,8 +48,15 @@
             "name": "Tiệm Nhà Duy",
             "url": "{{ url('/') }}",
             "logo": "{{ asset('rosta/images/tiemnhaduy.svg') }}",
+            "image": "{{ asset('rosta/images/about-us-image.jpg') }}",
             "email": "support@tiemnhaduy.com",
-            "telephone": "+84981314516"
+            "telephone": "+84981314516",
+            "address": {
+                "@@type": "PostalAddress",
+                "addressLocality": "Chư Sê",
+                "addressRegion": "Gia Lai",
+                "addressCountry": "VN"
+            }
         }
     </script>
     <script type="application/ld+json">
@@ -86,15 +107,24 @@
         <noscript><link rel="stylesheet" href="{{ $stylesheetUrl }}"></noscript>
     @endforeach
     <style>
-        body:not(.is-home-page) header.main-header .header-sticky,
-        body:not(.is-home-page) header.main-header .header-sticky.active {
-            background: transparent !important;
-            border-bottom-color: transparent !important;
-            box-shadow: none !important;
+        header.main-header .header-sticky,
+        header.main-header .header-sticky.active {
+            background: #FBFAF3 !important;
+            border-bottom: 1px solid rgba(17, 17, 17, 0.08) !important;
+            box-shadow: 0 8px 24px rgba(18, 29, 35, 0.06) !important;
         }
-        body:not(.is-home-page) .main-menu ul li.nav-item a,
-        body:not(.is-home-page) .main-menu ul li.nav-item.submenu > a {
-            color: #111 !important;
+        .main-menu ul li.nav-item a,
+        .main-menu ul li.nav-item.submenu > a {
+            color: #1a1a1a !important;
+            font-family: "Montserrat", sans-serif !important;
+            text-transform: none !important;
+            letter-spacing: 0.01em !important;
+            font-weight: 500 !important;
+            white-space: nowrap;
+        }
+        .main-menu ul li.nav-item a:hover,
+        .main-menu ul li.nav-item a:focus {
+            color: #8b6244 !important;
         }
         body:not(.is-home-page) .header-btn .btn-default,
         body:not(.is-home-page) .header-btn .btn-default.btn-highlighted {
@@ -110,8 +140,8 @@
         body:not(.is-home-page) .header-sidebar-btn .btn-popup {
             filter: invert(1);
         }
-        body:not(.is-home-page) .navbar-brand img {
-            filter: brightness(0) saturate(100%);
+        .navbar-brand img {
+            filter: brightness(0) saturate(100%) !important;
         }
         body:not(.is-home-page) .onyx-signature svg #SigAnim path,
         body:not(.is-home-page) .navbar-brand svg #anim path {

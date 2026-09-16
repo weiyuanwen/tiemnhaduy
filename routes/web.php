@@ -9,20 +9,24 @@ use Illuminate\Http\Request;
  */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Basic pages from new UI
-Route::get('/about', function () {
+// Basic pages — Vietnamese slugs
+Route::get('/ve-chung-toi', function () {
     return view('pages.about');
 })->name('about');
 
-Route::get('/services', function () {
+Route::get('/dich-vu', function () {
     return view('pages.services');
 })->name('services');
 
-Route::get('/projects', function () {
+Route::get('/san-pham', function () {
+    return view('pages.products');
+})->name('san-pham');
+
+Route::get('/du-an', function () {
     return view('pages.projects');
 })->name('projects');
 
-Route::get('/contact', function () {
+Route::get('/lien-he', function () {
     return view('pages.contact');
 })->name('contact');
 
@@ -30,26 +34,34 @@ Route::get('/thanh-toan', function () {
     return view('pages.book-table');
 })->name('thanh-toan');
 
-Route::permanentRedirect('/book-table', '/thanh-toan');
-
-Route::get('/faqs', function () {
+Route::get('/cau-hoi-thuong-gap', function () {
     return view('pages.faqs');
 })->name('faqs');
 
-Route::get('/terms-of-service', function () {
+Route::get('/dieu-khoan-su-dung', function () {
     return view('pages.terms-of-service');
 })->name('terms-of-service');
 
-Route::get('/privacy-policy', function () {
+Route::get('/chinh-sach-bao-mat', function () {
     return view('pages.privacy-policy');
 })->name('privacy-policy');
 
-Route::get('/sitemap', function () {
+Route::get('/so-do-trang', function () {
     return view('pages.sitemap');
 })->name('sitemap');
 
+Route::permanentRedirect('/about', '/ve-chung-toi');
+Route::permanentRedirect('/services', '/dich-vu');
+Route::permanentRedirect('/projects', '/du-an');
+Route::permanentRedirect('/contact', '/lien-he');
+Route::permanentRedirect('/book-table', '/thanh-toan');
+Route::permanentRedirect('/faqs', '/cau-hoi-thuong-gap');
+Route::permanentRedirect('/terms-of-service', '/dieu-khoan-su-dung');
+Route::permanentRedirect('/privacy-policy', '/chinh-sach-bao-mat');
+Route::permanentRedirect('/sitemap', '/so-do-trang');
+
 // Contact form POST handler
-Route::post('/contact/send', function (Request $request) {
+$sendContact = function (Request $request) {
     $data = $request->validate([
         'name' => 'nullable|string|max:191',
         'email' => 'required|email|max:191',
@@ -72,7 +84,11 @@ Route::post('/contact/send', function (Request $request) {
         : 'Cảm ơn bạn. Tiệm Nhà Duy đã nhận thư và sẽ phản hồi sớm.';
 
     return back()->with('status', $ok);
-})->name('contact.send');
+};
+
+Route::post('/lien-he/gui', $sendContact)->name('contact.send');
+Route::post('/contact/send', $sendContact);
+
 
 /**
  * Placeholder Routes (to be implemented)

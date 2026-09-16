@@ -47,7 +47,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Trang chủ</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Về chúng tôi</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Dịch vụ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Sản phẩm</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('san-pham') }}">Sản phẩm</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Liên hệ</a></li>                             
                                 <li class="nav-item highlighted-menu"><a class="nav-link" href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a></li>                             
                             </ul>
@@ -75,14 +75,14 @@
                                     <div class="offcanvas-body">
                                         <!-- Header Title Box Start -->
                                         <div class="header-title-box">
-                                            <h2>Welcome to Tiem Nha Duy</h2>
+                                            <p class="sidebar-heading">Tiệm Nhà Duy</p>
                                             <p>Chuyên cung cấp nông sản chất lượng: Cà phê robusta gia lai, mắc ca, tiêu và bơ sạch.</p>
                                         </div>
                                         <!-- Header Title Box End -->
 
                                         <!-- Header Sidebar Info Start -->
                                         <div class="header-sidebar-info">
-                                            <h2><a href="tel:+84981314516">+84981314516</a></h2>
+                                            <p class="sidebar-phone"><a href="tel:+84981314516">+84981314516</a></p>
                                             <ul>
                                                 <li>Xã Chư Sê, Tỉnh Gia Lai, Vietnam</li>
                                                 <li><a href="mailto:support@tiemnhaduy.com">support@tiemnhaduy.com</a></li>
@@ -104,7 +104,7 @@
                                             <a class="primary" href="{{ route('home') }}">Trang chủ</a>
                                             <a class="primary" href="{{ route('about') }}">Về chúng tôi</a>
                                             <a class="primary" href="{{ route('services') }}">Dịch vụ</a>
-                                            <a class="primary" href="{{ route('services') }}">Sản phẩm</a>
+                                            <a class="primary" href="{{ route('san-pham') }}">Sản phẩm</a>
                                             <a class="primary" href="{{ route('contact') }}">Liên hệ</a>
                                             <a class="primary" href="{{ route('thanh-toan') }}">Đặt lịch tư vấn</a>
                                         </div>

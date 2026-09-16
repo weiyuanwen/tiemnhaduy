@@ -16,10 +16,10 @@
             </div>
             <div class="span-1">
                 <h3>Mua sắm</h3>
-                <a href="{{ route('services') }}">Cà phê</a>
-                <a href="{{ route('services') }}">Mắc ca</a>
-                <a href="{{ route('services') }}">Tiêu</a>
-                <a href="{{ route('services') }}">Bơ</a>
+                <a href="{{ route('san-pham') }}">Cà phê</a>
+                <a href="{{ route('san-pham') }}">Mắc ca</a>
+                <a href="{{ route('san-pham') }}">Tiêu</a>
+                <a href="{{ route('san-pham') }}">Bơ</a>
             </div>
             <div class="span-1">
                 <h3>Hỗ trợ</h3>
@@ -53,13 +53,13 @@
                 <h3>Quà tặng</h3>
                 <a href="{{ route('thanh-toan') }}">Hộp quà đặc sản</a>
                 <a href="{{ route('thanh-toan') }}">Gói định kỳ</a>
-                <a href="{{ route('services') }}">Sản phẩm đề xuất</a>
+                <a href="{{ route('san-pham') }}">Sản phẩm đề xuất</a>
                 <a href="{{ route('thanh-toan') }}">Phiếu quà tặng</a>
             </div>
             <div class="span-1">
                 <h3>Kiến thức</h3>
                 <a href="{{ route('faqs') }}">Hướng dẫn sử dụng</a>
-                <a href="{{ route('services') }}">Chọn loại phù hợp</a>
+                <a href="{{ route('san-pham') }}">Chọn loại phù hợp</a>
                 <a href="{{ route('faqs') }}">Mẹo bảo quản</a>
                 <a href="{{ route('faqs') }}">Cách pha cà phê ngon</a>
             </div>

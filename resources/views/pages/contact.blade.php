@@ -1,8 +1,11 @@
 @extends('layouts.rosta')
 
-@section('title', 'Liên hệ')
-@section('meta_description', 'Gửi thư cho Tiệm Nhà Duy để nhận tư vấn nông sản Chư Sê – Gia Lai.')
-@section('og_image', asset('rosta/images/icon-mail-accent.svg'))
+@section('title', 'Liên hệ Tiệm Nhà Duy – đặt hàng nông sản Gia Lai')
+@section('meta_description', 'Gửi thư đặt cà phê Robusta, mắc ca, tiêu đen hoặc hỏi mùa vụ. Tiệm Nhà Duy phản hồi trong giờ làm việc tại Chư Sê, Gia Lai.')
+@section('og_title', 'Liên hệ Tiệm Nhà Duy')
+@section('og_description', 'Đặt hàng nông sản Tây Nguyên, hỏi tồn kho hoặc hợp tác bán sỉ. Gửi thư trực tiếp cho Tiệm Nhà Duy.')
+@section('og_image', asset('rosta/images/book-table-image.jpg'))
+@section('og_image_alt', 'Liên hệ đặt nông sản Tiệm Nhà Duy tại Chư Sê, Gia Lai')
 @section('canonical_url', route('contact'))
 
 @push('structured_data')
@@ -10,8 +13,8 @@
 {
     "@@context": "https://schema.org",
     "@@type": "ContactPage",
-    "name": "Liên hệ",
-    "description": "Gửi thư cho Tiệm Nhà Duy để nhận tư vấn nông sản Chư Sê – Gia Lai.",
+    "name": "Liên hệ Tiệm Nhà Duy",
+    "description": "Gửi thư đặt cà phê Robusta, mắc ca, tiêu đen hoặc hỏi mùa vụ. Tiệm Nhà Duy phản hồi trong giờ làm việc tại Chư Sê, Gia Lai.",
     "url": "{{ route('contact') }}",
     "inLanguage": "vi-VN"
 }
@@ -39,15 +42,15 @@
 @endpush
 
 @section('content')
-    @include('pages.partials.rosta.page-header', ['title' => 'liên hệ'])
+    @include('pages.partials.rosta.page-header', ['title' => 'Liên hệ Tiệm Nhà Duy'])
     <div class="page-contact-us">
         <div class="container">
             <div class="row align-items-stretch">
                 <div class="col-lg-5">
                     <div class="contact-information">
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">viết thư cho tiệm</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Gửi yêu cầu, chúng tôi đọc từng lá</h2>
+                            <p class="section-eyebrow wow fadeInUp">Viết thư cho tiệm</p>
+                            <h2 class="wow fadeInUp">Gửi yêu cầu, chúng tôi đọc từng lá</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Đặt hàng, hỏi mùa vụ cà phê hay góp ý món quê — điền form bên cạnh, Tiệm Nhà Duy phản hồi trong giờ làm việc.</p>
                         </div>
                         <div class="contact-info-body contact-info-box-2">
@@ -100,19 +103,19 @@
                             <div class="row">
                                 <div class="form-group col-md-6 mb-4">
                                     <label for="mail-name">Họ tên</label>
-                                    <input type="text" name="name" id="mail-name" class="form-control" value="{{ old('name') }}" autocomplete="name" required>
+                                    <input type="text" name="name" id="mail-name" class="form-control" value="{{ old('name') }}" placeholder="Họ và tên của bạn" autocomplete="name" required>
                                 </div>
                                 <div class="form-group col-md-6 mb-4">
                                     <label for="mail-email">Email</label>
-                                    <input type="email" name="email" id="mail-email" class="form-control" value="{{ old('email') }}" autocomplete="email" required>
+                                    <input type="email" name="email" id="mail-email" class="form-control" value="{{ old('email') }}" placeholder="email@domain.com" autocomplete="email" required>
                                 </div>
                                 <div class="form-group col-md-12 mb-4">
                                     <label for="mail-phone">Số điện thoại <span>(không bắt buộc)</span></label>
-                                    <input type="tel" name="phone" id="mail-phone" class="form-control" value="{{ old('phone') }}" autocomplete="tel">
+                                    <input type="tel" name="phone" id="mail-phone" class="form-control" value="{{ old('phone') }}" placeholder="0981 314 516" autocomplete="tel">
                                 </div>
                                 <div class="form-group col-md-12 mb-4">
                                     <label for="mail-message">Nội dung</label>
-                                    <textarea name="message" id="mail-message" class="form-control" rows="6" required>{{ old('message') }}</textarea>
+                                    <textarea name="message" id="mail-message" class="form-control" rows="6" placeholder="Bạn muốn hỏi về cà phê, đặt hàng hay hợp tác?" required>{{ old('message') }}</textarea>
                                 </div>
                                 <div class="col-lg-12 mail-compose-actions">
                                     <button type="submit" class="btn-default">Gửi thư</button>

@@ -5,8 +5,8 @@
     'showNavbarToggler' => true
 ])
 
-@section('title', 'Tiệm Nhà Duy | Mất Kết Nối Internet')
-@section('meta_description', 'Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối internet để tiếp tục truy cập Tiệm Nhà Duy.')
+@section('title', 'Mất kết nối internet | Tiệm Nhà Duy')
+@section('meta_description', 'Bạn đang ngoại tuyến. Kiểm tra mạng rồi quay lại Tiệm Nhà Duy để xem nông sản Tây Nguyên.')
 
 @section('content')
 <!-- Offline Area -->

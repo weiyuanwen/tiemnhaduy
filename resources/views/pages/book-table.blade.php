@@ -6,6 +6,7 @@
 @section('og_title', 'Đóng phí nhóm Ăn vặt Chư Sê')
 @section('og_description', 'Quét QR để đóng phí nhóm. Bài viết chờ duyệt sẽ được mở sau khi thanh toán thành công.')
 @section('og_image', asset('rosta/images/og/og-thanh-toan.png'))
+@section('og_image_type', 'image/png')
 @section('og_image_alt', 'Đóng phí nhóm Facebook Ăn vặt Chư Sê — quét QR thanh toán')
 @section('twitter_image', asset('rosta/images/og/fb-phi-nhom.png'))
 @section('canonical_url', route('thanh-toan'))
@@ -609,7 +610,7 @@
         <main data-header-color="dark">
             <div class="container text-only">
                 <div class="payment-content">
-                    <h1>Thanh toán</h1>
+                    <h1>Đóng phí nhóm Ăn vặt Chư Sê</h1>
                     <div class="blurb">
                         <p>Tạo mã QR thanh toán nhanh trong một bước. Mỗi đơn có nội dung CK riêng và hiệu lực 12 phút. Chuyển khoản đúng số tiền, đúng nội dung — hệ thống tự xác nhận.</p>
                     </div>
