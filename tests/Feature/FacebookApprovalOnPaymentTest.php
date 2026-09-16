@@ -163,7 +163,8 @@ class FacebookApprovalOnPaymentTest extends TestCase
                 && str_contains($html, 'Hệ thống đang tắt phê duyệt bài viết')
                 && str_contains($html, 'Bé Ruby')
                 && str_contains($html, '100014343376569')
-                && str_contains($html, 'https://facebook.com/beruby');
+                && str_contains($html, 'https://facebook.com/beruby')
+                && str_contains($html, 'https://web.facebook.com/groups/782860725537921/user/100014343376569/');
         });
     }
 

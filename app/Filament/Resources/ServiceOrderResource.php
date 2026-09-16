@@ -79,7 +79,8 @@ class ServiceOrderResource extends Resource
 
                         Forms\TextInput::make('facebook_id')
                             ->label('ID Facebook')
-                            ->maxLength(64),
+                            ->maxLength(64)
+                            ->helperText('Dùng để mở hoạt động thành viên trong nhóm Facebook.'),
 
                         Forms\TextInput::make('customer_email')
                             ->label('Email')
@@ -147,7 +148,15 @@ class ServiceOrderResource extends Resource
                 Tables\Columns\TextColumn::make('facebook_name')
                     ->label('Facebook')
                     ->searchable()
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->url(fn (ServiceOrder $record) => $record->facebook_profile_link, true),
+
+                Tables\Columns\TextColumn::make('facebook_id')
+                    ->label('Hoạt động nhóm')
+                    ->placeholder('—')
+                    ->url(fn (ServiceOrder $record) => $record->facebookGroupActivityUrl(), true)
+                    ->tooltip(fn (ServiceOrder $record) => $record->facebookGroupActivityUrl())
+                    ->copyable(),
 
                 Tables\Columns\TextColumn::make('customer_email')
                     ->label('Email')

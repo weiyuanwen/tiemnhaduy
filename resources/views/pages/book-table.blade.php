@@ -86,6 +86,11 @@
             color: #222;
             letter-spacing: normal;
         }
+        .facebook-payer a {
+            color: #111;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
         .facebook-payer[hidden] {
             display: none;
         }
@@ -885,6 +890,18 @@
                 return Number(amount).toLocaleString("vi-VN") + " VND";
             }
 
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+
+            function facebookAnchor(label, href) {
+                return '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(label) + "</a>";
+            }
+
             function setMessage(text, isError) {
                 paymentMessage.className = isError ? "text-danger" : "text-success";
                 paymentMessage.textContent = text;
@@ -1057,13 +1074,20 @@
                 qrStatusBadge.textContent = "Đang chờ CK";
                 var payerBits = [];
                 if (data.facebook_name) {
-                    payerBits.push(data.facebook_name);
+                    payerBits.push(escapeHtml(data.facebook_name));
                 }
                 if (data.facebook_id) {
-                    payerBits.push("ID " + data.facebook_id);
+                    payerBits.push("ID " + escapeHtml(data.facebook_id));
                 }
-                if (payerBits.length) {
-                    facebookPayerName.textContent = payerBits.join(" · ");
+                var payerLinks = [];
+                if (data.facebook_profile_link) {
+                    payerLinks.push(facebookAnchor("Profile", data.facebook_profile_link));
+                }
+                if (data.facebook_group_activity_url) {
+                    payerLinks.push(facebookAnchor("Hoạt động nhóm", data.facebook_group_activity_url));
+                }
+                if (payerBits.length || payerLinks.length) {
+                    facebookPayerName.innerHTML = payerBits.join(" · ") + (payerLinks.length ? "<br>" + payerLinks.join(" · ") : "");
                     facebookPayerName.hidden = false;
                 } else {
                     facebookPayerName.textContent = "";

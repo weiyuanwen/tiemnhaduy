@@ -82,6 +82,12 @@ class OrdersRelationManager extends RelationManager
                     ->tooltip(fn ($record) => $record->facebook_profile_link)
                     ->url(fn ($record) => $record->facebook_profile_link, true),
 
+                Tables\Columns\TextColumn::make('facebook_id')
+                    ->label('Hoạt động nhóm')
+                    ->placeholder('—')
+                    ->url(fn ($record) => $record->facebookGroupActivityUrl(), true)
+                    ->tooltip(fn ($record) => $record->facebookGroupActivityUrl()),
+
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Amount')
                     ->money('VND')

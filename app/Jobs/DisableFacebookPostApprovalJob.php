@@ -44,15 +44,13 @@ class DisableFacebookPostApprovalJob implements ShouldQueue
         ]);
 
         $reason = (string) ($result['reason'] ?? 'unknown');
-        $telegram->notify(implode("\n", [
+        $telegram->notify(implode("\n", array_merge([
             $ok
                 ? 'Tiệm Nhà Duy: đã tắt phê duyệt bài viết trên Facebook'
                 : 'Tiệm Nhà Duy: chưa tắt được phê duyệt bài viết',
             'Mã: '.$order->order_code,
-            'Facebook: '.($order->facebook_name ?: '—'),
-            'ID: '.($order->facebook_id ?: '—'),
-            'URL: '.($order->facebook_profile_link ?: '—'),
+        ], $order->facebookTelegramLines(), [
             $ok ? 'Kết quả: '.$reason : 'Lý do: '.$reason,
-        ]));
+        ])));
     }
 }

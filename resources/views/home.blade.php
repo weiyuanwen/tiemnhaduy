@@ -27,19 +27,22 @@
     <!-- Hero Section Start -->
     <div class="hero hero-video" id="main-content">
         <div class="background">
-            <picture>
-                <source media="(max-width: 767px)" srcset="{{ asset('rosta/images/produce/highland-coffee-sm.webp') }}" type="image/webp">
-                <img
-                    class="media-kenburns-img"
-                    src="{{ asset('rosta/images/produce/highland-coffee.webp') }}"
-                    alt="Vườn cà phê Gia Lai, đất đỏ bazan Tây Nguyên"
-                    fetchpriority="high"
-                    loading="eager"
-                    decoding="async"
-                    width="1400"
-                    height="662"
-                >
-            </picture>
+            <div class="hero-media-zoom">
+                <picture>
+                    <source media="(max-width: 767px)" srcset="{{ asset('rosta/images/produce/highland-coffee-sm.webp') }}" type="image/webp">
+                    <img
+                        class="hero-media-img"
+                        src="{{ asset('rosta/images/produce/highland-coffee.webp') }}"
+                        alt="Vườn cà phê Gia Lai, đất đỏ bazan Tây Nguyên"
+                        fetchpriority="high"
+                        loading="eager"
+                        decoding="async"
+                        width="1400"
+                        height="662"
+                    >
+                </picture>
+                <div class="hero-media-overlay" aria-hidden="true"></div>
+            </div>
         </div>
         <div class="container">
             <div class="row align-items-center">

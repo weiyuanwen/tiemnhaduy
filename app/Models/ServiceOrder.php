@@ -85,6 +85,51 @@ class ServiceOrder extends Model
         return $this->hasMany(BankTransaction::class);
     }
 
+    public function facebookNumericId(): ?string
+    {
+        if (is_string($this->facebook_id) && preg_match('/^\d+$/', $this->facebook_id)) {
+            return $this->facebook_id;
+        }
+
+        $link = (string) $this->facebook_profile_link;
+        if ($link !== '' && preg_match('/(?:profile\.php\?id=|\/user\/)(\d+)/', $link, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    public function facebookGroupActivityUrl(): ?string
+    {
+        $userId = $this->facebookNumericId();
+        $groupId = (string) config('services.facebook.group_id');
+
+        if ($userId === null || $groupId === '') {
+            return null;
+        }
+
+        return 'https://web.facebook.com/groups/'.$groupId.'/user/'.$userId.'/';
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function facebookTelegramLines(): array
+    {
+        $lines = [
+            'Facebook: '.($this->facebook_name ?: '—'),
+            'ID: '.($this->facebook_id ?: '—'),
+            'Profile: '.($this->facebook_profile_link ?: '—'),
+        ];
+
+        $groupUrl = $this->facebookGroupActivityUrl();
+        if ($groupUrl) {
+            $lines[] = 'Hoạt động nhóm: '.$groupUrl;
+        }
+
+        return $lines;
+    }
+
     /**
      * Check if order is pending.
      */

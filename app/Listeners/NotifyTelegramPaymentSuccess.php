@@ -36,15 +36,13 @@ class NotifyTelegramPaymentSuccess
             }
         }
 
-        $this->telegram->notify(implode("\n", [
+        $this->telegram->notify(implode("\n", array_merge([
             'Tiệm Nhà Duy: thanh toán thành công',
             'Mã: '.$order->order_code,
             'Số tiền: '.number_format((int) $order->amount).' VND',
-            'Facebook: '.($order->facebook_name ?: '—'),
-            'ID: '.($order->facebook_id ?: '—'),
-            'URL: '.($order->facebook_profile_link ?: '—'),
+        ], $order->facebookTelegramLines(), [
             'Đang tắt phê duyệt bài viết trên Facebook...',
             $mailLine,
-        ]));
+        ])));
     }
 }

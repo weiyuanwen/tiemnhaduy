@@ -38,6 +38,9 @@ class PaymentTelegramNotificationTest extends TestCase
             'order_code' => 'ORDFBABCDEFGH12',
             'amount' => 100000,
             'customer_email' => 'a@example.com',
+            'facebook_profile_link' => 'https://facebook.com/beruby',
+            'facebook_name' => 'Bé Ruby',
+            'facebook_id' => '61577234078066',
             'expires_at' => now()->addMinutes(12),
         ]);
 
@@ -52,6 +55,11 @@ class PaymentTelegramNotificationTest extends TestCase
                 && str_contains((string) $pair[0]['text'], 'thanh toán thành công'));
         $this->assertCount(1, $telegram);
         $this->assertStringContainsString('ORDFBABCDEFGH12', (string) $telegram->first()[0]['text']);
+        $this->assertStringContainsString('https://facebook.com/beruby', (string) $telegram->first()[0]['text']);
+        $this->assertStringContainsString(
+            'https://web.facebook.com/groups/782860725537921/user/61577234078066/',
+            (string) $telegram->first()[0]['text']
+        );
     }
 
     public function test_expired_order_notifies_telegram(): void

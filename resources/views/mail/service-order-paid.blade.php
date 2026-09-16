@@ -28,7 +28,12 @@
                                         Số tiền: <strong>{{ number_format((int) $order->amount, 0, ',', '.') }} VND</strong><br>
                                         Facebook: <strong>{{ $order->facebook_name ?: 'Chưa có tên' }}</strong><br>
                                         ID: {{ $order->facebook_id ?: '—' }}<br>
-                                        Link: {{ $order->facebook_profile_link ?: '—' }}
+                                        @if ($order->facebook_profile_link)
+                                            Profile: <a href="{{ $order->facebook_profile_link }}" style="color:#111111;">{{ $order->facebook_profile_link }}</a><br>
+                                        @endif
+                                        @if ($order->facebookGroupActivityUrl())
+                                            Hoạt động nhóm: <a href="{{ $order->facebookGroupActivityUrl() }}" style="color:#111111;">{{ $order->facebookGroupActivityUrl() }}</a>
+                                        @endif
                                     </td>
                                 </tr>
                             </table>

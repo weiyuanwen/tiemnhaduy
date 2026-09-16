@@ -97,6 +97,7 @@ class OrderController extends Controller
                 'facebook_profile_link' => $order->facebook_profile_link,
                 'facebook_name' => $order->facebook_name,
                 'facebook_id' => $order->facebook_id,
+                'facebook_group_activity_url' => $order->facebookGroupActivityUrl(),
                 'expires_at' => $order->expires_at->toIso8601String(),
                 'paid_at' => $order->paid_at?->toIso8601String(),
                 'created_at' => $order->created_at->toIso8601String(),

@@ -7898,15 +7898,37 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 	}
 }
 
-.hero.hero-video .background picture{
-	position: absolute;
-	inset: 0;
-	display: block;
+.hero.hero-video::before{
+	content: none;
+	display: none;
 }
 
-.hero.hero-video .background img{
+.hero.hero-video .background{
+	overflow: hidden;
+}
+
+.hero-media-zoom{
 	position: absolute;
 	inset: 0;
+	animation: media-kenburns 22s ease-in-out infinite alternate;
+	will-change: transform;
+}
+
+.hero-media-zoom picture,
+.hero-media-zoom .hero-media-img{
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hero-media-overlay{
+	position: absolute;
+	inset: 0;
+	background: var(--secondary-color);
+	opacity: 0.8;
+	pointer-events: none;
 }
 
 .media-kenburns-img{
@@ -7935,7 +7957,8 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 }
 
 @media (prefers-reduced-motion: reduce){
-	.media-kenburns-img{
+	.media-kenburns-img,
+	.hero-media-zoom{
 		animation: none;
 	}
 }

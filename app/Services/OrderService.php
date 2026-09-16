@@ -145,6 +145,7 @@ class OrderService
                     'facebook_profile_link' => $order->facebook_profile_link,
                     'facebook_name' => $order->facebook_name,
                     'facebook_id' => $order->facebook_id,
+                    'facebook_group_activity_url' => $order->facebookGroupActivityUrl(),
                     'service' => [
                         'id' => $serviceData['id'],
                         'name' => $serviceData['name'],
