@@ -238,9 +238,9 @@ function isValidFacebookUrl(url) {
 
   // Basic format validation
   const facebookPatterns = [
-    /^https?:\/\/(www\.|m\.|mbasic\.)?facebook\.com\/[\w.]+\/?$/i,
-    /^https?:\/\/(www\.|m\.|mbasic\.)?facebook\.com\/profile\.php\?id=\d+&?.*$/i,
-    /^https?:\/\/(www\.|m\.|mbasic\.)?facebook\.com\/groups\/.*$/i
+    /^https?:\/\/(www\.|web\.|m\.|mbasic\.)?facebook\.com\/[\w.]+\/?$/i,
+    /^https?:\/\/(www\.|web\.|m\.|mbasic\.)?facebook\.com\/profile\.php\?id=\d+&?.*$/i,
+    /^https?:\/\/(www\.|web\.|m\.|mbasic\.)?facebook\.com\/groups\/.*$/i
   ];
 
   return facebookPatterns.some(pattern => pattern.test(url));

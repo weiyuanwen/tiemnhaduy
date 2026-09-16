@@ -49,6 +49,39 @@ class FacebookApprovalOnPaymentTest extends TestCase
         ]);
     }
 
+    public function test_create_order_looks_up_web_facebook_host_via_www_inspect(): void
+    {
+        config()->set('services.facebook.approver_url', 'http://approver.test');
+        config()->set('services.facebook.lookup_http', false);
+        Http::fake([
+            'http://approver.test/lookup-profile' => Http::response([
+                'ok' => true,
+                'uid' => '100000000000001',
+                'name' => 'Edward Swim',
+                'reason' => 'ok',
+            ], 200),
+        ]);
+
+        $service = Service::factory()->create(['is_active' => true, 'price' => 100000]);
+        $response = $this->postJson('/api/v1/orders', [
+            'facebook_profile_link' => 'https://web.facebook.com/swimwedward',
+            'service_id' => $service->id,
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.facebook_name', 'Edward Swim')
+            ->assertJsonPath('data.facebook_id', '100000000000001');
+        Http::assertSent(function ($request) {
+            return $request->url() === 'http://approver.test/lookup-profile'
+                && $request['url'] === 'https://www.facebook.com/swimwedward';
+        });
+        $this->assertDatabaseHas('service_orders', [
+            'facebook_profile_link' => 'https://web.facebook.com/swimwedward',
+            'facebook_name' => 'Edward Swim',
+            'facebook_id' => '100000000000001',
+        ]);
+    }
+
     public function test_create_order_looks_up_facebook_name_from_html(): void
     {
         config()->set('services.facebook.approver_url', '');

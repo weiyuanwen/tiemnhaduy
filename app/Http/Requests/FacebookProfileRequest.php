@@ -27,7 +27,7 @@ class FacebookProfileRequest extends FormRequest
             'facebook_profile_link' => [
                 'required',
                 'url',
-                'regex:/facebook\.com/',
+                'regex:/^https?:\/\/((www|web|m|mbasic)\.)?facebook\.com\//i',
             ],
         ];
     }

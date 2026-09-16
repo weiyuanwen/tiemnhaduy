@@ -608,7 +608,7 @@
                         <form id="paymentForm" action="#" method="POST">
                             <div class="form-group mb-4">
                                 <label class="input-label" for="facebookLink">Link Facebook</label>
-                                <input type="url" name="facebookLink" class="form-control" id="facebookLink" placeholder="https://facebook.com/..." required>
+                                <input type="url" name="facebookLink" class="form-control" id="facebookLink" placeholder="https://facebook.com/... hoặc https://web.facebook.com/..." required>
                                 <p class="input-hint">Dùng để tạo nội dung chuyển khoản riêng cho đơn này.</p>
                             </div>
                             <div class="form-group mb-4">
@@ -1080,8 +1080,8 @@
                     setMessage("Vui lòng nhập link Facebook.", true);
                     return false;
                 }
-                if (!/^https?:\/\/(www\.)?facebook\.com\//i.test(facebookLink)) {
-                    setMessage("Link phải là địa chỉ facebook.com.", true);
+                if (!/^https?:\/\/((www|web|m|mbasic)\.)?facebook\.com\//i.test(facebookLink)) {
+                    setMessage("Link phải là địa chỉ facebook.com hoặc web.facebook.com.", true);
                     return false;
                 }
                 if (creatingOrder) {

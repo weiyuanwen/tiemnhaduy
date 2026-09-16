@@ -19,7 +19,21 @@ class FacebookProfileLookupTest extends TestCase
     {
         $lookup = app(FacebookProfileLookup::class);
         $this->assertSame('nguyenvana', $lookup->nameFromUrl('https://www.facebook.com/nguyenvana'));
+        $this->assertSame('swimwedward', $lookup->nameFromUrl('https://web.facebook.com/swimwedward'));
         $this->assertSame('ID 100014343376569', $lookup->nameFromUrl('https://facebook.com/profile.php?id=100014343376569'));
+    }
+
+    public function test_canonicalizes_web_and_bare_facebook_hosts(): void
+    {
+        $lookup = app(FacebookProfileLookup::class);
+        $this->assertSame(
+            'https://www.facebook.com/swimwedward',
+            $lookup->canonicalUrl('https://web.facebook.com/swimwedward')
+        );
+        $this->assertSame(
+            'https://www.facebook.com/swimwedward',
+            $lookup->canonicalUrl('https://facebook.com/swimwedward')
+        );
     }
 
     public function test_resolves_username_without_http_when_lookup_disabled(): void

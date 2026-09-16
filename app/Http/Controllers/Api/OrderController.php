@@ -29,7 +29,7 @@ class OrderController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'facebook_profile_link' => ['required', 'url', 'regex:/facebook\.com/'],
+            'facebook_profile_link' => ['required', 'url', 'regex:/^https?:\/\/((www|web|m|mbasic)\.)?facebook\.com\//i'],
             'service_id' => ['nullable', 'integer'],
             'email' => ['nullable', 'email', 'max:255'],
         ]);

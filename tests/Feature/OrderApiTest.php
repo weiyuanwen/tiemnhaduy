@@ -118,6 +118,27 @@ class OrderApiTest extends TestCase
             ->assertJsonValidationErrors(['facebook_profile_link']);
     }
 
+    public function test_create_order_accepts_web_facebook_host(): void
+    {
+        $service = Service::factory()->create([
+            'is_active' => true,
+            'price' => 100000,
+        ]);
+        Event::fake([PaymentPending::class]);
+
+        $response = $this->postJson('/api/v1/orders', [
+            'facebook_profile_link' => 'https://web.facebook.com/swimwedward',
+            'service_id' => $service->id,
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.facebook_name', 'swimwedward');
+        $this->assertDatabaseHas('service_orders', [
+            'facebook_profile_link' => 'https://web.facebook.com/swimwedward',
+            'facebook_name' => 'swimwedward',
+        ]);
+    }
+
     public function test_can_get_order_details(): void
     {
         $order = ServiceOrder::factory()->create();

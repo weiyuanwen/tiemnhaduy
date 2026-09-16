@@ -162,6 +162,10 @@ class FacebookUidExtractorService
             $url = str_replace('mbasic.facebook.com', 'www.facebook.com', $url);
         }
 
+        if (str_contains($url, 'web.facebook.com')) {
+            $url = str_replace('web.facebook.com', 'www.facebook.com', $url);
+        }
+
         // Remove query parameters and fragments
         $url = preg_replace('/[\?#].*$/', '', $url);
 

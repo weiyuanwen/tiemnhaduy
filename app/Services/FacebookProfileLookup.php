@@ -22,7 +22,7 @@ class FacebookProfileLookup
         $id = $this->idFromUrl($url);
         $name = $this->nameFromUrl($url);
 
-        $inspected = $this->approver->lookupProfile($url);
+        $inspected = $this->approver->lookupProfile($this->canonicalUrl($url));
         if (($inspected['ok'] ?? false) && ! ($inspected['skipped'] ?? false)) {
             return [
                 'name' => $inspected['name'] ?: $name,
@@ -36,7 +36,7 @@ class FacebookProfileLookup
         }
 
         try {
-            $html = $this->fetchHtml($url);
+            $html = $this->fetchHtml($this->canonicalUrl($url));
             if (is_string($html) && $html !== '') {
                 $id = $this->idFromHtml($html) ?? $id;
                 $name = $this->nameFromHtml($html) ?? $name;
@@ -82,6 +82,17 @@ class FacebookProfileLookup
         }
 
         return app(FacebookUidExtractorService::class)->extractUidFromUrl($url);
+    }
+
+    public function canonicalUrl(string $url): string
+    {
+        $canonical = preg_replace(
+            '~^https?://(?:web|m|mbasic)\.facebook\.com~i',
+            'https://www.facebook.com',
+            trim($url)
+        ) ?? trim($url);
+
+        return preg_replace('~^https?://facebook\.com~i', 'https://www.facebook.com', $canonical) ?? $canonical;
     }
 
     public function nameFromUrl(string $url): ?string

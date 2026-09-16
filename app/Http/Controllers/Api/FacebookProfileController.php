@@ -319,6 +319,10 @@ class FacebookProfileController extends Controller
             $url = str_replace('m.facebook.com', 'www.facebook.com', $url);
         }
 
+        if (str_contains($url, 'web.facebook.com')) {
+            $url = str_replace('web.facebook.com', 'www.facebook.com', $url);
+        }
+
         // Check if it's a shortened URL (fb.me)
         if (str_contains($url, 'fb.me')) {
             $isShortened = true;

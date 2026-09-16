@@ -52,6 +52,8 @@ class VietQrOrderCreateTest extends TestCase
             ->assertSee('facebookPayerName', false)
             ->assertSee('Thông tin thanh toán', false)
             ->assertDontSee('buildQrUrl', false)
-            ->assertDontSee('generateTransferCode', false);
+            ->assertDontSee('generateTransferCode', false)
+            ->assertSee('web.facebook.com', false)
+            ->assertSee('((www|web|m|mbasic)\\.)?facebook', false);
     }
 }
