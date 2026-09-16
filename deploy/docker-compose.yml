@@ -68,6 +68,8 @@ services:
       REVERB_PORT: "8080"
       REVERB_SCHEME: http
     command: ["php", "artisan", "queue:work", "database", "--sleep=3", "--tries=3", "--max-time=3600"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ../.env:/var/www/html/.env:ro
       - laravel-storage:/var/www/html/storage
