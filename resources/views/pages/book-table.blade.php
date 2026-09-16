@@ -66,8 +66,14 @@
             text-align: center;
         }
         .text-only h1 {
-            font-size: 7vw;
-            margin-bottom: 20px;
+            font-family: "Montserrat", sans-serif;
+            font-size: clamp(26px, 3.2vw, 38px);
+            font-weight: 600;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+            text-wrap: balance;
+            margin-bottom: 16px;
+            text-transform: none;
         }
         .section-title {
             font-weight: 400;
@@ -361,7 +367,8 @@
                 padding-top: 84px;
             }
             .text-only h1 {
-                font-size: 50px;
+                font-size: clamp(22px, 6.2vw, 30px);
+                margin-bottom: 12px;
             }
             .section-title {
                 font-size: 32px;

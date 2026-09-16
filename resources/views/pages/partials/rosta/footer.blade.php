@@ -87,7 +87,7 @@
                     <p class="social">
                         <a href="https://www.facebook.com/tiemnhaduy"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="https://www.instagram.com/tiemnhaduy"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://maps.app.goo.gl/JXTdYnauTKkTRdbi7"><i class="fa-solid fa-location-dot"></i></a>
+                        <a href="https://maps.app.goo.gl/7Yj27C915hADd5NR8" aria-label="Xem Tiệm Nhà Duy trên Google Maps"><i class="fa-solid fa-location-dot"></i></a>
                         <a href="https://www.youtube.com/@tiemnhaduy"><i class="fa-brands fa-youtube"></i></a>
                     </p>
                 </div>

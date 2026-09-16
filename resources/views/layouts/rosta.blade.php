@@ -53,10 +53,18 @@
             "telephone": "+84981314516",
             "address": {
                 "@@type": "PostalAddress",
+                "streetAddress": "Nguyễn Văn Linh",
                 "addressLocality": "Chư Sê",
                 "addressRegion": "Gia Lai",
+                "postalCode": "61906",
                 "addressCountry": "VN"
-            }
+            },
+            "geo": {
+                "@@type": "GeoCoordinates",
+                "latitude": 13.72162,
+                "longitude": 108.059918
+            },
+            "hasMap": "https://maps.app.goo.gl/7Yj27C915hADd5NR8"
         }
     </script>
     <script type="application/ld+json">

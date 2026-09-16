@@ -7,7 +7,7 @@
                     <div class="topbar-contact-info">
                         <ul>
                             <li><a href="mailto:support@tiemnhaduy.com"><img src="{{ asset('rosta/images/icon-mail.svg') }}" alt="Email icon">support@tiemnhaduy.com</a></li>
-                            <li><img src="{{ asset('rosta/images/icon-location.svg') }}" alt="Location icon">Xã Chư Sê, Tỉnh Gia Lai, Vietnam</li>
+                            <li><img src="{{ asset('rosta/images/icon-location.svg') }}" alt="Location icon">Macca Gia Lai, xã Chư Sê, Gia Lai</li>
                         </ul>
                     </div>
                     <!-- Topbar Contact Information End -->
@@ -19,7 +19,7 @@
                         <ul>
                             <li><a href="https://www.instagram.com/tiemnhaduy"><i class="fa-brands fa-instagram"></i></a></li>
                             <li><a href="https://www.facebook.com/tiemnhaduy"><i class="fa-brands fa-facebook-f"></i></a></li>
-                            <li><a href="https://maps.app.goo.gl/JXTdYnauTKkTRdbi7"><i class="fa-solid fa-location-dot"></i></a></li>
+                            <li><a href="https://maps.app.goo.gl/7Yj27C915hADd5NR8" aria-label="Xem Tiệm Nhà Duy trên Google Maps"><i class="fa-solid fa-location-dot"></i></a></li>
                         </ul>
                     </div>
                     <!-- Topbar Social Links End -->
@@ -84,7 +84,7 @@
                                         <div class="header-sidebar-info">
                                             <p class="sidebar-phone"><a href="tel:+84981314516">+84981314516</a></p>
                                             <ul>
-                                                <li>Xã Chư Sê, Tỉnh Gia Lai, Vietnam</li>
+                                                <li>Macca Gia Lai, xã Chư Sê, Gia Lai</li>
                                                 <li><a href="mailto:support@tiemnhaduy.com">support@tiemnhaduy.com</a></li>
                                             </ul>
                                         </div>
@@ -113,7 +113,7 @@
                                             <ul>
                                                 <li><a href="https://www.instagram.com/tiemnhaduy"><i class="fa-brands fa-instagram"></i></a></li>
                                                 <li><a href="https://www.facebook.com/tiemnhaduy"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                                <li><a href="https://maps.app.goo.gl/JXTdYnauTKkTRdbi7"><i class="fa-solid fa-location-dot"></i></a></li>
+                                                <li><a href="https://maps.app.goo.gl/7Yj27C915hADd5NR8" aria-label="Xem Tiệm Nhà Duy trên Google Maps"><i class="fa-solid fa-location-dot"></i></a></li>
                                             </ul>
                                         </div>
                                         <!-- Header Sidebar Social List End -->

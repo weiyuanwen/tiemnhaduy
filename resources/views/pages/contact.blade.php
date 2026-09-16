@@ -1,12 +1,13 @@
 @extends('layouts.rosta')
 
-@section('title', 'Liên hệ Tiệm Nhà Duy – đặt hàng nông sản Gia Lai')
-@section('meta_description', 'Gửi thư đặt cà phê Robusta, mắc ca, tiêu đen hoặc hỏi mùa vụ. Tiệm Nhà Duy phản hồi trong giờ làm việc tại Chư Sê, Gia Lai.')
-@section('og_title', 'Liên hệ Tiệm Nhà Duy')
-@section('og_description', 'Đặt hàng nông sản Tây Nguyên, hỏi tồn kho hoặc hợp tác bán sỉ. Gửi thư trực tiếp cho Tiệm Nhà Duy.')
+@section('title', 'Liên hệ Tiệm Nhà Duy – Macca Gia Lai, Chư Sê')
+@section('meta_description', 'Gửi thư đặt cà phê Robusta, mắc ca hoặc hỏi mùa vụ. Tiệm Nhà Duy tại Macca Gia Lai, xã Chư Sê, tỉnh Gia Lai. Xem vị trí trên Google Maps.')
+@section('og_title', 'Liên hệ Tiệm Nhà Duy tại Chư Sê, Gia Lai')
+@section('og_description', 'Đặt hàng nông sản Tây Nguyên tại Macca Gia Lai, xã Chư Sê. Gửi thư hoặc xem bản đồ để đến tiệm.')
 @section('og_image', asset('rosta/images/book-table-image.jpg'))
-@section('og_image_alt', 'Liên hệ đặt nông sản Tiệm Nhà Duy tại Chư Sê, Gia Lai')
+@section('og_image_alt', 'Liên hệ và bản đồ Tiệm Nhà Duy tại Macca Gia Lai, Chư Sê, Gia Lai')
 @section('canonical_url', route('contact'))
+@section('meta_keywords', 'Liên hệ Tiệm Nhà Duy, Macca Gia Lai, địa chỉ Chư Sê Gia Lai, bản đồ Tiệm Nhà Duy, đặt cà phê Robusta')
 
 @push('structured_data')
 <script type="application/ld+json">
@@ -14,9 +15,57 @@
     "@@context": "https://schema.org",
     "@@type": "ContactPage",
     "name": "Liên hệ Tiệm Nhà Duy",
-    "description": "Gửi thư đặt cà phê Robusta, mắc ca, tiêu đen hoặc hỏi mùa vụ. Tiệm Nhà Duy phản hồi trong giờ làm việc tại Chư Sê, Gia Lai.",
+    "description": "Gửi thư đặt cà phê Robusta, mắc ca hoặc hỏi mùa vụ. Tiệm Nhà Duy tại Macca Gia Lai, xã Chư Sê, tỉnh Gia Lai.",
     "url": "{{ route('contact') }}",
-    "inLanguage": "vi-VN"
+    "inLanguage": "vi-VN",
+    "mainEntity": {
+        "@@id": "{{ url('/') }}#localbusiness"
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "LocalBusiness",
+    "@@id": "{{ url('/') }}#localbusiness",
+    "name": "Tiệm Nhà Duy",
+    "image": "{{ asset('rosta/images/about-us-image.jpg') }}",
+    "url": "{{ url('/') }}",
+    "telephone": "+84981314516",
+    "email": "support@tiemnhaduy.com",
+    "priceRange": "$$",
+    "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "Nguyễn Văn Linh",
+        "addressLocality": "Chư Sê",
+        "addressRegion": "Gia Lai",
+        "postalCode": "61906",
+        "addressCountry": "VN"
+    },
+    "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": 13.72162,
+        "longitude": 108.059918
+    },
+    "hasMap": "https://maps.app.goo.gl/7Yj27C915hADd5NR8",
+    "areaServed": {
+        "@@type": "AdministrativeArea",
+        "name": "Gia Lai"
+    },
+    "openingHoursSpecification": [
+        {
+            "@@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "08:00",
+            "closes": "21:00"
+        },
+        {
+            "@@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Saturday", "Sunday"],
+            "opens": "09:00",
+            "closes": "22:00"
+        }
+    ]
 }
 </script>
 <script type="application/ld+json">
@@ -72,7 +121,7 @@
                                 <div class="icon-box"><img src="{{ asset('rosta/images/icon-location.svg') }}" alt=""></div>
                                 <div class="contact-item-content">
                                     <h3>Địa chỉ</h3>
-                                    <p><a href="https://maps.app.goo.gl/JXTdYnauTKkTRdbi7" target="_blank" rel="noopener noreferrer">Xã Chư Sê, tỉnh Gia Lai</a></p>
+                                    <p><a href="https://maps.app.goo.gl/7Yj27C915hADd5NR8" target="_blank" rel="noopener noreferrer">Macca Gia Lai, Nguyễn Văn Linh, xã Chư Sê, tỉnh Gia Lai</a></p>
                                 </div>
                             </div>
                         </div>
@@ -128,4 +177,25 @@
             </div>
         </div>
     </div>
+    <section class="google-map" aria-labelledby="contact-map-heading">
+        <div class="container">
+            <div class="section-title">
+                <h2 id="contact-map-heading">Vị trí trên bản đồ</h2>
+                <p>Macca Gia Lai, Nguyễn Văn Linh, xã Chư Sê, tỉnh Gia Lai. <a href="https://maps.app.goo.gl/7Yj27C915hADd5NR8" target="_blank" rel="noopener noreferrer">Mở Google Maps</a></p>
+            </div>
+            <figure class="google-map-iframe">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.947638066792!2d108.05991787597776!3d13.721619986667028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x316e833dc3313e4f%3A0xb234a4637dd5cc19!2sMacca%20Gia%20Lai!5e0!3m2!1svi!2s!4v1789572237512!5m2!1svi!2s"
+                    title="Bản đồ Tiệm Nhà Duy tại Macca Gia Lai, xã Chư Sê, tỉnh Gia Lai"
+                    width="600"
+                    height="450"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                ></iframe>
+                <figcaption>Tiệm Nhà Duy tại Macca Gia Lai, xã Chư Sê, tỉnh Gia Lai.</figcaption>
+            </figure>
+        </div>
+    </section>
 @endsection

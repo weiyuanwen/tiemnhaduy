@@ -1426,8 +1426,9 @@ body{
 #main-content .hero-content .section-title h1.text-anime-style-3,
 #main-content .hero-content .section-title h1.text-anime-style-3 .split-line,
 #main-content .hero-content .section-title h1.text-anime-style-3 .split-char{
-	font-family: var(--heading-family) !important;
-	font-size: 95px;
+	font-family: "Montserrat", sans-serif !important;
+	font-size: clamp(40px, 6vw, 72px);
+	font-weight: 600;
 	color: #fff;
 }
 
@@ -2230,12 +2231,14 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 }
 
 .scrolling-content span{
-	font-family: var(--accent-font);
+	font-family: "Montserrat", sans-serif;
 	display: inline-flex;
 	align-items: center;
-	font-size: 22px;
+	font-size: 18px;
+	font-weight: 600;
 	line-height: 1.2em;
-	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	text-transform: none;
 	color: var(--secondary-color);
 	vertical-align: middle;
 }
@@ -5923,23 +5926,50 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 }
 
 .google-map{
-	padding: 50px 0 100px;
+	padding: 20px 0 100px;
+	background-color: #FFFDF8;
 }
 
-.google-map-iframe,
-.google-map-iframe iframe{
-	width: 100%;
-	height: 600px;
+.google-map .section-title{
+	margin-bottom: 28px;
+}
+
+.google-map .section-title h2{
+	max-width: none;
+}
+
+.google-map .section-title p{
+	margin-top: 12px;
+}
+
+.google-map-iframe{
+	margin: 0;
+	position: relative;
+	overflow: hidden;
 	border-radius: 26px;
+	background: #eee9df;
+	aspect-ratio: 16 / 9;
+	width: 100%;
 }
 
 .google-map-iframe iframe{
-    filter: grayscale(1);
-    transition: all 0.4s ease-in-out;
+	display: block;
+	width: 100%;
+	height: 100%;
+	min-height: 360px;
+	border: 0;
 }
 
-.google-map-iframe iframe:hover{
-    filter: grayscale(0);
+.google-map-iframe figcaption{
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /************************************/
@@ -7213,10 +7243,12 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 		padding: 25px 0 50px;
 	}
 	
-	.google-map-iframe,
-	.google-map-iframe iframe{
-		height: 450px;
+	.google-map-iframe{
 		border-radius: 16px;
+	}
+
+	.google-map-iframe iframe{
+		min-height: 280px;
 	}
 
 	.page-book-table{
@@ -7887,9 +7919,8 @@ header.main-header .header-sticky,header.main-header .header-sticky.active{backg
 		font-size: 16px;
 	}
 
-	.google-map-iframe,
 	.google-map-iframe iframe{
-		height: 350px;
+		min-height: 240px;
 	}
 
 	.book-table-image{
@@ -8095,7 +8126,12 @@ body.onyx-theme .section-title .section-eyebrow{
 }
 
 #main-content .hero-content .section-title h1{
-	font-family: var(--heading-family), "Montserrat", sans-serif;
+	font-family: "Montserrat", sans-serif;
+	font-weight: 600;
+	font-size: clamp(40px, 6vw, 72px);
+	letter-spacing: -0.03em;
+	line-height: 1.12;
+	text-wrap: balance;
 	text-transform: none;
 	color: #fff;
 	text-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
