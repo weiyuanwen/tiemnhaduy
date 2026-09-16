@@ -911,9 +911,9 @@
                     <div class="our-offers-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">chúng tôi cung cấp gì?</h3>
-                            <h2 class="text-anime-style-3" data-cursor="-opaque">Sản phẩm cho nhu cầu thưởng thức, quà tặng và lưu niệm</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Chúng tôi cung cấp cà phê, mắc ca, tiêu và bơ phù hợp để dùng hằng ngày, làm quà tặng ý nghĩa hoặc chọn làm sản phẩm lưu niệm đặc trưng.</p>
+                            <h3 class="wow fadeInUp">Facebook · Ăn vặt Chư Sê</h3>
+                            <h2 class="text-anime-style-3" data-cursor="-opaque">Cộng đồng ẩm thực Chư Sê – Gia Lai</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">Nhóm do người con sinh ra và lớn lên ở Chư Sê tạo ra — nơi tụ họp những người yêu món ăn vặt, đồ uống và ẩm thực quê nhà. Hơn 39.800 người theo dõi, gom đơn và chia sẻ món ngon mỗi ngày.</p>
                         </div>
                         <!-- Section Title End -->
 
@@ -923,12 +923,12 @@
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
                                 <h2 class="accordion-header" id="offersheading1">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse1" aria-expanded="true" aria-controls="offerscollapse1">
-                                        Combo gia đình
+                                        Người Chư Sê tụ họp
                                     </button>
                                 </h2>
                                 <div id="offerscollapse1" class="accordion-collapse collapse show" aria-labelledby="offersheading1" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
-                                        <p>Gói sản phẩm tổng hợp cà phê robusta, mắc ca, tiêu và bơ phù hợp sử dụng hằng ngày.</p>
+                                        <p>Không gian của người sống, làm việc hoặc nhớ Chư Sê – Gia Lai: kể chuyện quê, hỏi quán quen, tìm món đúng vị nhà.</p>
                                     </div>
                                 </div>
                             </div>
@@ -937,13 +937,13 @@
                             <!-- Offer Accordian Item Start -->
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
                                 <h2 class="accordion-header" id="offersheading2">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse2" aria-expanded="true" aria-controls="offerscollapse2">
-                                        Combo quà tặng
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse2" aria-expanded="false" aria-controls="offerscollapse2">
+                                        Ăn vặt &amp; đồ uống
                                     </button>
                                 </h2>
                                 <div id="offerscollapse2" class="accordion-collapse collapse" aria-labelledby="offersheading2" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
-                                        <p>Đóng gói lịch sự, phù hợp làm quà cho đối tác, người thân trong các dịp quan trọng.</p>
+                                        <p>Từ món ăn vặt, đồ uống đến đặc sản Tây Nguyên: gợi ý quán, công thức nhà làm và những món đang được khen trong ngày.</p>
                                     </div>
                                 </div>
                             </div>
@@ -952,13 +952,13 @@
                             <!-- Offer Accordian Item Start -->
                             <div class="accordion-item wow fadeInUp" data-wow-delay="0.8s">
                                 <h2 class="accordion-header" id="offersheading3">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse3" aria-expanded="true" aria-controls="offerscollapse3">
-                                        Đặt hàng định kỳ
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offerscollapse3" aria-expanded="false" aria-controls="offerscollapse3">
+                                        Gom đơn mỗi ngày
                                     </button>
                                 </h2>
                                 <div id="offerscollapse3" class="accordion-collapse collapse" aria-labelledby="offersheading3" data-bs-parent="#offer-accordion">
                                     <div class="accordion-body">
-                                        <p>Hỗ trợ đơn hàng theo tuần/tháng để bạn luôn có nông sản tươi mới, ổn định chất lượng.</p>
+                                        <p>Thành viên thường gom đơn món quen như bún trộn, ship theo nhóm — tiện, rẻ, đúng khẩu vị Chư Sê.</p>
                                     </div>
                                 </div>
                             </div>
@@ -968,7 +968,7 @@
 
                         <!-- Offer Button Start -->
                         <div class="offer-button wow fadeInUp" data-wow-delay="1s">
-                            <a href="{{ route('thanh-toan') }}" class="btn-default">Đặt lịch tư vấn ngay</a>
+                            <a href="https://www.facebook.com/search/groups/?q=Ăn%20vặt%20Chư%20Sê" class="btn-default" target="_blank" rel="noopener noreferrer">Tham gia nhóm Facebook</a>
                         </div>
                         <!-- Offer Button End -->
                     </div>

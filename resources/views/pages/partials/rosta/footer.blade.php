@@ -6,7 +6,11 @@
                 <p>Nhận thông tin sản phẩm mới, ưu đãi và mẹo sử dụng nông sản hữu ích từ Tiệm Nhà Duy.</p>
                 <form class="onyx-newsletter" action="{{ route('contact.send') }}" method="post">
                     @csrf
-                    <input type="email" name="email" placeholder="Nhập email của bạn" required>
+                    <input type="hidden" name="intent" value="newsletter">
+                    <input type="hidden" name="name" value="Đăng ký nhận tin">
+                    <input type="hidden" name="message" value="Đăng ký nhận tin từ website Tiệm Nhà Duy.">
+                    <label class="visually-hidden" for="footer-newsletter-email">Email nhận tin</label>
+                    <input id="footer-newsletter-email" type="email" name="email" placeholder="Nhập email của bạn" autocomplete="email" required>
                     <button type="submit">Đăng ký</button>
                 </form>
             </div>
