@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('bank:poll-pending')->everyFifteenSeconds()->withoutOverlapping(2);
         $schedule->command('bank:reconcile-overnight')->dailyAt('02:30');
     })
+    ->withEvents(false)
     ->withMiddleware(function (Middleware $middleware): void {
         //
         // Register custom middleware aliases

@@ -43,14 +43,15 @@ class PaymentTelegramNotificationTest extends TestCase
 
         app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-mail');
 
+        Mail::assertSent(ServiceOrderPaidMail::class, 1);
         Mail::assertSent(ServiceOrderPaidMail::class, function ($mail) {
             return $mail->hasTo('a@example.com');
         });
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), 'api.telegram.org')
-                && str_contains((string) $request['text'], 'thanh toán thành công')
-                && str_contains((string) $request['text'], 'ORDFBABCDEFGH12');
-        });
+        $telegram = collect(Http::recorded())
+            ->filter(fn ($pair) => str_contains($pair[0]->url(), 'api.telegram.org')
+                && str_contains((string) $pair[0]['text'], 'thanh toán thành công'));
+        $this->assertCount(1, $telegram);
+        $this->assertStringContainsString('ORDFBABCDEFGH12', (string) $telegram->first()[0]['text']);
     }
 
     public function test_expired_order_notifies_telegram(): void
@@ -66,10 +67,10 @@ class PaymentTelegramNotificationTest extends TestCase
 
         event(new PaymentExpired($order));
 
-        Http::assertSent(function ($request) {
-            return str_contains((string) $request['text'], 'hết hạn')
-                && str_contains((string) $request['text'], 'ORDFBZZZZZZZZZZ');
-        });
+        $telegram = collect(Http::recorded())
+            ->filter(fn ($pair) => str_contains((string) $pair[0]['text'], 'hết hạn'));
+        $this->assertCount(1, $telegram);
+        $this->assertStringContainsString('ORDFBZZZZZZZZZZ', (string) $telegram->first()[0]['text']);
     }
 
     public function test_histbank_error_notifies_telegram_once(): void

@@ -297,6 +297,7 @@ class OrderApiTest extends TestCase
 
         app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-mail');
 
+        \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\ServiceOrderPaidMail::class, 1);
         \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\ServiceOrderPaidMail::class, function ($mail) {
             return $mail->hasTo('a@example.com');
         });
