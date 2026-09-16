@@ -6,7 +6,7 @@ use App\Models\ServiceOrder;
 
 class BankTransferMatcher
 {
-    public const CODE_PATTERN = '/\bORDFB[A-Z0-9]{10}\b/i';
+    public const CODE_PATTERN = '/ORDFB[A-Z0-9]{10}/i';
 
     /**
      * @param  array<int, array<string, mixed>>  $transactions
@@ -33,7 +33,7 @@ class BankTransferMatcher
                 continue;
             }
 
-            $amount = (int) $tx['amount'];
+            $amount = (int) round((float) $tx['amount']);
             $description = $this->normalize((string) ($tx['description'] ?? ''));
 
             if (! preg_match_all(self::CODE_PATTERN, $description, $found)) {

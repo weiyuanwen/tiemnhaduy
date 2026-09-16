@@ -160,4 +160,38 @@ class PendingBankPollerTest extends TestCase
         $this->assertSame(1, $result['matched']);
         $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
     }
+
+    public function test_reads_transaction_infos_payload_from_histbank(): void
+    {
+        Event::fake([PaymentSuccess::class]);
+        Cache::flush();
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'expires_at' => now()->addMinutes(12),
+            'created_at' => now()->subMinutes(1),
+        ]);
+
+        Http::fake([
+            'http://histbank.test/transactions*' => Http::response([
+                'count' => 1,
+                'transactionInfos' => [[
+                    'id' => 'tx-infos-1',
+                    'description' => 'IBFTORDFBABCDEFGH12',
+                    'amount' => '100000',
+                    'creditDebitIndicator' => 'CRDT',
+                ]],
+            ], 200),
+        ]);
+
+        $result = app(PendingBankPoller::class)->run();
+
+        $this->assertTrue($result['fetched']);
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
+    }
 }

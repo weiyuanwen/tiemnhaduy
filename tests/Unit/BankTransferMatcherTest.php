@@ -68,13 +68,24 @@ class BankTransferMatcherTest extends TestCase
         $this->assertSame([], $matches);
     }
 
-    public function test_requires_word_boundary_on_code(): void
+    public function test_matches_code_glued_to_bank_prefix(): void
     {
         $order = $this->order('ORDFBABCDEFGH12');
         $matches = (new BankTransferMatcher())->match([
-            $this->tx(['description' => 'XORDFBABCDEFGH12Y']),
+            $this->tx(['description' => 'IBFTORDFBABCDEFGH12 CT tu Nguyen Van A']),
         ], collect([$order]));
 
-        $this->assertSame([], $matches);
+        $this->assertCount(1, $matches);
+        $this->assertSame('tx-1', $matches[0]['txId']);
+    }
+
+    public function test_matches_code_glued_to_trailing_content(): void
+    {
+        $order = $this->order('ORDFBABCDEFGH12');
+        $matches = (new BankTransferMatcher())->match([
+            $this->tx(['description' => 'NDORDFBABCDEFGH12chuyentien']),
+        ], collect([$order]));
+
+        $this->assertCount(1, $matches);
     }
 }

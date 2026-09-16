@@ -40,8 +40,27 @@ class HistbankClient
 
         return [
             'ok' => true,
-            'transactions' => $json['transactions'] ?? [],
+            'transactions' => $this->extractTransactions($json),
             'status' => $response->status(),
         ];
+    }
+
+    /**
+     * @param  mixed  $json
+     * @return array<int, array<string, mixed>>
+     */
+    private function extractTransactions(mixed $json): array
+    {
+        if (! is_array($json)) {
+            return [];
+        }
+
+        if (array_is_list($json)) {
+            return $json;
+        }
+
+        $rows = $json['transactions'] ?? $json['transactionInfos'] ?? [];
+
+        return is_array($rows) ? $rows : [];
     }
 }

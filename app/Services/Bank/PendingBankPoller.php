@@ -51,7 +51,7 @@ class PendingBankPoller
             return ['fetched' => false, 'matched' => 0, 'reason' => 'throttled'];
         }
 
-        $result = $this->client->transactions(1, 100);
+        $result = $this->client->transactions(1, 400);
         Cache::put('histbank:last_poll_at', now()->toIso8601String(), 3600);
 
         if (! $result['ok']) {
@@ -80,6 +80,19 @@ class PendingBankPoller
             if ($confirm['success']) {
                 $paid++;
             }
+        }
+
+        if ($paid === 0) {
+            $credits = collect($result['transactions'])
+                ->filter(fn ($tx) => ($tx['creditDebitIndicator'] ?? '') === 'CRDT');
+            Log::info('histbank poll unmatched', [
+                'pending' => $pending->count(),
+                'fetched' => count($result['transactions']),
+                'credits' => $credits->count(),
+                'credits_with_code' => $credits->filter(
+                    fn ($tx) => (bool) preg_match(BankTransferMatcher::CODE_PATTERN, (string) ($tx['description'] ?? ''))
+                )->count(),
+            ]);
         }
 
         return ['fetched' => true, 'matched' => $paid, 'reason' => 'ok'];

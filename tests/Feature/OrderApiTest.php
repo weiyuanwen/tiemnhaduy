@@ -304,6 +304,26 @@ class OrderApiTest extends TestCase
         Event::assertDispatched(PaymentSuccess::class);
     }
 
+    public function test_confirm_bank_match_stays_paid_when_success_listener_throws(): void
+    {
+        Event::listen(PaymentSuccess::class, function (): void {
+            throw new \RuntimeException('reverb down');
+        });
+
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'amount' => 100000,
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBTHROWTEST1',
+            'expires_at' => now()->addMinutes(12),
+        ]);
+
+        $result = app(\App\Services\OrderService::class)->confirmBankMatch($order->order_code, 'tx-throw-1');
+
+        $this->assertTrue($result['success']);
+        $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
+    }
+
     public function test_paid_order_sends_mail_when_email_present(): void
     {
         \Illuminate\Support\Facades\Mail::fake();

@@ -159,7 +159,7 @@ class OrderService
     public function confirmBankMatch(string $orderCode, string $bankTxnId, bool $allowExpired = false, ?array $bankMeta = null): array
     {
         try {
-            return DB::transaction(function () use ($orderCode, $bankTxnId, $allowExpired, $bankMeta) {
+            $result = DB::transaction(function () use ($orderCode, $bankTxnId, $allowExpired, $bankMeta) {
                 $order = $this->findOrderByCodeWithLock($orderCode);
 
                 if (! $order) {
@@ -204,13 +204,11 @@ class OrderService
                 ]);
 
                 $this->recordBankTransaction($order, $bankTxnId, $bankMeta);
-
-                event(new PaymentSuccess($order));
-
-                $this->notifyPaidSafely($order);
+                $order->refresh();
 
                 return [
                     'success' => true,
+                    'order' => $order,
                     'data' => [
                         'order_code' => $order->order_code,
                         'status' => $order->status,
@@ -231,6 +229,17 @@ class OrderService
                 'message' => 'Có lỗi xảy ra khi xác nhận thanh toán.',
             ];
         }
+
+        if (($result['success'] ?? false) === true && isset($result['order'])) {
+            $this->firePaidSideEffects($result['order']);
+
+            return [
+                'success' => true,
+                'data' => $result['data'],
+            ];
+        }
+
+        return $result;
     }
 
     public function verifyPayment(string $orderCode, string $bankTxnId): array
@@ -241,7 +250,7 @@ class OrderService
     public function markPaidTest(string $orderCode): array
     {
         try {
-            return DB::transaction(function () use ($orderCode) {
+            $result = DB::transaction(function () use ($orderCode) {
                 $order = $this->findOrderByCodeWithLock($orderCode);
 
                 if (!$order) {
@@ -281,13 +290,11 @@ class OrderService
                     'amount' => (int) $order->amount,
                     'description' => 'Test mark paid',
                 ]);
-
-                event(new PaymentSuccess($order));
-
-                $this->notifyPaidSafely($order);
+                $order->refresh();
 
                 return [
                     'success' => true,
+                    'order' => $order,
                     'data' => [
                         'order_code' => $order->order_code,
                         'status' => $order->status,
@@ -307,6 +314,17 @@ class OrderService
                 'message' => 'Có lỗi xảy ra khi xác nhận thanh toán.',
             ];
         }
+
+        if (($result['success'] ?? false) === true && isset($result['order'])) {
+            $this->firePaidSideEffects($result['order']);
+
+            return [
+                'success' => true,
+                'data' => $result['data'],
+            ];
+        }
+
+        return $result;
     }
 
     public function getOrder(string $orderCode): ?ServiceOrder
@@ -370,6 +388,20 @@ class OrderService
                 'matched_at' => now(),
             ]
         );
+    }
+
+    private function firePaidSideEffects(ServiceOrder $order): void
+    {
+        try {
+            event(new PaymentSuccess($order));
+        } catch (\Throwable $e) {
+            Log::error('PaymentSuccess side effects failed', [
+                'order_code' => $order->order_code,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        $this->notifyPaidSafely($order);
     }
 
     private function notifyPaidSafely(ServiceOrder $order): void

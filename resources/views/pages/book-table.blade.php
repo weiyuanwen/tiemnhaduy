@@ -1027,7 +1027,7 @@
                 if (pollTimer) {
                     clearInterval(pollTimer);
                 }
-                pollTimer = setInterval(async function () {
+                async function tick() {
                     if (orderSettled) {
                         return;
                     }
@@ -1041,7 +1041,9 @@
                         var payload = await response.json();
                         applyStatus(payload && payload.data ? payload.data.status : null);
                     } catch (error) {}
-                }, 4000);
+                }
+                tick();
+                pollTimer = setInterval(tick, 4000);
             }
 
             function subscribeEcho(orderCode) {

@@ -28,7 +28,7 @@ class ReconcileOvernightBankTransfers extends Command
             return self::SUCCESS;
         }
 
-        $result = $client->transactions(1, 100);
+        $result = $client->transactions(1, 400);
         if (! $result['ok']) {
             $this->error((string) json_encode(['fetched' => true, 'matched' => 0, 'reason' => 'histbank_error']));
 
