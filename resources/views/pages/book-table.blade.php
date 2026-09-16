@@ -394,6 +394,12 @@
             pointer-events: none;
             z-index: 1;
         }
+        .pay-success-card,
+        .pay-success-card h2,
+        .pay-success-title {
+            font-family: "Montserrat", sans-serif;
+            letter-spacing: normal;
+        }
         .pay-success-card {
             position: relative;
             z-index: 2;
@@ -458,10 +464,10 @@
         }
         .pay-success-title {
             margin: 0 0 16px;
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 600;
             color: #1a1a1a;
-            line-height: 1.35;
+            line-height: 1.4;
             text-wrap: balance;
         }
         .pay-success-code {
