@@ -134,7 +134,9 @@ class FacebookApprovalOnPaymentTest extends TestCase
     public function test_paid_mail_includes_facebook_and_approval_copy(): void
     {
         Mail::fake();
-        Http::fake();
+        Http::fake([
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
         config()->set('services.telegram.bot_token', 'test-bot');
         config()->set('services.telegram.chat_id', '123');
 
@@ -158,7 +160,7 @@ class FacebookApprovalOnPaymentTest extends TestCase
             $html = $mail->render();
 
             return $mail->hasTo('a@example.com')
-                && str_contains($html, 'Đã tắt phê duyệt bài viết thành công')
+                && str_contains($html, 'Hệ thống đang tắt phê duyệt bài viết')
                 && str_contains($html, 'Bé Ruby')
                 && str_contains($html, '100014343376569')
                 && str_contains($html, 'https://facebook.com/beruby');
@@ -193,9 +195,12 @@ class FacebookApprovalOnPaymentTest extends TestCase
     {
         Http::fake([
             'http://approver.test/disable-post-approval' => Http::response(['ok' => true, 'reason' => 'disabled'], 200),
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
         ]);
         config()->set('services.facebook.approver_url', 'http://approver.test');
         config()->set('services.facebook.approver_token', 'secret');
+        config()->set('services.telegram.bot_token', 'test-bot');
+        config()->set('services.telegram.chat_id', '123');
 
         $order = ServiceOrder::factory()->create([
             'facebook_profile_link' => 'https://facebook.com/beruby',
@@ -203,7 +208,10 @@ class FacebookApprovalOnPaymentTest extends TestCase
             'facebook_id' => '100014343376569',
         ]);
 
-        (new DisableFacebookPostApprovalJob($order->id))->handle(app(\App\Services\FacebookGroupApproverClient::class));
+        (new DisableFacebookPostApprovalJob($order->id))->handle(
+            app(\App\Services\FacebookGroupApproverClient::class),
+            app(\App\Services\TelegramNotifier::class),
+        );
 
         Http::assertSent(function ($request) {
             return $request->url() === 'http://approver.test/disable-post-approval'

@@ -1,7 +1,7 @@
 <x-mail::message>
 # Thanh toán thành công
 
-Đã tắt phê duyệt bài viết thành công cho Facebook của bạn.
+Thanh toán đã được ghi nhận. Hệ thống đang tắt phê duyệt bài viết trên Facebook của bạn.
 
 - Tên Facebook: **{{ $order->facebook_name ?: '—' }}**
 - ID Facebook: **{{ $order->facebook_id ?: '—' }}**

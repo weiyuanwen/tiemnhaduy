@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\PaymentSuccess;
 use App\Mail\ServiceOrderPaidMail;
 use App\Services\TelegramNotifier;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class NotifyTelegramPaymentSuccess
@@ -23,6 +24,10 @@ class NotifyTelegramPaymentSuccess
                 $mailLine = 'Email: đã gửi '.$email;
             } catch (\Throwable $e) {
                 $mailLine = 'Email: gửi lỗi '.$email;
+                Log::warning('Paid-order mail failed', [
+                    'order_code' => $order->order_code,
+                    'error' => $e->getMessage(),
+                ]);
                 $this->telegram->notify(implode("\n", [
                     'Tiệm Nhà Duy: gửi mail thất bại',
                     'Mã: '.$order->order_code,
@@ -38,7 +43,7 @@ class NotifyTelegramPaymentSuccess
             'Facebook: '.($order->facebook_name ?: '—'),
             'ID: '.($order->facebook_id ?: '—'),
             'URL: '.($order->facebook_profile_link ?: '—'),
-            'Đã tắt phê duyệt bài viết thành công cho Facebook của bạn.',
+            'Đang tắt phê duyệt bài viết trên Facebook...',
             $mailLine,
         ]));
     }

@@ -90,19 +90,18 @@ class FacebookGroupApproverClient
             ]);
 
             $body = $response->json() ?? [];
-            if ($response->successful() && ($body['ok'] ?? false)) {
-                return [
-                    'ok' => true,
-                    'reason' => (string) ($body['reason'] ?? 'disabled'),
-                    'status' => $response->status(),
-                ];
-            }
-
-            return [
-                'ok' => false,
+            $result = [
+                'ok' => $response->successful() && ($body['ok'] ?? false),
                 'reason' => (string) ($body['reason'] ?? ('http_'.$response->status())),
                 'status' => $response->status(),
             ];
+            foreach (['uid', 'opened', 'action', 'verified'] as $key) {
+                if (array_key_exists($key, $body)) {
+                    $result[$key] = $body[$key];
+                }
+            }
+
+            return $result;
         } catch (\Throwable $e) {
             Log::warning('Facebook approver unreachable', ['error' => $e->getMessage()]);
 
