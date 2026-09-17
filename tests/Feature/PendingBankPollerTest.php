@@ -194,4 +194,39 @@ class PendingBankPollerTest extends TestCase
         $this->assertSame(1, $result['matched']);
         $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
     }
+
+    public function test_matches_expired_unpaid_order_when_histbank_recovers(): void
+    {
+        Event::fake([PaymentSuccess::class]);
+        Cache::flush();
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+
+        $order = ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_EXPIRED,
+            'order_code' => 'ORDFB3S59B3BODT',
+            'amount' => 150000,
+            'expires_at' => now()->subMinutes(30),
+            'paid_at' => null,
+            'created_at' => now()->subMinutes(45),
+        ]);
+
+        Http::fake([
+            'http://histbank.test/transactions*' => Http::response([
+                'count' => 1,
+                'transactions' => [[
+                    'id' => 'tx-expired-1',
+                    'description' => 'CK ORDFB3S59B3BODT',
+                    'amount' => 150000,
+                    'creditDebitIndicator' => 'CRDT',
+                ]],
+            ], 200),
+        ]);
+
+        $result = app(PendingBankPoller::class)->run();
+        $this->assertTrue($result['fetched']);
+        $this->assertSame(1, $result['matched']);
+        $this->assertSame(ServiceOrder::STATUS_PAID, $order->fresh()->status);
+        Event::assertDispatched(PaymentSuccess::class);
+    }
 }

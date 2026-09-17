@@ -15,34 +15,57 @@ class HistbankClient
     {
         $base = rtrim((string) config('services.histbank.base_url'), '/');
         $timeout = (int) config('services.histbank.timeout', 15);
+        $lastStatus = 0;
 
-        try {
-            $response = Http::timeout($timeout)
-                ->acceptJson()
-                ->get($base.'/transactions', [
-                    'days' => $days,
-                    'pageSize' => $pageSize,
-                    'pageNumber' => 1,
-                ]);
-        } catch (ConnectionException $e) {
-            Log::warning('histbank unreachable', ['error' => $e->getMessage()]);
+        for ($attempt = 1; $attempt <= 2; $attempt++) {
+            try {
+                $response = Http::timeout($timeout)
+                    ->acceptJson()
+                    ->get($base.'/transactions', [
+                        'days' => $days,
+                        'pageSize' => $pageSize,
+                        'pageNumber' => 1,
+                    ]);
+            } catch (ConnectionException $e) {
+                Log::warning('histbank unreachable', ['error' => $e->getMessage(), 'attempt' => $attempt]);
+                $lastStatus = 0;
+                if ($attempt < 2) {
+                    $this->retryPause();
+                    continue;
+                }
 
-            return ['ok' => false, 'transactions' => [], 'status' => 0];
+                return ['ok' => false, 'transactions' => [], 'status' => 0];
+            }
+
+            if ($response->successful()) {
+                $json = $response->json();
+
+                return [
+                    'ok' => true,
+                    'transactions' => $this->extractTransactions($json),
+                    'status' => $response->status(),
+                ];
+            }
+
+            $lastStatus = $response->status();
+            Log::warning('histbank non-2xx', ['status' => $lastStatus, 'attempt' => $attempt]);
+
+            if ($attempt < 2 && $response->serverError()) {
+                $this->retryPause();
+                continue;
+            }
+
+            return ['ok' => false, 'transactions' => [], 'status' => $lastStatus];
         }
 
-        if (! $response->successful()) {
-            Log::warning('histbank non-2xx', ['status' => $response->status()]);
+        return ['ok' => false, 'transactions' => [], 'status' => $lastStatus];
+    }
 
-            return ['ok' => false, 'transactions' => [], 'status' => $response->status()];
+    private function retryPause(): void
+    {
+        if (! app()->environment('testing')) {
+            usleep(800_000);
         }
-
-        $json = $response->json();
-
-        return [
-            'ok' => true,
-            'transactions' => $this->extractTransactions($json),
-            'status' => $response->status(),
-        ];
     }
 
     /**

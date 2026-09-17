@@ -104,7 +104,42 @@ class PaymentTelegramNotificationTest extends TestCase
         $telegram = collect(Http::recorded())
             ->filter(fn ($pair) => str_contains($pair[0]->url(), 'api.telegram.org'));
         $this->assertCount(1, $telegram);
-        $this->assertStringContainsString('histbank', (string) $telegram->first()[0]['text']);
+        $text = (string) $telegram->first()[0]['text'];
+        $this->assertStringContainsString('báo cáo đối soát CK', $text);
+        $this->assertStringContainsString('HTTP 500', $text);
+        $this->assertStringContainsString('Đối soát đêm 02:30', $text);
+        $this->assertStringContainsString('đơn hết hạn trong 6 giờ', $text);
+    }
+
+    public function test_histbank_unreachable_report_uses_http_0(): void
+    {
+        Cache::flush();
+        Http::fake([
+            'http://histbank.test/transactions*' => function () {
+                throw new \Illuminate\Http\Client\ConnectionException('Connection timed out');
+            },
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+        config()->set('services.histbank.base_url', 'http://histbank.test');
+
+        ServiceOrder::factory()->create([
+            'service_id' => Service::factory(),
+            'status' => ServiceOrder::STATUS_PENDING,
+            'order_code' => 'ORDFBABCDEFGH12',
+            'amount' => 100000,
+            'expires_at' => now()->addMinutes(12),
+            'created_at' => now()->subMinutes(1),
+        ]);
+
+        app(PendingBankPoller::class)->run();
+
+        $telegram = collect(Http::recorded())
+            ->filter(fn ($pair) => str_contains($pair[0]->url(), 'api.telegram.org'));
+        $this->assertCount(1, $telegram);
+        $text = (string) $telegram->first()[0]['text'];
+        $this->assertStringContainsString('báo cáo đối soát CK', $text);
+        $this->assertStringContainsString('HTTP 0', $text);
+        $this->assertStringContainsString('Không kết nối được histbank', $text);
     }
 
     public function test_skips_telegram_without_credentials(): void
