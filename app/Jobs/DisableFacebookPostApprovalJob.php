@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\ServiceOrder;
 use App\Services\FacebookGroupApproverClient;
+use App\Services\FacebookProfileLookup;
 use App\Services\TelegramNotifier;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -19,11 +20,22 @@ class DisableFacebookPostApprovalJob implements ShouldQueue
 
     public function __construct(public int $orderId) {}
 
-    public function handle(FacebookGroupApproverClient $approver, TelegramNotifier $telegram): void
-    {
+    public function handle(
+        FacebookGroupApproverClient $approver,
+        FacebookProfileLookup $lookup,
+        TelegramNotifier $telegram
+    ): void {
         $order = ServiceOrder::query()->find($this->orderId);
         if (! $order || ! $order->facebook_profile_link) {
             return;
+        }
+
+        if (! $order->facebook_id) {
+            $facebook = $lookup->resolve($order->facebook_profile_link);
+            $order->forceFill([
+                'facebook_name' => $facebook['name'] ?: $order->facebook_name,
+                'facebook_id' => $facebook['id'] ?: $order->facebook_id,
+            ])->save();
         }
 
         $result = $approver->disablePostApproval(

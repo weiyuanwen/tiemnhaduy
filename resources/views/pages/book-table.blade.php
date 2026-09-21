@@ -756,6 +756,7 @@
             var paySuccessCloseBtn = document.getElementById("paySuccessCloseBtn");
             var paySuccessConfetti = document.getElementById("paySuccessConfetti");
             var pollTimer = null;
+            var pollFastSwitchTimer = null;
             var countdownTimer = null;
             var copyTooltipTimer = null;
             var echoWaitTimer = null;
@@ -954,6 +955,10 @@
                     clearInterval(pollTimer);
                     pollTimer = null;
                 }
+                if (pollFastSwitchTimer) {
+                    clearTimeout(pollFastSwitchTimer);
+                    pollFastSwitchTimer = null;
+                }
                 if (countdownTimer) {
                     clearInterval(countdownTimer);
                     countdownTimer = null;
@@ -1007,6 +1012,32 @@
                 }
             }
 
+            function renderFacebookPayer(data) {
+                var payerBits = [];
+                if (data.facebook_name) {
+                    payerBits.push(escapeHtml(data.facebook_name));
+                }
+                if (data.facebook_id) {
+                    payerBits.push("ID " + escapeHtml(data.facebook_id));
+                } else if (data.facebook_name) {
+                    payerBits.push("đang lấy ID…");
+                }
+                var payerLinks = [];
+                if (data.facebook_profile_link) {
+                    payerLinks.push(facebookAnchor("Profile", data.facebook_profile_link));
+                }
+                if (data.facebook_group_activity_url) {
+                    payerLinks.push(facebookAnchor("Hoạt động nhóm", data.facebook_group_activity_url));
+                }
+                if (payerBits.length || payerLinks.length) {
+                    facebookPayerName.innerHTML = payerBits.join(" · ") + (payerLinks.length ? "<br>" + payerLinks.join(" · ") : "");
+                    facebookPayerName.hidden = false;
+                } else {
+                    facebookPayerName.textContent = "";
+                    facebookPayerName.hidden = true;
+                }
+            }
+
             function startCountdown() {
                 if (countdownTimer) {
                     clearInterval(countdownTimer);
@@ -1026,6 +1057,11 @@
             function startStatusPoll(orderCode) {
                 if (pollTimer) {
                     clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+                if (pollFastSwitchTimer) {
+                    clearTimeout(pollFastSwitchTimer);
+                    pollFastSwitchTimer = null;
                 }
                 async function tick() {
                     if (orderSettled) {
@@ -1039,11 +1075,24 @@
                             return;
                         }
                         var payload = await response.json();
-                        applyStatus(payload && payload.data ? payload.data.status : null);
+                        var data = payload && payload.data ? payload.data : null;
+                        if (!data) {
+                            return;
+                        }
+                        applyStatus(data.status);
+                        renderFacebookPayer(data);
                     } catch (error) {}
                 }
                 tick();
-                pollTimer = setInterval(tick, 4000);
+                pollTimer = setInterval(tick, 1000);
+                pollFastSwitchTimer = setTimeout(function () {
+                    pollFastSwitchTimer = null;
+                    if (!pollTimer || orderSettled) {
+                        return;
+                    }
+                    clearInterval(pollTimer);
+                    pollTimer = setInterval(tick, 4000);
+                }, 25000);
             }
 
             function subscribeEcho(orderCode) {
@@ -1082,27 +1131,7 @@
                 expiresAtValue.textContent = formatDateTime(currentExpiresAt);
                 expiryCountdownValue.textContent = formatCountdown(currentExpiresAt.getTime() - Date.now());
                 qrStatusBadge.textContent = "Đang chờ CK";
-                var payerBits = [];
-                if (data.facebook_name) {
-                    payerBits.push(escapeHtml(data.facebook_name));
-                }
-                if (data.facebook_id) {
-                    payerBits.push("ID " + escapeHtml(data.facebook_id));
-                }
-                var payerLinks = [];
-                if (data.facebook_profile_link) {
-                    payerLinks.push(facebookAnchor("Profile", data.facebook_profile_link));
-                }
-                if (data.facebook_group_activity_url) {
-                    payerLinks.push(facebookAnchor("Hoạt động nhóm", data.facebook_group_activity_url));
-                }
-                if (payerBits.length || payerLinks.length) {
-                    facebookPayerName.innerHTML = payerBits.join(" · ") + (payerLinks.length ? "<br>" + payerLinks.join(" · ") : "");
-                    facebookPayerName.hidden = false;
-                } else {
-                    facebookPayerName.textContent = "";
-                    facebookPayerName.hidden = true;
-                }
+                renderFacebookPayer(data);
                 qrResult.style.display = "block";
                 paymentMessage.className = "";
                 paymentMessage.textContent = "";

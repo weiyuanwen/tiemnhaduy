@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\PaymentExpired;
 use App\Events\PaymentPending;
 use App\Events\PaymentSuccess;
+use App\Jobs\LookupFacebookProfileJob;
 use App\Models\BankTransaction;
 use App\Models\Service;
 use App\Models\ServiceOrder;
@@ -96,9 +97,9 @@ class OrderService
         }
 
         $amount = $serviceData['price'];
-        $facebook = $this->facebookLookup->resolve($facebookProfileLink);
+        $facebook = $this->facebookLookup->fromUrl($facebookProfileLink);
 
-        return DB::transaction(function () use ($request, $serviceData, $localServiceId, $amount, $facebookProfileLink, $facebook, $userId) {
+        $created = DB::transaction(function () use ($request, $serviceData, $localServiceId, $amount, $facebookProfileLink, $facebook, $userId) {
             $this->cleanupExpiredPendingOrders();
 
             $deviceFingerprint = $this->deviceTrackingService->generateFingerprint($request);
@@ -133,7 +134,7 @@ class OrderService
             event(new PaymentPending($order));
 
             return [
-                'success' => true,
+                'order' => $order,
                 'data' => [
                     'order_code' => $order->order_code,
                     'amount' => $order->amount,
@@ -154,6 +155,13 @@ class OrderService
                 ],
             ];
         });
+
+        LookupFacebookProfileJob::dispatch($created['order']->id);
+
+        return [
+            'success' => true,
+            'data' => $created['data'],
+        ];
     }
 
     public function confirmBankMatch(string $orderCode, string $bankTxnId, bool $allowExpired = false, ?array $bankMeta = null): array

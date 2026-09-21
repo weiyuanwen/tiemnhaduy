@@ -14,13 +14,30 @@ class FacebookProfileLookup
     }
 
     /**
+     * Parse name/id from the URL only — no network.
+     *
+     * @return array{name: string|null, id: string|null, url: string}
+     */
+    public function fromUrl(string $profileUrl): array
+    {
+        $url = trim($profileUrl);
+
+        return [
+            'name' => $this->nameFromUrl($url),
+            'id' => $this->idFromUrl($url),
+            'url' => $url,
+        ];
+    }
+
+    /**
      * @return array{name: string|null, id: string|null, url: string}
      */
     public function resolve(string $profileUrl): array
     {
-        $url = trim($profileUrl);
-        $id = $this->idFromUrl($url);
-        $name = $this->nameFromUrl($url);
+        $parsed = $this->fromUrl($profileUrl);
+        $url = $parsed['url'];
+        $id = $parsed['id'];
+        $name = $parsed['name'];
 
         $inspected = $this->approver->lookupProfile($this->canonicalUrl($url));
         if (($inspected['ok'] ?? false) && ! ($inspected['skipped'] ?? false)) {

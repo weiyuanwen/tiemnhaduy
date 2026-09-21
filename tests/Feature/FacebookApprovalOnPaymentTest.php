@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use App\Jobs\DisableFacebookPostApprovalJob;
+use App\Jobs\LookupFacebookProfileJob;
 use App\Mail\ServiceOrderPaidMail;
 use App\Models\Service;
 use App\Models\ServiceOrder;
+use App\Services\FacebookProfileLookup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class FacebookApprovalOnPaymentTest extends TestCase
@@ -17,6 +20,7 @@ class FacebookApprovalOnPaymentTest extends TestCase
 
     public function test_create_order_looks_up_facebook_via_group_member_inspect(): void
     {
+        Queue::fake();
         config()->set('services.facebook.approver_url', 'http://approver.test');
         config()->set('services.facebook.lookup_http', false);
         Http::fake([
@@ -36,8 +40,14 @@ class FacebookApprovalOnPaymentTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.facebook_name', 'Thảo Phương Sarah Wedding')
-            ->assertJsonPath('data.facebook_id', '100012345678901');
+            ->assertJsonPath('data.facebook_name', 'thaophuongsarahwedding')
+            ->assertJsonPath('data.facebook_id', null);
+        Queue::assertPushed(LookupFacebookProfileJob::class, 1);
+        Http::assertNotSent(fn ($request) => str_contains($request->url(), 'lookup-profile'));
+
+        $order = ServiceOrder::query()->latest('id')->first();
+        (new LookupFacebookProfileJob($order->id))->handle(app(FacebookProfileLookup::class));
+
         Http::assertSent(function ($request) {
             return $request->url() === 'http://approver.test/lookup-profile'
                 && $request['url'] === 'https://www.facebook.com/thaophuongsarahwedding';
@@ -51,6 +61,7 @@ class FacebookApprovalOnPaymentTest extends TestCase
 
     public function test_create_order_looks_up_web_facebook_host_via_www_inspect(): void
     {
+        Queue::fake();
         config()->set('services.facebook.approver_url', 'http://approver.test');
         config()->set('services.facebook.lookup_http', false);
         Http::fake([
@@ -69,8 +80,13 @@ class FacebookApprovalOnPaymentTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.facebook_name', 'Edward Swim')
-            ->assertJsonPath('data.facebook_id', '100000000000001');
+            ->assertJsonPath('data.facebook_name', 'swimwedward')
+            ->assertJsonPath('data.facebook_id', null);
+        Queue::assertPushed(LookupFacebookProfileJob::class);
+
+        $order = ServiceOrder::query()->latest('id')->first();
+        (new LookupFacebookProfileJob($order->id))->handle(app(FacebookProfileLookup::class));
+
         Http::assertSent(function ($request) {
             return $request->url() === 'http://approver.test/lookup-profile'
                 && $request['url'] === 'https://www.facebook.com/swimwedward';
@@ -84,6 +100,7 @@ class FacebookApprovalOnPaymentTest extends TestCase
 
     public function test_create_order_looks_up_facebook_name_from_html(): void
     {
+        Queue::fake();
         config()->set('services.facebook.approver_url', '');
         config()->set('services.facebook.lookup_http', true);
         Http::fake([
@@ -104,8 +121,12 @@ class FacebookApprovalOnPaymentTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.facebook_name', 'Bé Ruby')
-            ->assertJsonPath('data.facebook_id', '100014343376569');
+            ->assertJsonPath('data.facebook_name', 'beruby')
+            ->assertJsonPath('data.facebook_id', null);
+
+        $order = ServiceOrder::query()->latest('id')->first();
+        (new LookupFacebookProfileJob($order->id))->handle(app(FacebookProfileLookup::class));
+
         $this->assertDatabaseHas('service_orders', [
             'facebook_profile_link' => 'https://facebook.com/beruby',
             'facebook_name' => 'Bé Ruby',
@@ -211,6 +232,7 @@ class FacebookApprovalOnPaymentTest extends TestCase
 
         (new DisableFacebookPostApprovalJob($order->id))->handle(
             app(\App\Services\FacebookGroupApproverClient::class),
+            app(FacebookProfileLookup::class),
             app(\App\Services\TelegramNotifier::class),
         );
 
@@ -220,5 +242,44 @@ class FacebookApprovalOnPaymentTest extends TestCase
                 && $request['uid'] === '100014343376569';
         });
         $this->assertNotNull($order->fresh()->facebook_approval_disabled_at);
+    }
+
+    public function test_disable_job_looks_up_facebook_id_when_missing(): void
+    {
+        Http::fake([
+            'http://approver.test/lookup-profile' => Http::response([
+                'ok' => true,
+                'uid' => '100014343376569',
+                'name' => 'Bé Ruby',
+            ], 200),
+            'http://approver.test/disable-post-approval' => Http::response(['ok' => true, 'reason' => 'disabled'], 200),
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+        config()->set('services.facebook.approver_url', 'http://approver.test');
+        config()->set('services.facebook.approver_token', 'secret');
+        config()->set('services.facebook.lookup_http', false);
+        config()->set('services.telegram.bot_token', '');
+
+        $order = ServiceOrder::factory()->create([
+            'facebook_profile_link' => 'https://facebook.com/beruby',
+            'facebook_name' => 'beruby',
+            'facebook_id' => null,
+        ]);
+
+        (new DisableFacebookPostApprovalJob($order->id))->handle(
+            app(\App\Services\FacebookGroupApproverClient::class),
+            app(FacebookProfileLookup::class),
+            app(\App\Services\TelegramNotifier::class),
+        );
+
+        Http::assertSent(function ($request) {
+            return $request->url() === 'http://approver.test/lookup-profile';
+        });
+        Http::assertSent(function ($request) {
+            return $request->url() === 'http://approver.test/disable-post-approval'
+                && $request['uid'] === '100014343376569';
+        });
+        $this->assertSame('100014343376569', $order->fresh()->facebook_id);
+        $this->assertSame('Bé Ruby', $order->fresh()->facebook_name);
     }
 }

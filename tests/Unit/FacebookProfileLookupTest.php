@@ -21,6 +21,10 @@ class FacebookProfileLookupTest extends TestCase
         $this->assertSame('nguyenvana', $lookup->nameFromUrl('https://www.facebook.com/nguyenvana'));
         $this->assertSame('swimwedward', $lookup->nameFromUrl('https://web.facebook.com/swimwedward'));
         $this->assertSame('ID 100014343376569', $lookup->nameFromUrl('https://facebook.com/profile.php?id=100014343376569'));
+
+        $fromUrl = $lookup->fromUrl('https://www.facebook.com/profile.php?id=100014343376569');
+        $this->assertSame('ID 100014343376569', $fromUrl['name']);
+        $this->assertSame('100014343376569', $fromUrl['id']);
     }
 
     public function test_canonicalizes_web_and_bare_facebook_hosts(): void
