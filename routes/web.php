@@ -59,6 +59,8 @@ Route::permanentRedirect('/faqs', '/cau-hoi-thuong-gap');
 Route::permanentRedirect('/terms-of-service', '/dieu-khoan-su-dung');
 Route::permanentRedirect('/privacy-policy', '/chinh-sach-bao-mat');
 Route::permanentRedirect('/sitemap', '/so-do-trang');
+Route::permanentRedirect('/home', '/');
+Route::permanentRedirect('/pwa-ecommerce', '/');
 
 // Contact form POST handler
 $sendContact = function (Request $request) {
@@ -97,100 +99,100 @@ Route::post('/contact/send', $sendContact);
 
 // Search
 Route::get('/search', function () {
-    return view('home'); // Placeholder
+    return redirect()->route('home', status: 301);
 })->name('search');
 
 // Products
 Route::prefix('products')->name('products.')->group(function () {
     Route::get('/{id}', function ($id) {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('show');
     
     Route::get('/featured', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('featured');
     
     Route::get('/flash-sale', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('flash-sale');
 });
 
 // Shop
 Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/grid', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('grid');
     
     Route::get('/list', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('list');
 });
 
 // Categories
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/{slug}', function ($slug) {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('show');
 });
 
 // Collections
 Route::prefix('collections')->name('collections.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
     
     Route::get('/{id}', function ($id) {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('show');
 });
 
 // Cart
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
 });
 
 // Wishlist
 Route::prefix('wishlist')->name('wishlist.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
     
     Route::get('/grid', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('grid');
     
     Route::get('/list', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('list');
 });
 
 // Profile
 Route::prefix('profile')->name('profile.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('show');
 });
 
 // Messages
 Route::prefix('messages')->name('messages.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
 });
 
 // Notifications
 Route::prefix('notifications')->name('notifications.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
 });
 
 // Pages
 Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
 });
 
@@ -202,17 +204,17 @@ Route::get('/offline', function () {
 // Settings
 Route::prefix('settings')->name('settings.')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('home'); // Placeholder
+        return redirect()->route('home', status: 301);
     })->name('index');
 });
 
 // Auth Routes (placeholders - will be implemented with Laravel Breeze/Fortify)
 Route::get('/login', function () {
-    return redirect()->route('home'); // Placeholder
+    return redirect()->route('home', status: 301);
 })->name('login');
 
 Route::get('/register', function () {
-    return redirect()->route('home'); // Placeholder
+    return redirect()->route('home', status: 301);
 })->name('register');
 
 Route::post('/logout', function () {

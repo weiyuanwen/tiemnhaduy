@@ -19,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withEvents(false)
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->append(\App\Http\Middleware\CanonicalHost::class);
+
         // Register custom middleware aliases
         $middleware->alias([
             'bot.detect' => \App\Http\Middleware\DetectBot::class,

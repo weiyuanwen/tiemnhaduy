@@ -7,7 +7,7 @@
     @php
         $seoTitle = trim($__env->yieldContent('title', 'Nông sản Tây Nguyên | Tiệm Nhà Duy'));
         $seoDescription = trim($__env->yieldContent('meta_description', 'Tiệm Nhà Duy cung cấp cà phê Robusta Gia Lai, mắc ca, tiêu đen và bơ sáp — nông sản sạch từ Chư Sê, Tây Nguyên.'));
-        $seoCanonical = trim($__env->yieldContent('canonical_url', url()->current()));
+        $seoCanonical = \App\Support\SeoCanonical::url(trim($__env->yieldContent('canonical_url', url()->current())) ?: null);
         $seoOgTitle = trim($__env->yieldContent('og_title', $seoTitle));
         $seoOgDescription = trim($__env->yieldContent('og_description', $seoDescription));
         $seoOgImage = trim($__env->yieldContent('og_image', asset('rosta/images/about-us-image.jpg')));
@@ -46,7 +46,7 @@
             "@@context": "https://schema.org",
             "@@type": "Organization",
             "name": "Tiệm Nhà Duy",
-            "url": "{{ url('/') }}",
+            "url": "{{ \App\Support\SeoCanonical::url(url('/')) }}",
             "logo": "{{ asset('rosta/images/tiemnhaduy.svg') }}",
             "image": "{{ asset('rosta/images/about-us-image.jpg') }}",
             "email": "support@tiemnhaduy.com",
@@ -72,7 +72,7 @@
             "@@context": "https://schema.org",
             "@@type": "WebSite",
             "name": "Tiệm Nhà Duy",
-            "url": "{{ url('/') }}",
+            "url": "{{ \App\Support\SeoCanonical::url(url('/')) }}",
             "inLanguage": "vi-VN"
         }
     </script>
